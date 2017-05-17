@@ -1,0 +1,24 @@
+{
+    "name": "universityofadelaide/openshift-client",
+    "description": "Simple OpenShift client for PHP.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Chris Barton",
+            "email": "c.barton@adelaide.edu.au"
+        },
+        {
+            "name": "Casey Fulton",
+            "email": "casey.fulton@adelaide.edu.au"
+        }
+    ],
+    "require": {
+        "universityofadelaide/openshift-restclient-php": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "UniversityOfAdelaide\\OpenShift\\": "src/"
+        }
+    }
+}
