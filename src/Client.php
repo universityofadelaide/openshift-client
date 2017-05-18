@@ -107,6 +107,24 @@ class Client
     }
 
   /**
+   * Sends a delete request via the guzzle http client.
+   *
+   * @param string $path
+   *
+   * @return array Returns the status code and json_decoded body contents.
+   */
+  protected function delete($path) {
+    $request = $this->guzzleClient->request('DELETE', $path, []);
+
+    // @todo - handle exceptions.
+
+    return [
+      'response' => $request->getStatusCode(),
+      'body'     => json_decode($request->getBody()->getContents()),
+    ];
+  }
+
+  /**
    * Creates secret on current namespace.
    *
    * @param string $name The key/name of the secret.
@@ -137,12 +155,24 @@ class Client
       $response = $this->post($path, $secret);
 
       if ($response['response'] === 201) {
-        return $response['body'];
+        return $response['response'];
       } else {
         // something failed.
         return FALSE;
       }
 
-    }
+  }
 
+  public function deleteSecret($name) {
+    $path = '/api/' . $this->apiVersion . '/namespaces/' . $this->namespace . '/secrets/' . $name;
+
+    $response = $this->delete($path);
+
+    if ($response['response'] === 200) {
+      return $response['response'];
+    }
+    else {
+      return FALSE;
+    }
+  }
 }

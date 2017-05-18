@@ -45,6 +45,11 @@ $response = $client->createSecret('superSecret', ['username' => 'pied_piper', 'p
 
 ```
 
+## How to test with phpunit
+
+vendor/bin/phpunit tests/ClientTest.php https://192.168.99.100:8443 $(oc whoami -t) myproject
+
+
 ## Todo
 
 Implement everything.
