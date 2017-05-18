@@ -13,8 +13,14 @@
             "email": "casey.fulton@adelaide.edu.au"
         }
     ],
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/universityofadelaide/openshift-client-php-apimatic.git"
+        }
+    ],
     "require": {
-        "universityofadelaide/openshift-restclient-php": "dev-master"
+        "apimatic/openshiftapiwithkubernetes": "dev-master"
     },
     "autoload": {
         "psr-4": {
