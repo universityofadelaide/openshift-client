@@ -19,7 +19,30 @@ use UniversityOfAdelaide\OpenShift\Client;
 
 ...
 
-$client = new Client('https://192.168.64.2:8443/api/v1/', 'big_secret_token_hash');
+$client = new Client('https://192.168.64.2:8443/api/v1/', 'big_secret_token_hash', 'project');
+```
+
+## How to Test
+
+Create a `test.php` or similar file in the root of the project. 
+
+Add the following to this file:
+
+```php
+require_once __DIR__ . './../../autoload.php';
+
+use UniversityOfAdelaide\OpenShift\Client;
+
+$host = 'https://pathToOpenshift.host';
+$token = 'yourOpenShiftToken';
+$namespace = 'project';
+
+// Get the arguments required
+$client = new Client($host, $token, $namespace, TRUE);
+
+// Attempt to create a secret.
+$response = $client->createSecret('superSecret', ['username' => 'pied_piper', 'pass', 'middleout']);
+
 ```
 
 ## Todo

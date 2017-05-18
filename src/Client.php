@@ -2,20 +2,25 @@
 
 namespace UniversityOfAdelaide\OpenShift;
 
-use UniversityOfAdelaide\OpenShift\Model\V1ObjectMeta;
-use UniversityOfAdelaide\OpenShift\Model\V1Secret;
 use GuzzleHttp\Client as GuzzleClient;
 
 /**
  * Class Client
- * Provides sugar and helper methods for easier use
- * of the the swagger api(s) for OpenShift.
+ *
+ * Provides a client using guzzle to interact easily
+ * with the OpenShift api.
  *
  * @package UniversityOfAdelaide\OpenShift
  */
 class Client
 {
 
+  /**
+   * Api version.
+   *
+   * @var string
+   */
+  private $apiVersion = 'v1';
 
   /**
    * Current working namespace.
@@ -55,8 +60,12 @@ class Client
         'verify' => TRUE,
         'base_uri' => $host,
         'headers' => [
-          'Authorization' => 'Bearer ' . $token
+          'Authorization' => 'Bearer ' . $token,
+          // @todo - make this configurable.
+          'Content-Type' => 'application/json',
+          'Accept' => 'application/json',
         ],
+
       ];
 
       // If dev mode - turn off SSL Verification.
@@ -68,36 +77,72 @@ class Client
 
     }
 
+  /**
+   * Returns the guzzle client.
+   *
+   * @return \GuzzleHttp\Client
+   */
     public function getGuzzleClient() {
       return $this->guzzleClient;
     }
 
   /**
-   * Create a namespaced secret.
+   * Sends a post request via the guzzle http client.
    *
-   * @param string $name Name of the secret.
-   * @param array $data Key Value array of secret data. This will base64
-   * encoded.
-   * @return \UniversityOfAdelaide\OpenShift\Model\V1Secret
+   * @param string $path
+   * @param array $body
+   * @return array Returns the status code and json_decoded body contents.
+   */
+    protected function post($path, $body) {
+      $request = $this->guzzleClient->request('POST', $path, [
+        'body' => json_encode($body)
+      ]);
+
+      // @todo - handle exceptions.
+
+      return [
+        'response' => $request->getStatusCode(),
+        'body' => json_decode($request->getBody()->getContents())
+      ];
+    }
+
+  /**
+   * Creates secret on current namespace.
+   *
+   * @param string $name The key/name of the secret.
+   * @param array $data Key, value array data.
+   * @return bool|mixed Returns the body response if successful otherwise false
+   * if request fails to get back a 201.
    */
     public function createSecret($name, array $data) {
+
+      $path = '/api/' . $this->apiVersion . '/namespaces/' . $this->namespace . '/secrets';
 
       // base64 the data
       foreach ($data as $key => $value) {
         $data[$key] = base64_encode($value);
       }
 
-      $secret = new V1Secret([
+      // @todo - this should use  model.
+      $secret = [
         'api_version' => 'v1',
         'kind' => 'Secret',
-        'metadata' => new V1ObjectMeta([
+        'metadata' => [
           'name' => $name
-        ]),
+        ],
         'type' => 'Opaque',
         'data' => $data
-      ]);
+      ];
 
-      return $this->coreClient->createCoreV1NamespacedSecret($this->namespace, $secret, TRUE);
+      $response = $this->post($path, $secret);
+
+      if ($response['response'] === 201) {
+        return $response['body'];
+      } else {
+        // something failed.
+        return FALSE;
+      }
+
     }
 
 }
