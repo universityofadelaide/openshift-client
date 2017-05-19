@@ -163,6 +163,10 @@ class Client
 
   }
 
+  /**
+   * @param $name
+   * @return bool|int
+   */
   public function deleteSecret($name) {
     $path = '/api/' . $this->apiVersion . '/namespaces/' . $this->namespace . '/secrets/' . $name;
 
