@@ -44,6 +44,28 @@ class Client implements OpenShiftClientInterface
   protected $guzzleClient;
 
   /**
+   * Resource map.
+   *
+   * @var array
+   */
+  protected $resourceMap = [
+    'secret' => [
+      'create' => [
+        'action' => 'POST',
+        'uri' => '/api/v1/namespaces/{namespace}/secrets',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}'
+      ],
+      'get' => [
+        'action' => 'GET',
+        'uri' => '/api/v1/namespaces/{namespace}/secrets'
+      ]
+    ]
+  ];
+
+  /**
    * Client constructor.
    *
    * @param string $host The hostname.
@@ -87,6 +109,34 @@ class Client implements OpenShiftClientInterface
     }
 
   /**
+   * Sends a request via the guzzle http client
+   *
+   * @param string $method HTTP VERB
+   * @param string $uri Path the endpoint
+   * @param array $body Request body to be converted to JSON.
+   * @param array $query Query params
+   *
+   * @return array Returns the status code and json_decoded body contents.
+   */
+  protected function request($method, $uri, array $body = [], array $query = []) {
+    $requestOptions = [];
+
+    if ($method != 'DELETE') {
+      $requestOptions = [
+        'query' => is_array($query) ? $query : [],
+        'body'  => is_array($body) ? json_encode($body) : $body,
+      ];
+    }
+
+    $response = $this->guzzleClient->request($method, $uri, $requestOptions);
+
+    return [
+      'response' => $response->getStatusCode(),
+      'body' => json_decode($response->getBody()->getContents())
+    ];
+  }
+
+  /**
    * Sends a post request via the guzzle http client.
    *
    * @param string $path
@@ -125,18 +175,58 @@ class Client implements OpenShiftClientInterface
   }
 
   /**
+   * Gets the uri and action from the resourceMap from the class Method.
+   *
+   * @param string $method The class method name.
+   * @return array
+   */
+  protected function getResourceMethod($method) {
+    $name = explode('::', $method);
+    $nameArray =  preg_split('/(?=[A-Z])/', end($name));
+    // the first element is the action
+    $action = array_shift($nameArray);
+    $method = strtolower(implode('', $nameArray));
+    return $this->resourceMap[$method][$action];
+  }
+
+  /**
+   * Creates a relative request url.
+   *
+   * @param $uri
+   * @param array $params Params that map to the uri resource path e.g
+   * /api/{namespace}/{name}
+   *
+   * @return string The request uri.
+   */
+  protected function createRequestUri($uri, array $params = []) {
+
+    // By default replace the {namespace} this is set in configuration.
+    if ($this->namespace !== null) {
+      $uri = str_replace('{' . 'namespace' . '}', $this->namespace, $uri);
+    }
+
+    foreach ($params as $key => $param) {
+      // perform a string replace on the uri.
+      $uri = str_replace('{' . $key . '}', $param, $uri);
+    }
+
+    return $uri;
+  }
+
+  /**
    * @inheritdoc
    */
     public function createSecret($name, array $data) {
 
-      $path = '/api/' . $this->apiVersion . '/namespaces/' . $this->namespace . '/secrets';
+      $method = __METHOD__;
+      $resourceMethod = $this->getResourceMethod($method);
 
       // base64 the data
       foreach ($data as $key => $value) {
         $data[$key] = base64_encode($value);
       }
 
-      // @todo - this should use  model.
+      // @todo - this should use model.
       $secret = [
         'api_version' => 'v1',
         'kind' => 'Secret',
@@ -147,7 +237,7 @@ class Client implements OpenShiftClientInterface
         'data' => $data
       ];
 
-      $response = $this->post($path, $secret);
+      $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $secret);
 
       if ($response['response'] === 201) {
         return $response['response'];
@@ -162,23 +252,32 @@ class Client implements OpenShiftClientInterface
    * @inheritdoc
    */
   public function getSecret($name) {
-    // TODO: Implement getSecret() method.
+
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+
+    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), []);
+
+    return $response['response'];
   }
 
   /**
    * @inheritdoc
    */
   public function updateSecret($name, array $data) {
-    // TODO: Implement updateSecret() method.
+    // @todo - create update secret method.
   }
 
   /**
    * @inheritdoc
    */
   public function deleteSecret($name) {
-    $path = '/api/' . $this->apiVersion . '/namespaces/' . $this->namespace . '/secrets/' . $name;
 
-    $response = $this->delete($path);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name
+    ]);
+
+    $response = $this->request($resourceMethod['action'], $uri);
 
     if ($response['response'] === 200) {
       return $response['response'];
