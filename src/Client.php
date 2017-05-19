@@ -12,7 +12,7 @@ use GuzzleHttp\Client as GuzzleClient;
  *
  * @package UniversityOfAdelaide\OpenShift
  */
-class Client
+class Client implements OpenShiftClientInterface
 {
 
   /**
@@ -125,12 +125,7 @@ class Client
   }
 
   /**
-   * Creates secret on current namespace.
-   *
-   * @param string $name The key/name of the secret.
-   * @param array $data Key, value array data.
-   * @return bool|mixed Returns the body response if successful otherwise false
-   * if request fails to get back a 201.
+   * @inheritdoc
    */
     public function createSecret($name, array $data) {
 
@@ -164,8 +159,21 @@ class Client
   }
 
   /**
-   * @param $name
-   * @return bool|int
+   * @inheritdoc
+   */
+  public function getSecret($name) {
+    // TODO: Implement getSecret() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function updateSecret($name, array $data) {
+    // TODO: Implement updateSecret() method.
+  }
+
+  /**
+   * @inheritdoc
    */
   public function deleteSecret($name) {
     $path = '/api/' . $this->apiVersion . '/namespaces/' . $this->namespace . '/secrets/' . $name;
@@ -178,5 +186,201 @@ class Client
     else {
       return FALSE;
     }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getService($name) {
+    // TODO: Implement getService() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function createService($name, array $data) {
+    // TODO: Implement createService() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function updateService() {
+    // TODO: Implement updateService() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function deleteService($name) {
+    // TODO: Implement deleteService() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getRoute() {
+    // TODO: Implement getRoute() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function createRoute() {
+    // TODO: Implement createRoute() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function updateRoute() {
+    // TODO: Implement updateRoute() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function deleteRoute() {
+    // TODO: Implement deleteRoute() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getBuildConfig() {
+    // TODO: Implement getBuildConfig() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function createBuildConfig() {
+    // TODO: Implement createBuildConfig() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function updateBuildConfig() {
+    // TODO: Implement updateBuildConfig() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function deleteBuildConfig() {
+    // TODO: Implement deleteBuildConfig() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getImageStream() {
+    // TODO: Implement getImageStream() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function createImageStream() {
+    // TODO: Implement createImageStream() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function updateImageStream() {
+    // TODO: Implement updateImageStream() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function deleteImageStream() {
+    // TODO: Implement deleteImageStream() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getImageStreamTag() {
+    // TODO: Implement getImageStreamTag() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function createImageSteamTag() {
+    // TODO: Implement createImageSteamTag() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function updateImageSteamTag() {
+    // TODO: Implement updateImageSteamTag() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function deleteImageSteamTag() {
+    // TODO: Implement deleteImageSteamTag() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getPersistentVolumeClaim() {
+    // TODO: Implement getPersistentVolumeClaim() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function createPersistentVolumeClaim() {
+    // TODO: Implement createPersistentVolumeClaim() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function updatePersistentVolumeClaim() {
+    // TODO: Implement updatePersistentVolumeClaim() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function deletePersistentVolumeClaim() {
+    // TODO: Implement deletePersistentVolumeClaim() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function getDeploymentConfig() {
+    // TODO: Implement getDeploymentConfig() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function createDeploymentConfig() {
+    // TODO: Implement createDeploymentConfig() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function updateDeploymentConfig() {
+    // TODO: Implement updateDeploymentConfig() method.
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function deleteDeploymentConfig() {
+    // TODO: Implement deleteDeploymentConfig() method.
   }
 }

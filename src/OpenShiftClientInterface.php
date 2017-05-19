@@ -27,8 +27,8 @@ interface OpenShiftClientInterface {
    * @param array $data
    *   Array of key => values to be stored. These will base64 encoded.
    *
-   * @return mixed
-   *   Returns response from orchestration api.
+   * @return bool|mixed
+   *   Returns the body response if successful otherwise false if request fails to get back a 201.
    */
   public function createSecret($name, array $data);
 
@@ -41,7 +41,7 @@ interface OpenShiftClientInterface {
    *   Array of key => values to be stored. These will be base64 encoded.
    *
    * @return mixed
-   *   Returns response from orchestration api.
+   *   Returns the body response if successful otherwise false if request fails.
    */
   public function updateSecret($name, array $data);
 
@@ -52,7 +52,7 @@ interface OpenShiftClientInterface {
    *   Name of the service to retrieved.
    *
    * @return mixed
-   *   Returns the response from the orchestration api.
+   *   Returns the body response if successful otherwise false if request fails to get back a 200.
    */
   public function getService($name);
 
@@ -65,9 +65,33 @@ interface OpenShiftClientInterface {
    *    Configuration data for service.
    *
    * @return mixed
-   *    Returns the response from the orchestration api.
+   *   Returns the body response if successful otherwise false if request fails to get back a 201.
    */
   public function createService($name, array $data);
+
+  /**
+   * @return mixed
+   */
+  public function updateService();
+
+  /**
+   * Deletes a named service.
+   *
+   * @param string $name Name of service
+   * @return mixed
+   *   Returns the body response if successful otherwise false if request fails.
+   */
+  public function deleteService($name);
+
+  public function getRoute();
+
+  public function createRoute();
+
+  public function updateRoute();
+
+  public function deleteRoute();
+
+  public function getBuildConfig();
 
   public function createBuildConfig();
 
@@ -75,11 +99,15 @@ interface OpenShiftClientInterface {
 
   public function deleteBuildConfig();
 
+  public function getImageStream();
+
   public function createImageStream();
 
   public function updateImageStream();
 
   public function deleteImageStream();
+
+  public function getImageStreamTag();
 
   public function createImageSteamTag();
 
@@ -87,11 +115,15 @@ interface OpenShiftClientInterface {
 
   public function deleteImageSteamTag();
 
+  public function getPersistentVolumeClaim();
+
   public function createPersistentVolumeClaim();
 
   public function updatePersistentVolumeClaim();
 
   public function deletePersistentVolumeClaim();
+
+  public function getDeploymentConfig();
 
   public function createDeploymentConfig();
 
