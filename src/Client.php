@@ -100,6 +100,24 @@ class Client implements OpenShiftClientInterface
     }
 
   /**
+   * Returns the api version.
+   *
+   * @return string
+   */
+   public function getApiVersion() {
+      return $this->apiVersion;
+   }
+
+  /**
+   * Set the api version number.
+   *
+   * @param string $apiVersion Api version number.
+   */
+   public function setApiVersion($apiVersion) {
+      $this->apiVersion = (string) $apiVersion;
+   }
+
+  /**
    * Returns the guzzle client.
    *
    * @return \GuzzleHttp\Client
