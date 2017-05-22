@@ -484,8 +484,8 @@ class Client implements OpenShiftClientInterface
       'metadata' => [
         'annotations' => [
           'description' => 'Defines how to build the application',
-          'name' => $name . '-bc',
         ],
+        'name' => $name . '-bc',
       ],
       'spec' => [
         'output' => [
@@ -526,8 +526,9 @@ class Client implements OpenShiftClientInterface
         ],
         // @todo - figure out github and other types of triggers
         'triggers' => [],
-      'status' => [
-        'lastversion' => time()
+        'status' => [
+          'lastversion' => time()
+        ],
       ],
     ];
 
