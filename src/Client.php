@@ -480,7 +480,7 @@ class Client implements OpenShiftClientInterface
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
     $buildConfig = [
-      'kind' => 'buildConfig',
+      'kind' => 'BuildConfig',
       'metadata' => [
         'annotations' => [
           'description' => 'Defines how to build the application',
