@@ -504,7 +504,7 @@ class Client implements OpenShiftClientInterface {
         'annotations' => [
           'description' => 'Defines how to build the application',
         ],
-        'name' => $name . '-bc',
+        'name' => $name,
       ],
       'spec' => [
         'output' => [
@@ -574,6 +574,20 @@ class Client implements OpenShiftClientInterface {
    */
   public function deleteBuildConfig($name) {
 
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name
+    ]);
+
+    $response = $this->request($resourceMethod['action'], $uri);
+
+    if ($response['response'] === 200) {
+      return $response['response'];
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
@@ -605,7 +619,7 @@ class Client implements OpenShiftClientInterface {
     $imageStream = [
       'kind' => 'ImageStream',
       'metadata' => [
-        'name' => $name . '-imagestream',
+        'name' => $name,
         'annotations' => [
           'description' => 'Keeps track of changes in the application image'
         ]
@@ -665,8 +679,10 @@ class Client implements OpenShiftClientInterface {
 
     $method = __METHOD__;
     $resourceMethod = $this->getResourceMethod($method);
-
-    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']));
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name
+    ]);
+    $response = $this->request($resourceMethod['action'], $uri);
 
     if ($response['response'] === 200) {
       return $response['response'];

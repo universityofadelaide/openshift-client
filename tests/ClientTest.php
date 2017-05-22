@@ -9,16 +9,23 @@ class ClientTest extends TestCase {
   private $host;
   private $token;
   private $namespace;
+  private $yaml;
 
   protected $client;
 
   public function setUp() {
     global $argv, $argc;
 
-    $this->assertEquals(5, $argc, 'Missing arguments');
-    $this->host = $argv[2];
-    $this->token = $argv[3];
-    $this->namespace = $argv[4];
+    $this->assertEquals(6, $argc, 'Missing arguments');
+    if (file_exists($argv[5])) {
+      $this->host = $argv[2];
+      $this->token = $argv[3];
+      $this->namespace = $argv[4];
+      $this->yaml = yaml_parse(file_get_contents($argv[5]));
+    }
+    else {
+      die("Unable to open specified file $argv[2]");
+    }
 
     $this->client = new Client($this->host, $this->token, $this->namespace, TRUE);
   }
@@ -35,9 +42,9 @@ class ClientTest extends TestCase {
   public function testCreateSecret() {
     $this->assertEquals(
       201,
-      $this->client->createSecret('piedtest', [
+      $this->client->createSecret('pied-pass', [
         'username' => 'pied-piper',
-        'password' => 'testpass',
+        'password' => 'This guy..',
       ]),
       'Unable to create secret.'
     );
@@ -46,7 +53,7 @@ class ClientTest extends TestCase {
   public function testUpdateSecret() {
     $this->assertEquals(
       200,
-      $this->client->updateSecret('piedtest', [
+      $this->client->updateSecret('pied-pass', [
         'username' => 'pied-piper',
         'password' => 'middleout',
       ]),
@@ -54,28 +61,80 @@ class ClientTest extends TestCase {
     );
   }
 
-
-  public function testDeleteSecret() {
-    $this->assertEquals(
-      200,
-      $this->client->deleteSecret('piedtest'),
-      'Unable to delete secret.'
-    );
-  }
-
   public function testCreateImageStream() {
     $this->assertEquals(
       201,
-      $this->client->createImageStream('dreams'),
+      $this->client->createImageStream('pied-stream'),
       'Unable to create image stream.'
     );
   }
 
-  public function deleteImageStream() {
+  public function testCreateBuildConfig() {
+    $data = [
+      'git' => [
+        'uri' => $this->yaml['clientTest']['source']['git']['uri'],
+        'ref' => $this->yaml['clientTest']['source']['git']['ref'],
+      ],
+      'source' => [
+        'type' => $this->yaml['clientTest']['sourceStrategy']['from']['kind'],
+        'name' => $this->yaml['clientTest']['sourceStrategy']['from']['name'],
+      ],
+    ];
+    $this->assertEquals(
+      201,
+      $this->client->createBuildConfig('pied-build', 'pied-pass', 'pied-dreams', $data),
+      'Unable to create build config.'
+    );
+  }
+
+  public function testCreateDeploymentConfig() {
+    $data = [
+      'git' => [
+        'uri' => $this->yaml['clientTest']['source']['git']['uri'],
+        'ref' => $this->yaml['clientTest']['source']['git']['ref'],
+      ],
+      'source' => [
+        'type' => $this->yaml['clientTest']['sourceStrategy']['from']['kind'],
+        'name' => $this->yaml['clientTest']['sourceStrategy']['from']['name'],
+      ],
+    ];
+    $this->assertEquals(
+      201,
+      $this->client->createBuildConfig('pied-build', 'pied-pass', 'pied-dreams', $data),
+      'Unable to create build config.'
+    );
+  }
+
+  public function testDeleteDeploymentConfig() {
     $this->assertEquals(
       200,
-      $this->client->deleteImageStream('dreams'),
+      $this->client->deleteDeploymentConfig('pied-build'),
+      'Unable to delete deploy config.'
+    );
+  }
+
+  public function testDeleteBuildConfig() {
+    $this->assertEquals(
+      200,
+      $this->client->deleteBuildConfig('pied-build'),
+      'Unable to delete build config.'
+    );
+  }
+
+  public function testDeleteImageStream() {
+    $this->assertEquals(
+      200,
+      $this->client->deleteImageStream('pied-stream'),
       'Unable to delete image stream.'
     );
   }
+
+  public function testDeleteSecret() {
+    $this->assertEquals(
+      200,
+      $this->client->deleteSecret('pied-pass'),
+      'Unable to delete secret.'
+    );
+  }
+
 }
