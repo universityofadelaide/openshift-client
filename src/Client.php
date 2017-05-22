@@ -780,30 +780,25 @@ class Client implements OpenShiftClientInterface {
         ],
         'strategy' => [
           'resources' => [],
-          'rollingParams' =>
-            [
+          'rollingParams' => [
               'intervalSeconds' => 1,
               'maxSurge' => '25%',
               'maxUnavailable' => '25%',
               'timeoutSeconds' => 600,
               'updatePeriodSeconds' => 1,
-            ],
+          ],
           'type' => 'Rolling',
         ],
-        'template' =>
-          [
-            'metadata' =>
-              [
-                'annotations' =>
-                  [
+        'template' => [
+            'metadata' => [
+                'annotations' => [
                     'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
                   ],
-                'labels' =>
-                  [
+                'labels' => [
                     'name' => $name,
                   ],
                 'name' => $name,
-              ],
+            ],
             'spec' =>
               [
                 'containers' =>
@@ -840,9 +835,7 @@ class Client implements OpenShiftClientInterface {
                   ],
                 'dnsPolicy' => 'ClusterFirst',
                 'restartPolicy' => 'Always',
-                'securityContext' =>
-                  [
-                  ],
+                'securityContext' => [],
                 'terminationGracePeriodSeconds' => 30,
                 'volumes' =>
                   [
@@ -881,6 +874,16 @@ class Client implements OpenShiftClientInterface {
             ],
         ],
       ],
+      // According to the docs this is required.
+      // @see : https://docs.openshift.org/latest/rest_api/openshift_v1.html#v1-deploymentconfig
+      'status' => [
+        'lastestVersion' => 0,
+        'observedGeneration' => 0,
+        'replicas' => 0,
+        'updatedReplicas' => 0,
+        'availableReplicas' => 0,
+        'unavailableReplicas' => 0,
+      ]
     ];
 
     $response = $this->request($resourceMethod['action'], $uri, $deploymentConfig);
