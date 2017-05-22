@@ -1,4 +1,5 @@
 /vendor
 /composer.lock
 /.idea/
+/client_test.json
 /client_test.yml
