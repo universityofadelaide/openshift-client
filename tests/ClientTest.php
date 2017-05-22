@@ -21,7 +21,7 @@ class ClientTest extends TestCase {
       $this->host = $argv[2];
       $this->token = $argv[3];
       $this->namespace = $argv[4];
-      $this->yaml = yaml_parse(file_get_contents($argv[5]));
+      $this->yaml = json_decode(file_get_contents($argv[5]));
     }
     else {
       die("Unable to open specified file $argv[2]");
@@ -88,19 +88,10 @@ class ClientTest extends TestCase {
   }
 
   public function testCreateDeploymentConfig() {
-    $data = [
-      'git' => [
-        'uri' => $this->yaml['clientTest']['source']['git']['uri'],
-        'ref' => $this->yaml['clientTest']['source']['git']['ref'],
-      ],
-      'source' => [
-        'type' => $this->yaml['clientTest']['sourceStrategy']['from']['kind'],
-        'name' => $this->yaml['clientTest']['sourceStrategy']['from']['name'],
-      ],
-    ];
+    $data = [];
     $this->assertEquals(
       201,
-      $this->client->createBuildConfig('pied-build', 'pied-pass', 'pied-dreams', $data),
+      $this->client->createDeploymentConfig('pied-build', '', '', $data),
       'Unable to create build config.'
     );
   }
