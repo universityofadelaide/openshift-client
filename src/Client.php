@@ -652,7 +652,7 @@ class Client implements OpenShiftClientInterface {
     $imageStream = [
       'kind' => 'ImageStream',
       'metadata' => [
-        'name' => $name . '-imagestream',
+        'name' => $name,
         'annotations' => [
           'description' => 'Keeps track of changes in the application image'
         ]
@@ -771,7 +771,7 @@ class Client implements OpenShiftClientInterface {
         'annotations' => [
           'description' => 'Defines how to deploy the application server',
         ],
-        'name' => $name . '-dc',
+        'name' => $name,
       ],
       'spec' => [
         'replicas' => 1,
