@@ -61,6 +61,11 @@ class Client implements OpenShiftClientInterface
       'get' => [
         'action' => 'GET',
         'uri' => '/api/v1/namespaces/{namespace}/secrets'
+      ],
+      'update' => [
+        // PUT replaces the entire secret.
+        'action' => 'PUT',
+        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}'
       ]
     ]
   ];
@@ -155,44 +160,6 @@ class Client implements OpenShiftClientInterface
   }
 
   /**
-   * Sends a post request via the guzzle http client.
-   *
-   * @param string $path
-   * @param array $body
-   * @return array Returns the status code and json_decoded body contents.
-   */
-    protected function post($path, $body) {
-      $request = $this->guzzleClient->request('POST', $path, [
-        'body' => json_encode($body)
-      ]);
-
-      // @todo - handle exceptions.
-
-      return [
-        'response' => $request->getStatusCode(),
-        'body' => json_decode($request->getBody()->getContents())
-      ];
-    }
-
-  /**
-   * Sends a delete request via the guzzle http client.
-   *
-   * @param string $path
-   *
-   * @return array Returns the status code and json_decoded body contents.
-   */
-  protected function delete($path) {
-    $request = $this->guzzleClient->request('DELETE', $path, []);
-
-    // @todo - handle exceptions.
-
-    return [
-      'response' => $request->getStatusCode(),
-      'body'     => json_decode($request->getBody()->getContents()),
-    ];
-  }
-
-  /**
    * Gets the uri and action from the resourceMap from the class Method.
    *
    * @param string $method The class method name.
@@ -282,7 +249,33 @@ class Client implements OpenShiftClientInterface
    * @inheritdoc
    */
   public function updateSecret($name, array $data) {
-    // @todo - create update secret method.
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+
+    // base64 the data
+    foreach ($data as $key => $value) {
+      $data[$key] = base64_encode($value);
+    }
+
+    $secret = [
+      'api_version' => 'v1',
+      'kind' => 'Secret',
+      'metadata' => [
+        'name' => $name
+      ],
+      'type' => 'Opaque',
+      'data' => $data
+    ];
+
+    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $secret);
+
+    if ($response['response'] === 200) {
+      return $response['response'];
+    } else {
+      // something failed.
+      return FALSE;
+    }
   }
 
   /**
