@@ -33,7 +33,6 @@ class ClientTest extends TestCase {
   }
 
   public function testCreateSecret() {
-
     $this->assertEquals(
       201,
       $this->client->createSecret('piedtest', [
@@ -57,7 +56,6 @@ class ClientTest extends TestCase {
 
 
   public function testDeleteSecret() {
-
     $this->assertEquals(
       200,
       $this->client->deleteSecret('piedtest'),
@@ -67,13 +65,17 @@ class ClientTest extends TestCase {
 
   public function testCreateImageStream() {
     $this->assertEquals(
-      200,
+      201,
       $this->client->createImageStream('dreams'),
       'Unable to create image stream.'
     );
   }
 
   public function deleteImageStream() {
-
+    $this->assertEquals(
+      200,
+      $this->client->deleteImageStream('dreams'),
+      'Unable to delete image stream.'
+    );
   }
 }

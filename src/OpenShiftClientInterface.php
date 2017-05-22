@@ -93,7 +93,16 @@ interface OpenShiftClientInterface {
 
   public function getBuildConfig();
 
-  public function createBuildConfig();
+  /**
+   * Create build config.
+   *
+   * @param string $name Name of build config.
+   * @param string $secret Name of existing secret to use.
+   * @param string $imagestream Name of imagestream.
+   * @param array $data Build config data.
+   * @return mixed
+   */
+  public function createBuildConfig($name, $secret, $imagestream, $data);
 
   public function updateBuildConfig();
 

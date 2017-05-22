@@ -87,7 +87,25 @@ class Client implements OpenShiftClientInterface
         'action' => 'PUT',
         'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}'
       ],
-
+    ],
+    'buildconfig' => [
+      'create' => [
+        'action' => 'POST',
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs'
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}'
+      ],
+      'get' => [
+        'action' => 'GET',
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs'
+      ],
+      'update' => [
+        // PUT replaces the imagestream.
+        'action' => 'PUT',
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}'
+      ],
     ],
     'service' => [
       'create' => [
@@ -454,8 +472,13 @@ class Client implements OpenShiftClientInterface
   /**
    * @inheritdoc
    */
-  public function createBuildConfig() {
+  public function createBuildConfig($name, $secret, $imagestream, $data) {
     // TODO: Implement createBuildConfig() method.
+
+    $buildConfig = [
+      'kind' => 'BuildConfig',
+      ''
+    ];
   }
 
   /**
@@ -513,7 +536,7 @@ class Client implements OpenShiftClientInterface
 
     $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
 
-    if ($response['response'] === 200) {
+    if ($response['response'] === 201) {
       return $response['response'];
     }
     else {
