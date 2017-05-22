@@ -74,6 +74,20 @@ class Client implements OpenShiftClientInterface
         'action' => 'POST',
         'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams'
       ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}'
+      ],
+      'get' => [
+        'action' => 'GET',
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams'
+      ],
+      'update' => [
+        // PUT replaces the imagestream.
+        'action' => 'PUT',
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}'
+      ],
+
     ],
     'service' => [
       'create' => [
@@ -462,7 +476,18 @@ class Client implements OpenShiftClientInterface
    * @inheritdoc
    */
   public function getImageStream() {
-    // TODO: Implement getImageStream() method.
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+
+    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
+
+    if ($response['response'] === 200) {
+      return $response['response'];
+    }
+    else {
+      return FALSE;
+    }
+
   }
 
   /**
@@ -501,15 +526,50 @@ class Client implements OpenShiftClientInterface
   /**
    * @inheritdoc
    */
-  public function updateImageStream() {
-    // TODO: Implement updateImageStream() method.
+  public function updateImageStream($name) {
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+
+    $imageStream = [
+      'kind' => 'ImageStream',
+      'metadata' => [
+        'name' => $name . '-imagestream',
+        'annotations' => [
+          'description' => 'Keeps track of changes in the application image'
+        ]
+      ],
+      'spec' => [
+        'dockerImageRepository' => ''
+      ]
+    ];
+
+    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
+
+    if ($response['response'] === 200) {
+      return $response['response'];
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
    * @inheritdoc
    */
-  public function deleteImageStream() {
-    // TODO: Implement deleteImageStream() method.
+  public function deleteImageStream($name) {
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+
+    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
+
+    if ($response['response'] === 200) {
+      return $response['response'];
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**

@@ -99,6 +99,11 @@ interface OpenShiftClientInterface {
 
   public function deleteBuildConfig();
 
+  /**
+   * Retrieves all image streams under current namespace.
+   *
+   * @return mixed
+   */
   public function getImageStream();
 
   /**
@@ -109,9 +114,21 @@ interface OpenShiftClientInterface {
    */
   public function createImageStream($name);
 
-  public function updateImageStream();
+  /**
+   * Updates an image stream.
+   *
+   * @param string $name Name of imagestream, '-imagestream' appended to string.
+   * @return mixed
+   */
+  public function updateImageStream($name);
 
-  public function deleteImageStream();
+  /**
+   * Deletes an image stream.
+   *
+   * @param string $name Name of imagestream, '-imagestream' appended to string.
+   * @return mixed
+   */
+  public function deleteImageStream($name);
 
   public function getImageStreamTag();
 
