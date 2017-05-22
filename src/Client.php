@@ -13,8 +13,7 @@ use GuzzleHttp\Exception\RequestException;
  *
  * @package UniversityOfAdelaide\OpenShift
  */
-class Client implements OpenShiftClientInterface
-{
+class Client implements OpenShiftClientInterface {
 
   /**
    * Api version.
@@ -28,14 +27,14 @@ class Client implements OpenShiftClientInterface
    *
    * @var string
    */
-    private $namespace;
+  private $namespace;
 
   /**
    * Base url to OpenShift.
    *
    * @var string
    */
-    private $host;
+  private $host;
 
   /**
    * Guzzle HTTP Client
@@ -107,6 +106,25 @@ class Client implements OpenShiftClientInterface
         'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}'
       ],
     ],
+    'deploymentconfig' => [
+      'create' => [
+        'action' => 'POST',
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs'
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}'
+      ],
+      'get' => [
+        'action' => 'GET',
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs'
+      ],
+      'update' => [
+        // PUT replaces the imagestream.
+        'action' => 'PUT',
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}'
+      ],
+    ],
     'service' => [
       'create' => [
         'action' => 'POST',
@@ -137,58 +155,58 @@ class Client implements OpenShiftClientInterface
    * @param string $namespace Namespace/project on which to operate methods on.
    * @param bool $devMode Turn debug mode on or off.
    */
-    public function __construct($host, $token, $namespace, $devMode = FALSE) {
+  public function __construct($host, $token, $namespace, $devMode = FALSE) {
 
-      $this->host = $host;
-      $this->namespace = $namespace;
+    $this->host = $host;
+    $this->namespace = $namespace;
 
-      $guzzle_options = [
-        'verify' => TRUE,
-        'base_uri' => $host,
-        'headers' => [
-          'Authorization' => 'Bearer ' . $token,
-          // @todo - make this configurable.
-          'Content-Type' => 'application/json',
-          'Accept' => 'application/json',
-        ],
+    $guzzle_options = [
+      'verify' => TRUE,
+      'base_uri' => $host,
+      'headers' => [
+        'Authorization' => 'Bearer ' . $token,
+        // @todo - make this configurable.
+        'Content-Type' => 'application/json',
+        'Accept' => 'application/json',
+      ],
 
-      ];
+    ];
 
-      // If dev mode - turn off SSL Verification.
-      if ($devMode) {
-        $guzzle_options['verify'] = FALSE;
-      }
-
-      $this->guzzleClient = new GuzzleClient($guzzle_options);
-
+    // If dev mode - turn off SSL Verification.
+    if ($devMode) {
+      $guzzle_options['verify'] = FALSE;
     }
+
+    $this->guzzleClient = new GuzzleClient($guzzle_options);
+
+  }
 
   /**
    * Returns the api version.
    *
    * @return string
    */
-   public function getApiVersion() {
-      return $this->apiVersion;
-   }
+  public function getApiVersion() {
+    return $this->apiVersion;
+  }
 
   /**
    * Set the api version number.
    *
    * @param string $apiVersion Api version number.
    */
-   public function setApiVersion($apiVersion) {
-      $this->apiVersion = (string) $apiVersion;
-   }
+  public function setApiVersion($apiVersion) {
+    $this->apiVersion = (string) $apiVersion;
+  }
 
   /**
    * Returns the guzzle client.
    *
    * @return \GuzzleHttp\Client
    */
-    public function getGuzzleClient() {
-      return $this->guzzleClient;
-    }
+  public function getGuzzleClient() {
+    return $this->guzzleClient;
+  }
 
   /**
    * Sends a request via the guzzle http client
@@ -206,7 +224,7 @@ class Client implements OpenShiftClientInterface
     if ($method != 'DELETE') {
       $requestOptions = [
         'query' => is_array($query) ? $query : [],
-        'body'  => is_array($body) ? json_encode($body) : $body,
+        'body' => is_array($body) ? json_encode($body) : $body,
       ];
     }
 
@@ -232,7 +250,7 @@ class Client implements OpenShiftClientInterface
    */
   protected function getResourceMethod($method) {
     $name = explode('::', $method);
-    $nameArray =  preg_split('/(?=[A-Z])/', end($name));
+    $nameArray = preg_split('/(?=[A-Z])/', end($name));
     // the first element is the action
     $action = array_shift($nameArray);
     $method = strtolower(implode('', $nameArray));
@@ -251,7 +269,7 @@ class Client implements OpenShiftClientInterface
   protected function createRequestUri($uri, array $params = []) {
 
     // By default replace the {namespace} this is set in configuration.
-    if ($this->namespace !== null) {
+    if ($this->namespace !== NULL) {
       $uri = str_replace('{' . 'namespace' . '}', $this->namespace, $uri);
     }
 
@@ -266,35 +284,36 @@ class Client implements OpenShiftClientInterface
   /**
    * @inheritdoc
    */
-    public function createSecret($name, array $data) {
+  public function createSecret($name, array $data) {
 
-      $method = __METHOD__;
-      $resourceMethod = $this->getResourceMethod($method);
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
 
-      // base64 the data
-      foreach ($data as $key => $value) {
-        $data[$key] = base64_encode($value);
-      }
+    // base64 the data
+    foreach ($data as $key => $value) {
+      $data[$key] = base64_encode($value);
+    }
 
-      // @todo - this should use model.
-      $secret = [
-        'api_version' => 'v1',
-        'kind' => 'Secret',
-        'metadata' => [
-          'name' => $name
-        ],
-        'type' => 'Opaque',
-        'data' => $data
-      ];
+    // @todo - this should use model.
+    $secret = [
+      'api_version' => 'v1',
+      'kind' => 'Secret',
+      'metadata' => [
+        'name' => $name
+      ],
+      'type' => 'Opaque',
+      'data' => $data
+    ];
 
-      $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $secret);
+    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $secret);
 
-      if ($response['response'] === 201) {
-        return $response['response'];
-      } else {
-        // something failed.
-        return FALSE;
-      }
+    if ($response['response'] === 201) {
+      return $response['response'];
+    }
+    else {
+      // something failed.
+      return FALSE;
+    }
 
   }
 
@@ -340,7 +359,8 @@ class Client implements OpenShiftClientInterface
 
     if ($response['response'] === 200) {
       return $response['response'];
-    } else {
+    }
+    else {
       // something failed.
       return FALSE;
     }
@@ -383,7 +403,7 @@ class Client implements OpenShiftClientInterface
     $resourceMethod = $this->getResourceMethod($method);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
-    if(isset($data['dependencies'])) {
+    if (isset($data['dependencies'])) {
       $dependencies = [
         $data['dependencies']
       ];
@@ -474,7 +494,6 @@ class Client implements OpenShiftClientInterface
    */
   public function createBuildConfig($name, $secret, $imagestream, $data) {
 
-
     $method = __METHOD__;
     $resourceMethod = $this->getResourceMethod($method);
     $uri = $this->createRequestUri($resourceMethod['uri']);
@@ -491,7 +510,7 @@ class Client implements OpenShiftClientInterface
         'output' => [
           'to' => [
             'kind' => 'ImageStreamTag',
-            'name' => $imagestream .'-imagestream:latest'
+            'name' => $imagestream . '-imagestream:latest'
           ]
         ],
         'source' => [
@@ -522,7 +541,7 @@ class Client implements OpenShiftClientInterface
               'name' => $secret
             ]
           ],
-         'type' => 'Source'
+          'type' => 'Source'
         ],
         // @todo - figure out github and other types of triggers
         'triggers' => [],
@@ -547,14 +566,14 @@ class Client implements OpenShiftClientInterface
    * @inheritdoc
    */
   public function updateBuildConfig() {
-    // TODO: Implement updateBuildConfig() method.
+
   }
 
   /**
    * @inheritdoc
    */
-  public function deleteBuildConfig() {
-    // TODO: Implement deleteBuildConfig() method.
+  public function deleteBuildConfig($name) {
+
   }
 
   /**
@@ -564,7 +583,7 @@ class Client implements OpenShiftClientInterface
     $method = __METHOD__;
     $resourceMethod = $this->getResourceMethod($method);
 
-    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
+    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']));
 
     if ($response['response'] === 200) {
       return $response['response'];
@@ -647,7 +666,7 @@ class Client implements OpenShiftClientInterface
     $method = __METHOD__;
     $resourceMethod = $this->getResourceMethod($method);
 
-    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
+    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']));
 
     if ($response['response'] === 200) {
       return $response['response'];
@@ -717,14 +736,147 @@ class Client implements OpenShiftClientInterface
    * @inheritdoc
    */
   public function getDeploymentConfig() {
-    // TODO: Implement getDeploymentConfig() method.
+    // TODO: Implement createDeploymentConfig() method.
   }
 
   /**
    * @inheritdoc
    */
-  public function createDeploymentConfig() {
-    // TODO: Implement createDeploymentConfig() method.
+  public function createDeploymentConfig($name, $image_stream_tag, $image_name, $data) {
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+
+    $deploymentConfig = [
+      'apiVersion' => 'v1',
+      'kind' => 'DeploymentConfig',
+      'metadata' => [
+        'annotations' => [
+          'description' => 'Defines how to deploy the application server',
+        ],
+        'name' => $name . '-dc',
+      ],
+      'spec' => [
+        'replicas' => 1,
+        'selector' => [
+          'name' => $name,
+        ],
+        'strategy' => [
+          'resources' => [],
+          'rollingParams' =>
+            [
+              'intervalSeconds' => 1,
+              'maxSurge' => '25%',
+              'maxUnavailable' => '25%',
+              'timeoutSeconds' => 600,
+              'updatePeriodSeconds' => 1,
+            ],
+          'type' => 'Rolling',
+        ],
+        'template' =>
+          [
+            'metadata' =>
+              [
+                'annotations' =>
+                  [
+                    'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
+                  ],
+                'labels' =>
+                  [
+                    'name' => $name,
+                  ],
+                'name' => $name,
+              ],
+            'spec' =>
+              [
+                'containers' =>
+                  [
+                    [
+                      'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
+                      'image' => ' ',
+                      'name' => $name,
+                      'ports' =>
+                        [
+                          [
+                            'containerPort' => isset($data['containerPort']) ? $data['containerPort'] : NULL
+                          ],
+                        ],
+                      'resources' =>
+                        [
+                          'limits' =>
+                            [
+                              'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
+                            ],
+                        ],
+                      'volumeMounts' =>
+                        [
+                          [
+                            'mountPath' => '/code/web/sites/default/files',
+                            'name' => $name . '-public',
+                          ],
+                          [
+                            'mountPath' => '/code/private',
+                            'name' => $name . '-private',
+                          ],
+                        ],
+                    ],
+                  ],
+                'dnsPolicy' => 'ClusterFirst',
+                'restartPolicy' => 'Always',
+                'securityContext' =>
+                  [
+                  ],
+                'terminationGracePeriodSeconds' => 30,
+                'volumes' =>
+                  [
+                    [
+                      'name' => $name . '-public',
+                      'persistentVolumeClaim' =>
+                        [
+                          'claimName' => $name . '-public',
+                        ],
+                    ],
+                    [
+                      'name' => $name . '-private',
+                      'persistentVolumeClaim' =>
+                        [
+                          'claimName' => $name . '-private',
+                        ],
+                    ],
+                  ],
+              ],
+          ],
+        'test' => FALSE,
+        'triggers' => [
+            [
+              'imageChangeParams' => [
+                  'automatic' => TRUE,
+                  'containerNames' => [ $name ],
+                  'from' => [
+                      'kind' => 'ImageStreamTag',
+                      'name' => $image_stream_tag . ':latest',
+                    ],
+                ],
+              'type' => 'ImageChange',
+            ],
+            [
+              'type' => 'ConfigChange',
+            ],
+        ],
+      ],
+    ];
+
+    $response = $this->request($resourceMethod['action'], $uri, $deploymentConfig);
+
+    if ($response['response'] === 200) {
+      return $response['response'];
+    }
+    else {
+      return FALSE;
+    }
+
+
   }
 
   /**

@@ -106,7 +106,7 @@ interface OpenShiftClientInterface {
 
   public function updateBuildConfig();
 
-  public function deleteBuildConfig();
+  public function deleteBuildConfig($name);
 
   /**
    * Retrieves all image streams under current namespace.
@@ -157,7 +157,16 @@ interface OpenShiftClientInterface {
 
   public function getDeploymentConfig();
 
-  public function createDeploymentConfig();
+  /**
+   * Creates a deployment config.
+   *
+   * @param string $name
+   * @param string $image_stream_tag
+   * @param string $image_name
+   * @param array $data
+   * @return mixed
+   */
+  public function createDeploymentConfig($name, $image_stream_tag, $image_name, $data);
 
   public function updateDeploymentConfig();
 
