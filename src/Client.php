@@ -473,12 +473,73 @@ class Client implements OpenShiftClientInterface
    * @inheritdoc
    */
   public function createBuildConfig($name, $secret, $imagestream, $data) {
-    // TODO: Implement createBuildConfig() method.
+
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
 
     $buildConfig = [
-      'kind' => 'BuildConfig',
-      ''
+      'kind' => 'buildConfig',
+      'metadata' => [
+        'annotations' => [
+          'description' => 'Defines how to build the application',
+          'name' => $name . '-bc',
+        ],
+      ],
+      'spec' => [
+        'output' => [
+          'to' => [
+            'kind' => 'ImageStreamTag',
+            'name' => $imagestream .'-imagestream:latest'
+          ]
+        ],
+        'source' => [
+          'type' => 'Git',
+          'git' => [
+            'ref' => (string) $data['git']['ref'],
+            'uri' => (string) $data['git']['uri'],
+          ],
+          'secrets' => [
+            [
+              'destinationDir' => '.',
+              'secret' => [
+                'name' => $secret
+              ],
+            ]
+          ],
+          'sourceSecret' => [
+            'name' => $secret
+          ],
+        ],
+        'strategy' => [
+          'sourceStrategy' => [
+            'from' => [
+              'kind' => (string) $data['source']['type'],
+              'name' => (string) $data['source']['name']
+            ],
+            'pullSecret' => [
+              'name' => $secret
+            ]
+          ],
+         'type' => 'Source'
+        ],
+        // @todo - figure out github and other types of triggers
+        'triggers' => [],
+      'status' => [
+        'lastversion' => time()
+      ],
     ];
+
+    $response = $this->request($resourceMethod['action'], $uri, $buildConfig);
+
+    if ($response['response'] === 201) {
+      return $response['response'];
+    }
+    else {
+      return FALSE;
+    }
+
   }
 
   /**
