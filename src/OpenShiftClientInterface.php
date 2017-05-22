@@ -101,7 +101,13 @@ interface OpenShiftClientInterface {
 
   public function getImageStream();
 
-  public function createImageStream();
+  /**
+   * Creates an image stream, needed for buildConfig.
+   *
+   * @param string $name Name of imagestream, '-imagestream' appended to string.
+   * @return mixed
+   */
+  public function createImageStream($name);
 
   public function updateImageStream();
 

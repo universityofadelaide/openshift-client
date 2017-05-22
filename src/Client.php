@@ -3,6 +3,7 @@
 namespace UniversityOfAdelaide\OpenShift;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class Client
@@ -66,8 +67,34 @@ class Client implements OpenShiftClientInterface
         // PUT replaces the entire secret.
         'action' => 'PUT',
         'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}'
+      ],
+    ],
+    'imagestream' => [
+      'create' => [
+        'action' => 'POST',
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams'
+      ],
+    ],
+    'service' => [
+      'create' => [
+        'action' => 'POST',
+        'uri' => '/api/v1/namespaces/{namespace}/services'
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri' => '/api/v1/namespaces/{namespace}/services/{name}'
+      ],
+      'get' => [
+        // lists all services.
+        'action' => 'GET',
+        'uri' => '/api/v1/namespaces/{namespace}/services'
+      ],
+      'update' => [
+        // PUT replaces the service.
+        'action' => 'PUT',
+        'uri' => '/api/v1/namespaces/{namespace}/services/{name}'
       ]
-    ]
+    ],
   ];
 
   /**
@@ -151,8 +178,14 @@ class Client implements OpenShiftClientInterface
       ];
     }
 
-    $response = $this->guzzleClient->request($method, $uri, $requestOptions);
-
+    try {
+      $response = $this->guzzleClient->request($method, $uri, $requestOptions);
+    } catch (RequestException $exception) {
+      // @todo - handel the exception;
+      $message = $exception->getMessage();
+      var_dump($message);
+      die();
+    }
     return [
       'response' => $response->getStatusCode(),
       'body' => json_decode($response->getBody()->getContents())
@@ -252,6 +285,9 @@ class Client implements OpenShiftClientInterface
 
     $method = __METHOD__;
     $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name
+    ]);
 
     // base64 the data
     foreach ($data as $key => $value) {
@@ -268,7 +304,7 @@ class Client implements OpenShiftClientInterface
       'data' => $data
     ];
 
-    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $secret);
+    $response = $this->request($resourceMethod['action'], $uri, $secret);
 
     if ($response['response'] === 200) {
       return $response['response'];
@@ -283,7 +319,8 @@ class Client implements OpenShiftClientInterface
    */
   public function deleteSecret($name) {
 
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name
     ]);
@@ -309,7 +346,46 @@ class Client implements OpenShiftClientInterface
    * @inheritdoc
    */
   public function createService($name, array $data) {
-    // TODO: Implement createService() method.
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+
+    if(isset($data['dependencies'])) {
+      $dependencies = [
+        $data['dependencies']
+      ];
+    }
+
+    // @todo - use a model.
+    $service = [
+      'metadata' => [
+        'name' => $name,
+        'namespace' => $this->namespace,
+        'annotations' => [
+          'description' => isset($data['description']) ? $data['description'] : '',
+          'service.alpha.openshift.io/dependencies' => isset($dependencies) ? $dependencies : '',
+        ],
+      ],
+      'spec' => [
+        'ports' => [
+          // Defaults to TCP.
+          'protocol' => isset($data['protocol']) ? $data['protocol'] : 'TCP',
+          'port' => (int) $data['port'],
+          'targetPort' => (string) $data['targetPort'],
+        ],
+        'selector' => '' // is this a string ?
+      ]
+    ];
+
+    $response = $this->request($resourceMethod['action'], $uri, $service);
+
+    if ($response['response'] === 200) {
+      return $response['response'];
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
@@ -392,8 +468,34 @@ class Client implements OpenShiftClientInterface
   /**
    * @inheritdoc
    */
-  public function createImageStream() {
-    // TODO: Implement createImageStream() method.
+  public function createImageStream($name) {
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+
+    $imageStream = [
+      'kind' => 'ImageStream',
+      'metadata' => [
+        'name' => $name . '-imagestream',
+        'annotations' => [
+          'description' => 'Keeps track of changes in the application image'
+        ]
+      ],
+      'spec' => [
+        'dockerImageRepository' => ''
+      ]
+    ];
+
+    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
+
+    if ($response['response'] === 200) {
+      return $response['response'];
+    }
+    else {
+      return FALSE;
+    }
+
+
   }
 
   /**

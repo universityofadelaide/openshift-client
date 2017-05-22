@@ -10,6 +10,8 @@ class ClientTest extends TestCase {
   private $token;
   private $namespace;
 
+  protected $client;
+
   public function setUp() {
     global $argv, $argc;
 
@@ -17,37 +19,61 @@ class ClientTest extends TestCase {
     $this->host = $argv[2];
     $this->token = $argv[3];
     $this->namespace = $argv[4];
+
+    $this->client = new Client($this->host, $this->token, $this->namespace, TRUE);
   }
 
   public function testGetGuzzleClient() {
     // Test creating the client
     $this->assertInstanceOf(
       GuzzleClient::class,
-      (new Client($this->host, $this->token, $this->namespace, TRUE))->getGuzzleClient(),
+      $this->client->getGuzzleClient(),
       'Unable to create Guzzle client.'
     );
   }
 
   public function testCreateSecret() {
-    $client = new Client($this->host, $this->token, $this->namespace, TRUE);
 
     $this->assertEquals(
       201,
-      $client->createSecret('piedtest', [
+      $this->client->createSecret('piedtest', [
         'username' => 'pied-piper',
         'password' => 'testpass',
       ]),
-      'Unable to create test user.'
+      'Unable to create secret.'
     );
   }
 
+  public function testUpdateSecret() {
+    $this->assertEquals(
+      200,
+      $this->client->updateSecret('piedtest', [
+        'username' => 'pied-piper',
+        'password' => 'middleout',
+      ]),
+      'Unable to update secret.'
+    );
+  }
+
+
   public function testDeleteSecret() {
-    $client = new Client($this->host, $this->token, $this->namespace, TRUE);
 
     $this->assertEquals(
       200,
-      $client->deleteSecret('piedtest'),
-      'Unable to delete test user.'
+      $this->client->deleteSecret('piedtest'),
+      'Unable to delete secret.'
     );
+  }
+
+  public function testCreateImageStream() {
+    $this->assertEquals(
+      200,
+      $this->client->createImageStream('dreams'),
+      'Unable to create image stream.'
+    );
+  }
+
+  public function deleteImageStream() {
+
   }
 }

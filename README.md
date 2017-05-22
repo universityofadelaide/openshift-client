@@ -45,11 +45,20 @@ $response = $client->createSecret('superSecret', ['username' => 'pied_piper', 'p
 
 ```
 
-## How to test with phpunit
+## How to test with phpunit and minishift
+
+
+Ensure that you have the oc command available.
+
+The token will expire every 24 hours, if the token is expired you will need to login again.
+```bash
+oc login -u developer -p developer
+```
 
 ```bash
- # From the /vendor/universityofadelaide/openshift-client directory
-../vendor/bin/phpunit tests/ClientTest.php https://192.168.99.100:8443 $(oc whoami -t) myproject
+# Assumes myproject (default) is available.
+# From the /vendor/universityofadelaide/openshift-client directory
+../../bin/phpunit tests/ClientTest.php $(minishift console --url) $(oc whoami -t) myproject
 ```
 
 ## Todo
