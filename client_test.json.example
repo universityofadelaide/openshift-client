@@ -1,5 +1,6 @@
 {
   "clientTest": {
+    "delete": true,
     "project": "myproject",
     "artifacts": "pied-piper",
     "image_name": "shepherd",

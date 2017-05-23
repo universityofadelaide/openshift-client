@@ -86,7 +86,7 @@ class ClientTest extends TestCase {
     ];
     $this->assertEquals(
       201,
-      $this->client->createBuildConfig('pied-build', 'pied-pass', $this->json->clientTest->image_stream, $data),
+      $this->client->createBuildConfig($this->json->clientTest->artifacts . '-build', $this->json->clientTest->secret->name, $this->json->clientTest->image_stream, $data),
       'Unable to create build config.'
     );
   }
@@ -97,7 +97,7 @@ class ClientTest extends TestCase {
       'memory_limit' => 128,
       'env_vars' => $this->json->clientTest->envVars,
     ];
-    $name = 'pied-deploy';
+    $name = $this->json->clientTest->artifacts . '-deploy';
     $image_stream_tag = $this->json->clientTest->image_stream;
     $image_name = $this->json->clientTest->image_name;
     $this->assertEquals(
@@ -111,7 +111,7 @@ class ClientTest extends TestCase {
     if ($this->json->clientTest->delete) {
       $this->assertEquals(
         200,
-        $this->client->deleteDeploymentConfig('pied-deploy'),
+        $this->client->deleteDeploymentConfig($this->json->clientTest->artifacts . '-deploy'),
         'Unable to delete deploy config.'
       );
     }
@@ -121,7 +121,7 @@ class ClientTest extends TestCase {
     if ($this->json->clientTest->delete) {
       $this->assertEquals(
         200,
-        $this->client->deleteBuildConfig('pied-build'),
+        $this->client->deleteBuildConfig($this->json->clientTest->artifacts . '-build'),
         'Unable to delete build config.'
       );
     }
