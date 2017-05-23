@@ -142,6 +142,25 @@ class Client implements OpenShiftClientInterface {
         'uri' => '/api/v1/namespaces/{namespace}/services/{name}'
       ]
     ],
+    'route' => [
+      'create' => [
+        'action' => 'POST',
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes'
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}'
+      ],
+      'get' => [
+        // lists all routes.
+        'action' => 'GET',
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes'
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}'
+      ]
+    ],
   ];
 
   /**
@@ -401,13 +420,15 @@ class Client implements OpenShiftClientInterface {
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
     if (isset($data['dependencies'])) {
-      $dependencies = [
+      // @todo - json_encode this.
+      $dependencies = json_encode([
         $data['dependencies']
-      ];
+      ]);
     }
 
     // @todo - use a model.
     $service = [
+      'kind' => 'Service',
       'metadata' => [
         'name' => $name,
         'namespace' => $this->namespace,
@@ -417,19 +438,22 @@ class Client implements OpenShiftClientInterface {
         ],
       ],
       'spec' => [
+        // This may be an array.
         'ports' => [
           // Defaults to TCP.
+          [
           'protocol' => isset($data['protocol']) ? $data['protocol'] : 'TCP',
           'port' => (int) $data['port'],
           'targetPort' => (string) $data['targetPort'],
+          ]
         ],
-        'selector' => '' // is this a string ?
+        'selector' => (string) $name
       ]
     ];
 
     $response = $this->request($resourceMethod['action'], $uri, $service);
 
-    if ($response['response'] === 200) {
+    if ($response['response'] === 201) {
       return $response;
     }
     else {
@@ -454,28 +478,58 @@ class Client implements OpenShiftClientInterface {
   /**
    * @inheritdoc
    */
-  public function getRoute() {
+  public function getRoute($name) {
     // TODO: Implement getRoute() method.
   }
 
   /**
    * @inheritdoc
    */
-  public function createRoute() {
-    // TODO: Implement createRoute() method.
+  public function createRoute($name, $service_name, $application_domain) {
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+
+    $route = [
+      'kind' => 'Route',
+      'metadata' => [
+        'name' => (string) $name . '-route',
+      ],
+      'spec' => [
+        'host' => (string) $application_domain,
+        'to' => [
+          'kind' => 'Service',
+          'name' => (string) $service_name
+        ]
+      ],
+      // Unsure if required. @see : https://docs.openshift.org/latest/rest_api/openshift_v1.html#v1-routestatus
+      'status' => [
+        'ingress' => []
+      ]
+    ];
+
+    $response = $this->request($resourceMethod['action'], $uri, $route);
+
+    if ($response['response'] === 201) {
+      return $response;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
    * @inheritdoc
    */
-  public function updateRoute() {
+  public function updateRoute($name, $service_name, $application_domain) {
     // TODO: Implement updateRoute() method.
   }
 
   /**
    * @inheritdoc
    */
-  public function deleteRoute() {
+  public function deleteRoute($name) {
     // TODO: Implement deleteRoute() method.
   }
 

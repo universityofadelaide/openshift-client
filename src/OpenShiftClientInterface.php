@@ -83,13 +83,43 @@ interface OpenShiftClientInterface {
    */
   public function deleteService($name);
 
-  public function getRoute();
+  /**
+   * Gets all routes for the current working namespace.
+   *
+   * @param string $name
+   * @return mixed
+   */
+  public function getRoute($name);
 
-  public function createRoute();
+  /**
+   * Creates a route.
+   *
+   * @param string $name
+   * @param string $service_name
+   * @param string $application_domain
+   * @param array $data
+   * @return mixed
+   */
+  public function createRoute($name, $service_name, $application_domain);
 
-  public function updateRoute();
+  /**
+   * Updates an existing named route.
+   *
+   * @param string $name
+   * @param string $service_name
+   * @param string $application_domain
+   * @param array $data
+   * @return mixed
+   */
+  public function updateRoute($name, $service_name, $application_domain);
 
-  public function deleteRoute();
+  /**
+   * Deletes a named routes.
+   *
+   * @param string $name
+   * @return mixed
+   */
+  public function deleteRoute($name);
 
   /**
    * Retrieves all build configs binded to current working namespace.
