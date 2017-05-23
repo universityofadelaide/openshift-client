@@ -207,9 +207,32 @@ class ClientTest extends TestCase {
 
   }
 
+  public function testDeleteRoute() {
+    if ($this->json->clientTest->delete) {
+      $request = $this->client->deleteRoute($this->json->clientTest->artifacts . '-route');
+
+      $this->assertEquals(
+        200,
+        $request['response'],
+        'Unable to delete route.'
+      );
+    }
+  }
+
+  public function testDeleteService() {
+    if ($this->json->clientTest->delete) {
+      $request = $this->client->deleteService($this->json->clientTest->artifacts . '-service');
+
+      $this->assertEquals(
+        200,
+        $request['response'],
+        'Unable to delete route.'
+      );
+    }
+  }
+
   public function testDeleteDeploymentConfig() {
     if ($this->json->clientTest->delete) {
-
       $request = $this->client->deleteDeploymentConfig($this->json->clientTest->artifacts . '-deploy');
 
       $this->assertEquals(
@@ -222,7 +245,6 @@ class ClientTest extends TestCase {
 
   public function testDeleteBuildConfig() {
     if ($this->json->clientTest->delete) {
-
       $request = $this->client->deleteBuildConfig($this->json->clientTest->artifacts . '-build');
 
       $this->assertEquals(
@@ -235,7 +257,6 @@ class ClientTest extends TestCase {
 
   public function testDeleteImageStream() {
     if ($this->json->clientTest->delete) {
-
       $request = $this->client->deleteImageStream($this->json->clientTest->image_stream);
 
       $this->assertEquals(
@@ -248,7 +269,6 @@ class ClientTest extends TestCase {
 
   public function testDeleteSecret() {
     if ($this->json->clientTest->delete) {
-
       $request = $this->client->deleteSecret($this->json->clientTest->secret->name);
 
       $this->assertEquals(

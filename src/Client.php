@@ -475,7 +475,20 @@ class Client implements OpenShiftClientInterface {
    * @inheritdoc
    */
   public function deleteService($name) {
-    // TODO: Implement deleteService() method.
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name
+    ]);
+
+    $response = $this->request($resourceMethod['action'], $uri);
+
+    if ($response['response'] === 200) {
+      return $response;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
@@ -533,7 +546,20 @@ class Client implements OpenShiftClientInterface {
    * @inheritdoc
    */
   public function deleteRoute($name) {
-    // TODO: Implement deleteRoute() method.
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name
+    ]);
+
+    $response = $this->request($resourceMethod['action'], $uri);
+
+    if ($response['response'] === 200) {
+      return $response;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
