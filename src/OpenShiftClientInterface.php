@@ -91,6 +91,11 @@ interface OpenShiftClientInterface {
 
   public function deleteRoute();
 
+  /**
+   * Retrieves all build configs binded to current working namespace.
+   *
+   * @return mixed
+   */
   public function getBuildConfig();
 
   /**
@@ -104,8 +109,23 @@ interface OpenShiftClientInterface {
    */
   public function createBuildConfig($name, $secret, $imagestream, $data);
 
-  public function updateBuildConfig();
+  /**
+   * Updates an existing build config by name.
+   *
+   * @param string $name Name of build config.
+   * @param string $secret Name of existing secret to use.
+   * @param string $imagestream Name of imagestream.
+   * @param array $data Build config data.
+   * @return mixed
+   */
+  public function updateBuildConfig($name, $secret, $imagestream, $data);
 
+  /**
+   * Deletes a build config by name.
+   *
+   * @param string $name Name of build config.
+   * @return mixed
+   */
   public function deleteBuildConfig($name);
 
   /**
@@ -155,6 +175,11 @@ interface OpenShiftClientInterface {
 
   public function deletePersistentVolumeClaim();
 
+  /**
+   * Retrieves all deployment configs binded to the current working namespace.
+   *
+   * @return mixed
+   */
   public function getDeploymentConfig();
 
   /**
@@ -168,7 +193,16 @@ interface OpenShiftClientInterface {
    */
   public function createDeploymentConfig($name, $image_stream_tag, $image_name, $data);
 
-  public function updateDeploymentConfig();
+  /**
+   * Updates and existing deployment config.
+   *
+   * @param $name
+   * @param $image_stream_tag
+   * @param $image_name
+   * @param $data
+   * @return mixed
+   */
+  public function updateDeploymentConfig($name, $image_stream_tag, $image_name, $data);
 
   /**
    * Deletes a deployment config by name.
