@@ -565,8 +565,8 @@ class Client implements OpenShiftClientInterface {
   /**
    * @inheritdoc
    */
-  public function updateBuildConfig() {
-
+  public function updateBuildConfig($name, $secret, $imagestream, $data) {
+    // TODO: Implement updateBuildConfig() method.
   }
 
   /**
@@ -901,8 +901,134 @@ class Client implements OpenShiftClientInterface {
   /**
    * @inheritdoc
    */
-  public function updateDeploymentConfig() {
-    // TODO: Implement updateDeploymentConfig() method.
+  public function updateDeploymentConfig($name, $image_stream_tag, $image_name, $data) {
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => (string) $name
+    ]);
+
+    $deploymentConfig = [
+      'apiVersion' => 'v1',
+      'kind' => 'DeploymentConfig',
+      'metadata' => [
+        'annotations' => [
+          'description' => 'Defines how to deploy the application server',
+        ],
+        'name' => $name,
+      ],
+      'spec' => [
+        'replicas' => 1,
+        'selector' => [
+          'name' => $name,
+        ],
+        'strategy' => [
+          'resources' => [],
+          'rollingParams' => [
+            'intervalSeconds' => 1,
+            'maxSurge' => '25%',
+            'maxUnavailable' => '25%',
+            'timeoutSeconds' => 600,
+            'updatePeriodSeconds' => 1,
+          ],
+          'type' => 'Rolling',
+        ],
+        'template' => [
+          'metadata' => [
+            'annotations' => [
+              'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
+            ],
+            'labels' => [
+              'name' => $name,
+            ],
+            'name' => $name,
+          ],
+          'spec' =>
+            [
+              'containers' =>
+                [
+                  [
+                    'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
+                    'image' => ' ',
+                    'name' => $name,
+                    'ports' =>
+                      [
+                        [
+                          'containerPort' => isset($data['containerPort']) ? $data['containerPort'] : NULL
+                        ],
+                      ],
+                    'resources' =>
+                      [
+                        'limits' =>
+                          [
+                            'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
+                          ],
+                      ],
+                    'volumeMounts' =>
+                      [
+                        [
+                          'mountPath' => '/code/web/sites/default/files',
+                          'name' => $name . '-public',
+                        ],
+                        [
+                          'mountPath' => '/code/private',
+                          'name' => $name . '-private',
+                        ],
+                      ],
+                  ],
+                ],
+              'dnsPolicy' => 'ClusterFirst',
+              'restartPolicy' => 'Always',
+              'securityContext' => [],
+              'terminationGracePeriodSeconds' => 30,
+              'volumes' =>
+                [
+                  [
+                    'name' => $name . '-public',
+                    'persistentVolumeClaim' =>
+                      [
+                        'claimName' => $name . '-public',
+                      ],
+                  ],
+                  [
+                    'name' => $name . '-private',
+                    'persistentVolumeClaim' =>
+                      [
+                        'claimName' => $name . '-private',
+                      ],
+                  ],
+                ],
+            ],
+        ],
+        'test' => FALSE,
+        'triggers' => [
+          [
+            'imageChangeParams' => [
+              'automatic' => TRUE,
+              'containerNames' => [ $name ],
+              'from' => [
+                'kind' => 'ImageStreamTag',
+                'name' => $image_stream_tag . ':latest',
+              ],
+            ],
+            'type' => 'ImageChange',
+          ],
+          [
+            'type' => 'ConfigChange',
+          ],
+        ],
+      ]
+    ];
+
+    $response = $this->request($resourceMethod['action'], $uri, $deploymentConfig);
+
+    if($response['response'] === 200) {
+      return $response['response'];
+    }
+    else {
+      return FALSE;
+    }
+
   }
 
   /**
