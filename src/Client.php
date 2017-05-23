@@ -101,7 +101,6 @@ class Client implements OpenShiftClientInterface {
         'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs'
       ],
       'update' => [
-        // PUT replaces the imagestream.
         'action' => 'PUT',
         'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}'
       ],
@@ -120,7 +119,6 @@ class Client implements OpenShiftClientInterface {
         'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs'
       ],
       'update' => [
-        // PUT replaces the imagestream.
         'action' => 'PUT',
         'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}'
       ],
@@ -140,7 +138,6 @@ class Client implements OpenShiftClientInterface {
         'uri' => '/api/v1/namespaces/{namespace}/services'
       ],
       'update' => [
-        // PUT replaces the service.
         'action' => 'PUT',
         'uri' => '/api/v1/namespaces/{namespace}/services/{name}'
       ]
@@ -485,8 +482,21 @@ class Client implements OpenShiftClientInterface {
   /**
    * @inheritdoc
    */
-  public function getBuildConfig() {
-    // TODO: Implement getBuildConfig() method.
+  public function getBuildConfig($name) {
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'],[
+      'name' => $name
+    ]);
+
+    $response = $this->request($resourceMethod['action'], $uri);
+
+    if ($response['response'] === 200) {
+      return $response;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
@@ -593,11 +603,15 @@ class Client implements OpenShiftClientInterface {
   /**
    * @inheritdoc
    */
-  public function getImageStream() {
+  public function getImageStream($name) {
+
     $method = __METHOD__;
     $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'],[
+      'name' => $name
+    ]);
 
-    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']));
+    $response = $this->request($resourceMethod['action'], $uri);
 
     if ($response['response'] === 200) {
       return $response;
@@ -751,8 +765,23 @@ class Client implements OpenShiftClientInterface {
   /**
    * @inheritdoc
    */
-  public function getDeploymentConfig() {
-    // TODO: Implement createDeploymentConfig() method.
+  public function getDeploymentConfig($name) {
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'],[
+      'name' => $name
+    ]);
+
+    $response = $this->request($resourceMethod['action'], $uri);
+
+    if ($response['response'] === 200) {
+      return $response;
+    }
+    else {
+      return FALSE;
+    }
+
   }
 
   /**

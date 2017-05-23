@@ -94,9 +94,10 @@ interface OpenShiftClientInterface {
   /**
    * Retrieves all build configs binded to current working namespace.
    *
+   * @param string $name Name of build config.
    * @return mixed
    */
-  public function getBuildConfig();
+  public function getBuildConfig($name);
 
   /**
    * Create build config.
@@ -131,9 +132,10 @@ interface OpenShiftClientInterface {
   /**
    * Retrieves all image streams under current namespace.
    *
+   * @param string $name Name of build config.
    * @return mixed
    */
-  public function getImageStream();
+  public function getImageStream($name);
 
   /**
    * Creates an image stream, needed for buildConfig.
@@ -178,9 +180,10 @@ interface OpenShiftClientInterface {
   /**
    * Retrieves all deployment configs binded to the current working namespace.
    *
+   * @param string $name Name of build config.
    * @return mixed
    */
-  public function getDeploymentConfig();
+  public function getDeploymentConfig($name);
 
   /**
    * Creates a deployment config.

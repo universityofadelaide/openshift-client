@@ -82,6 +82,22 @@ class ClientTest extends TestCase {
     );
   }
 
+  public function testGetImageStream() {
+    $request = $this->client->getImageStream($this->json->clientTest->image_stream);
+
+    $this->assertEquals(
+      200,
+      $request['response'],
+      'Unable to retrieve image stream.'
+    );
+
+    $this->assertObjectHasAttribute(
+      'items',
+      $request['body']
+    );
+
+  }
+
   public function testCreateBuildConfig() {
     $data = [
       'git' => [
@@ -103,6 +119,22 @@ class ClientTest extends TestCase {
     );
   }
 
+  public function testGetBuildConfig() {
+    $request = $this->client->getBuildConfig($this->json->clientTest->artifacts . '-build');
+
+    $this->assertEquals(
+      200,
+      $request['response'],
+      'Unable to retrieve build config.'
+    );
+
+    $this->assertObjectHasAttribute(
+      'items',
+      $request['body']
+    );
+
+  }
+
   public function testCreateDeploymentConfig() {
     $data = [
       'containerPort' => 8080,
@@ -120,6 +152,23 @@ class ClientTest extends TestCase {
       $request['response'],
       'Unable to create deployment config.'
     );
+  }
+
+
+  public function testGetDeploymentConfig() {
+    $request = $this->client->getDeploymentConfig($this->json->clientTest->artifacts . '-deploy');
+
+    $this->assertEquals(
+      200,
+      $request['response'],
+      'Unable to retrieve deploy config.'
+    );
+
+    $this->assertObjectHasAttribute(
+      'items',
+      $request['body']
+    );
+
   }
 
   public function testDeleteDeploymentConfig() {
