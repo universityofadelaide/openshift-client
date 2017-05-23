@@ -74,4 +74,5 @@ name=pied; for type in dc bc is svc pvc route pods secrets; do for item in $(oc 
 
 ## Todo
 
-Implement everything.
+- Complete implementation of interface.
+- Improve test coverage, test the response json object rather that just the status code.  
