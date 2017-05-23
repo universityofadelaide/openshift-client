@@ -234,7 +234,7 @@ class Client implements OpenShiftClientInterface {
       // @todo - handel the exception;
       $message = $exception->getMessage();
       var_dump($message);
-      die();
+      // die();
     }
     return [
       'response' => $response->getStatusCode(),
@@ -510,7 +510,7 @@ class Client implements OpenShiftClientInterface {
         'output' => [
           'to' => [
             'kind' => 'ImageStreamTag',
-            'name' => $imagestream . '-imagestream:latest'
+            'name' => $imagestream . ':latest'
           ]
         ],
         'source' => [
@@ -879,7 +879,7 @@ class Client implements OpenShiftClientInterface {
       'status' => [
         'lastestVersion' => 0,
         'observedGeneration' => 0,
-        'replicas' => 0,
+        'replicas' => 1,
         'updatedReplicas' => 0,
         'availableReplicas' => 0,
         'unavailableReplicas' => 0,
@@ -888,7 +888,7 @@ class Client implements OpenShiftClientInterface {
 
     $response = $this->request($resourceMethod['action'], $uri, $deploymentConfig);
 
-    if ($response['response'] === 200) {
+    if ($response['response'] === 201) {
       return $response['response'];
     }
     else {
@@ -908,7 +908,22 @@ class Client implements OpenShiftClientInterface {
   /**
    * @inheritdoc
    */
-  public function deleteDeploymentConfig() {
-    // TODO: Implement deleteDeploymentConfig() method.
+  public function deleteDeploymentConfig($name) {
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => (string) $name
+    ]);
+
+    $response = $this->request($resourceMethod['action'], $uri);
+
+    if($response['response'] === 200) {
+      return $response['response'];
+    }
+    else {
+      return FALSE;
+    }
+
   }
 }

@@ -9,7 +9,7 @@ class ClientTest extends TestCase {
   private $host;
   private $token;
   private $namespace;
-  private $yaml;
+  private $json;
 
   protected $client;
 
@@ -21,13 +21,14 @@ class ClientTest extends TestCase {
       $this->host = $argv[2];
       $this->token = $argv[3];
       $this->namespace = $argv[4];
-      $this->yaml = json_decode(file_get_contents($argv[5]));
+      $this->json = json_decode(file_get_contents($argv[5]));
     }
     else {
       die("Unable to open specified file $argv[2]");
     }
 
     $this->client = new Client($this->host, $this->token, $this->namespace, TRUE);
+
   }
 
   public function testGetGuzzleClient() {
@@ -64,7 +65,7 @@ class ClientTest extends TestCase {
   public function testCreateImageStream() {
     $this->assertEquals(
       201,
-      $this->client->createImageStream('pied-stream'),
+      $this->client->createImageStream($this->json->clientTest->image_stream),
       'Unable to create image stream.'
     );
   }
@@ -72,26 +73,33 @@ class ClientTest extends TestCase {
   public function testCreateBuildConfig() {
     $data = [
       'git' => [
-        'uri' => $this->yaml['clientTest']['source']['git']['uri'],
-        'ref' => $this->yaml['clientTest']['source']['git']['ref'],
+        'uri' => $this->json->clientTest->source->git->uri,
+        'ref' => $this->json->clientTest->source->git->ref,
       ],
       'source' => [
-        'type' => $this->yaml['clientTest']['sourceStrategy']['from']['kind'],
-        'name' => $this->yaml['clientTest']['sourceStrategy']['from']['name'],
+        'type' => $this->json->clientTest->sourceStrategy->from->kind,
+        'name' => $this->json->clientTest->sourceStrategy->from->name,
       ],
     ];
     $this->assertEquals(
       201,
-      $this->client->createBuildConfig('pied-build', 'pied-pass', 'pied-dreams', $data),
+      $this->client->createBuildConfig('pied-build', 'pied-pass', $this->json->clientTest->image_stream, $data),
       'Unable to create build config.'
     );
   }
 
   public function testCreateDeploymentConfig() {
-    $data = [];
+    $data = [
+      'containerPort' => 8080,
+      'memory_limit' => 128,
+      'env_vars' => []
+    ];
+    $name = 'pied-deploy';
+    $image_stream_tag = $this->json->clientTest->image_stream;
+    $image_name = $this->json->clientTest->image_name;
     $this->assertEquals(
       201,
-      $this->client->createDeploymentConfig('pied-build', '', '', $data),
+      $this->client->createDeploymentConfig($name, $image_stream_tag, $image_name, $data),
       'Unable to create build config.'
     );
   }
@@ -99,7 +107,7 @@ class ClientTest extends TestCase {
   public function testDeleteDeploymentConfig() {
     $this->assertEquals(
       200,
-      $this->client->deleteDeploymentConfig('pied-build'),
+      $this->client->deleteDeploymentConfig('pied-deploy'),
       'Unable to delete deploy config.'
     );
   }
@@ -115,7 +123,7 @@ class ClientTest extends TestCase {
   public function testDeleteImageStream() {
     $this->assertEquals(
       200,
-      $this->client->deleteImageStream('pied-stream'),
+      $this->client->deleteImageStream($this->json->clientTest->image_stream),
       'Unable to delete image stream.'
     );
   }

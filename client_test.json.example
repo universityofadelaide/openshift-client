@@ -2,6 +2,8 @@
   "clientTest": {
     "project": "myproject",
     "atrifacts": "pied-piper",
+    "image_name": "shepherd",
+    "image_stream": "pied-stream",
     "secret": {
       "name": "pied-secret",
       "user": "pied-piper",

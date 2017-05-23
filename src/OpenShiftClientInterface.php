@@ -170,7 +170,13 @@ interface OpenShiftClientInterface {
 
   public function updateDeploymentConfig();
 
-  public function deleteDeploymentConfig();
+  /**
+   * Deletes a deployment config by name.
+   *
+   * @param string $name Name of deployment config.
+   * @return mixed
+   */
+  public function deleteDeploymentConfig($name);
 
 
 }
