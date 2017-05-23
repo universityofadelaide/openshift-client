@@ -61,6 +61,11 @@ oc login -u developer -p developer
 ../../bin/phpunit tests/ClientTest.php $(minishift console --url) $(oc whoami -t) myproject
 ```
 
+## Actual deployment
+
+Manually create a mysql container in openshift, make note of the db name, username and password, and put those into the client_test.json envVars section.
+
+
 ## Todo
 
 Implement everything.

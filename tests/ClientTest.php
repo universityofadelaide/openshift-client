@@ -24,7 +24,7 @@ class ClientTest extends TestCase {
       $this->json = json_decode(file_get_contents($argv[5]));
     }
     else {
-      die("Unable to open specified file $argv[2]");
+      die("Unable to open specified file $argv[5]");
     }
 
     $this->client = new Client($this->host, $this->token, $this->namespace, TRUE);
@@ -92,7 +92,7 @@ class ClientTest extends TestCase {
     $data = [
       'containerPort' => 8080,
       'memory_limit' => 128,
-      'env_vars' => []
+      'env_vars' => $this->json->clientTest->envVars,
     ];
     $name = 'pied-deploy';
     $image_stream_tag = $this->json->clientTest->image_stream;
@@ -100,40 +100,48 @@ class ClientTest extends TestCase {
     $this->assertEquals(
       201,
       $this->client->createDeploymentConfig($name, $image_stream_tag, $image_name, $data),
-      'Unable to create build config.'
+      'Unable to create deployment config.'
     );
   }
 
   public function testDeleteDeploymentConfig() {
-    $this->assertEquals(
-      200,
-      $this->client->deleteDeploymentConfig('pied-deploy'),
-      'Unable to delete deploy config.'
-    );
+    if ($this->json->clientTest->delete) {
+      $this->assertEquals(
+        200,
+        $this->client->deleteDeploymentConfig('pied-deploy'),
+        'Unable to delete deploy config.'
+      );
+    }
   }
 
   public function testDeleteBuildConfig() {
-    $this->assertEquals(
-      200,
-      $this->client->deleteBuildConfig('pied-build'),
-      'Unable to delete build config.'
-    );
+    if ($this->json->clientTest->delete) {
+      $this->assertEquals(
+        200,
+        $this->client->deleteBuildConfig('pied-build'),
+        'Unable to delete build config.'
+      );
+    }
   }
 
   public function testDeleteImageStream() {
-    $this->assertEquals(
-      200,
-      $this->client->deleteImageStream($this->json->clientTest->image_stream),
-      'Unable to delete image stream.'
-    );
+    if ($this->json->clientTest->delete) {
+      $this->assertEquals(
+        200,
+        $this->client->deleteImageStream($this->json->clientTest->image_stream),
+        'Unable to delete image stream.'
+      );
+    }
   }
 
   public function testDeleteSecret() {
-    $this->assertEquals(
-      200,
-      $this->client->deleteSecret('pied-pass'),
-      'Unable to delete secret.'
-    );
+    if ($this->json->clientTest->delete) {
+      $this->assertEquals(
+        200,
+        $this->client->deleteSecret('pied-pass'),
+        'Unable to delete secret.'
+      );
+    }
   }
 
 }
