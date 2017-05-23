@@ -22,6 +22,9 @@ class ClientTest extends TestCase {
       $this->token = $argv[3];
       $this->namespace = $argv[4];
       $this->json = json_decode(file_get_contents($argv[5]));
+      if (!is_object($this->json)) {
+        die("Unable to decode json config\n");
+      }
     }
     else {
       die("Unable to open specified file $argv[5]");
@@ -43,9 +46,9 @@ class ClientTest extends TestCase {
   public function testCreateSecret() {
     $this->assertEquals(
       201,
-      $this->client->createSecret('pied-pass', [
-        'username' => 'pied-piper',
-        'password' => 'This guy..',
+      $this->client->createSecret($this->json->clientTest->secret->name, [
+        'username' => $this->json->clientTest->secret->user,
+        'password' => $this->json->clientTest->secret->pass,
       ]),
       'Unable to create secret.'
     );
@@ -54,9 +57,9 @@ class ClientTest extends TestCase {
   public function testUpdateSecret() {
     $this->assertEquals(
       200,
-      $this->client->updateSecret('pied-pass', [
-        'username' => 'pied-piper',
-        'password' => 'middleout',
+      $this->client->updateSecret($this->json->clientTest->secret->name, [
+        'username' => $this->json->clientTest->secret->user,
+        'password' => $this->json->clientTest->secret->alt_pass,
       ]),
       'Unable to update secret.'
     );
@@ -138,7 +141,7 @@ class ClientTest extends TestCase {
     if ($this->json->clientTest->delete) {
       $this->assertEquals(
         200,
-        $this->client->deleteSecret('pied-pass'),
+        $this->client->deleteSecret($this->json->clientTest->secret->name),
         'Unable to delete secret.'
       );
     }

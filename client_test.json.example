@@ -7,7 +7,8 @@
     "secret": {
       "name": "pied-secret",
       "user": "pied-piper",
-      "pass": "This guy.."
+      "pass": "This guy..",
+      "alt_pass": "Middleout"
     },
     "source": {
       "git": {
