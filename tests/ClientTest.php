@@ -171,6 +171,42 @@ class ClientTest extends TestCase {
 
   }
 
+  public function testCreateService() {
+    $data = [
+      'dependencies' => '',
+      'description' => $this->json->clientTest->artifacts . '-description',
+      'protocol' => 'TCP',
+      'port' => 8080,
+      'targetPort' => 8080,
+    ];
+
+    $name = $this->json->clientTest->artifacts . '-service';
+
+    $request = $this->client->createService($name, $data);
+
+    $this->assertEquals(
+      201,
+      $request['response'],
+      'Unable to create service.'
+    );
+
+  }
+
+  public function testCreateRoute() {
+    $name = $this->json->clientTest->artifacts . '-route';
+    $service = $this->json->clientTest->artifacts . '-service';
+    $application_domain = $this->json->clientTest->domain;
+
+    $request = $this->client->createRoute($name, $service, $application_domain);
+
+    $this->assertEquals(
+      201,
+      $request['response'],
+      'Unable to create service.'
+    );
+
+  }
+
   public function testDeleteDeploymentConfig() {
     if ($this->json->clientTest->delete) {
 

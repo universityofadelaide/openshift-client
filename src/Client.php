@@ -250,7 +250,7 @@ class Client implements OpenShiftClientInterface {
       // @todo - handel the exception;
       $message = $exception->getMessage();
       var_dump($message);
-      // die();
+      die();
     }
     return [
       'response' => $response->getStatusCode(),
@@ -428,13 +428,13 @@ class Client implements OpenShiftClientInterface {
 
     // @todo - use a model.
     $service = [
-      'kind' => 'Service',
+      'kind'     => 'Service',
       'metadata' => [
-        'name' => $name,
-        'namespace' => $this->namespace,
+        'name'        => (string) $name,
+        //'namespace'   => $this->namespace,
         'annotations' => [
           'description' => isset($data['description']) ? $data['description'] : '',
-          'service.alpha.openshift.io/dependencies' => isset($dependencies) ? $dependencies : '',
+          //'service.alpha.openshift.io/dependencies' => isset($dependencies) ? $dependencies : '',
         ],
       ],
       'spec' => [
@@ -442,13 +442,16 @@ class Client implements OpenShiftClientInterface {
         'ports' => [
           // Defaults to TCP.
           [
-          'protocol' => isset($data['protocol']) ? $data['protocol'] : 'TCP',
-          'port' => (int) $data['port'],
-          'targetPort' => (string) $data['targetPort'],
-          ]
+            'name'       => 'web',
+            //'protocol'   => isset($data['protocol']) ? $data['protocol'] : 'TCP',
+            'port'       => (int) $data['port'],
+            'targetPort' => (int) $data['targetPort'],
+          ],
         ],
-        'selector' => (string) $name
-      ]
+        'selector' => [
+          'name' => $name,
+        ],
+      ],
     ];
 
     $response = $this->request($resourceMethod['action'], $uri, $service);
@@ -494,7 +497,7 @@ class Client implements OpenShiftClientInterface {
     $route = [
       'kind' => 'Route',
       'metadata' => [
-        'name' => (string) $name . '-route',
+        'name' => (string) $name,
       ],
       'spec' => [
         'host' => (string) $application_domain,
