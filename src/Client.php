@@ -308,7 +308,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $secret);
 
     if ($response['response'] === 201) {
-      return $response['response'];
+      return $response;
     }
     else {
       // something failed.
@@ -326,7 +326,7 @@ class Client implements OpenShiftClientInterface {
 
     $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), []);
 
-    return $response['response'];
+    return $response;
   }
 
   /**
@@ -358,7 +358,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $uri, $secret);
 
     if ($response['response'] === 200) {
-      return $response['response'];
+      return $response;
     }
     else {
       // something failed.
@@ -380,7 +380,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $uri);
 
     if ($response['response'] === 200) {
-      return $response['response'];
+      return $response;
     }
     else {
       return FALSE;
@@ -433,7 +433,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $uri, $service);
 
     if ($response['response'] === 200) {
-      return $response['response'];
+      return $response;
     }
     else {
       return FALSE;
@@ -554,7 +554,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $uri, $buildConfig);
 
     if ($response['response'] === 201) {
-      return $response['response'];
+      return $response;
     }
     else {
       return FALSE;
@@ -583,7 +583,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $uri);
 
     if ($response['response'] === 200) {
-      return $response['response'];
+      return $response;
     }
     else {
       return FALSE;
@@ -600,7 +600,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']));
 
     if ($response['response'] === 200) {
-      return $response['response'];
+      return $response;
     }
     else {
       return FALSE;
@@ -632,7 +632,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
 
     if ($response['response'] === 201) {
-      return $response['response'];
+      return $response;
     }
     else {
       return FALSE;
@@ -665,7 +665,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
 
     if ($response['response'] === 200) {
-      return $response['response'];
+      return $response;
     }
     else {
       return FALSE;
@@ -685,7 +685,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $uri);
 
     if ($response['response'] === 200) {
-      return $response['response'];
+      return $response;
     }
     else {
       return FALSE;
@@ -889,7 +889,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $uri, $deploymentConfig);
 
     if ($response['response'] === 201) {
-      return $response['response'];
+      return $response;
     }
     else {
       return FALSE;
@@ -1023,7 +1023,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $uri, $deploymentConfig);
 
     if($response['response'] === 200) {
-      return $response['response'];
+      return $response;
     }
     else {
       return FALSE;
@@ -1045,7 +1045,7 @@ class Client implements OpenShiftClientInterface {
     $response = $this->request($resourceMethod['action'], $uri);
 
     if($response['response'] === 200) {
-      return $response['response'];
+      return $response;
     }
     else {
       return FALSE;

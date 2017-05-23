@@ -44,31 +44,40 @@ class ClientTest extends TestCase {
   }
 
   public function testCreateSecret() {
+
+    $request = $this->client->createSecret($this->json->clientTest->secret->name, [
+      'username' => $this->json->clientTest->secret->user,
+      'password' => $this->json->clientTest->secret->pass,
+    ]);
+
     $this->assertEquals(
       201,
-      $this->client->createSecret($this->json->clientTest->secret->name, [
-        'username' => $this->json->clientTest->secret->user,
-        'password' => $this->json->clientTest->secret->pass,
-      ]),
+      $request['response'],
       'Unable to create secret.'
     );
   }
 
   public function testUpdateSecret() {
+
+    $request = $this->client->updateSecret($this->json->clientTest->secret->name, [
+      'username' => $this->json->clientTest->secret->user,
+      'password' => $this->json->clientTest->secret->alt_pass,
+    ]);
+
     $this->assertEquals(
       200,
-      $this->client->updateSecret($this->json->clientTest->secret->name, [
-        'username' => $this->json->clientTest->secret->user,
-        'password' => $this->json->clientTest->secret->alt_pass,
-      ]),
+      $request['response'],
       'Unable to update secret.'
     );
   }
 
   public function testCreateImageStream() {
+
+    $request = $this->client->createImageStream($this->json->clientTest->image_stream);
+
     $this->assertEquals(
       201,
-      $this->client->createImageStream($this->json->clientTest->image_stream),
+      $request['response'],
       'Unable to create image stream.'
     );
   }
@@ -84,9 +93,12 @@ class ClientTest extends TestCase {
         'name' => $this->json->clientTest->sourceStrategy->from->name,
       ],
     ];
+
+    $request = $this->client->createBuildConfig($this->json->clientTest->artifacts . '-build', $this->json->clientTest->secret->name, $this->json->clientTest->image_stream, $data);
+
     $this->assertEquals(
       201,
-      $this->client->createBuildConfig($this->json->clientTest->artifacts . '-build', $this->json->clientTest->secret->name, $this->json->clientTest->image_stream, $data),
+      $request['response'],
       'Unable to create build config.'
     );
   }
@@ -100,18 +112,24 @@ class ClientTest extends TestCase {
     $name = $this->json->clientTest->artifacts . '-deploy';
     $image_stream_tag = $this->json->clientTest->image_stream;
     $image_name = $this->json->clientTest->image_name;
+
+    $request = $this->client->createDeploymentConfig($name, $image_stream_tag, $image_name, $data);
+
     $this->assertEquals(
       201,
-      $this->client->createDeploymentConfig($name, $image_stream_tag, $image_name, $data),
+      $request['response'],
       'Unable to create deployment config.'
     );
   }
 
   public function testDeleteDeploymentConfig() {
     if ($this->json->clientTest->delete) {
+
+      $request = $this->client->deleteDeploymentConfig($this->json->clientTest->artifacts . '-deploy');
+
       $this->assertEquals(
         200,
-        $this->client->deleteDeploymentConfig($this->json->clientTest->artifacts . '-deploy'),
+        $request['response'],
         'Unable to delete deploy config.'
       );
     }
@@ -119,9 +137,12 @@ class ClientTest extends TestCase {
 
   public function testDeleteBuildConfig() {
     if ($this->json->clientTest->delete) {
+
+      $request = $this->client->deleteBuildConfig($this->json->clientTest->artifacts . '-build');
+
       $this->assertEquals(
         200,
-        $this->client->deleteBuildConfig($this->json->clientTest->artifacts . '-build'),
+        $request['response'],
         'Unable to delete build config.'
       );
     }
@@ -129,9 +150,12 @@ class ClientTest extends TestCase {
 
   public function testDeleteImageStream() {
     if ($this->json->clientTest->delete) {
+
+      $request = $this->client->deleteImageStream($this->json->clientTest->image_stream);
+
       $this->assertEquals(
         200,
-        $this->client->deleteImageStream($this->json->clientTest->image_stream),
+        $request['response'],
         'Unable to delete image stream.'
       );
     }
@@ -139,9 +163,12 @@ class ClientTest extends TestCase {
 
   public function testDeleteSecret() {
     if ($this->json->clientTest->delete) {
+
+      $request = $this->client->deleteSecret($this->json->clientTest->secret->name);
+
       $this->assertEquals(
         200,
-        $this->client->deleteSecret($this->json->clientTest->secret->name),
+        $request['response'],
         'Unable to delete secret.'
       );
     }
