@@ -45,9 +45,9 @@ class ClientTest extends TestCase {
 
   public function testCreateSecret() {
 
-    $request = $this->client->createSecret($this->json->clientTest->secret->name, [
-      'username' => $this->json->clientTest->secret->user,
-      'password' => $this->json->clientTest->secret->pass,
+    $request = $this->client->createSecret($this->json->clientTest->testSecret->name, [
+      'username' => $this->json->clientTest->testSecret->user,
+      'password' => $this->json->clientTest->testSecret->pass,
     ]);
 
     $this->assertEquals(
@@ -59,9 +59,9 @@ class ClientTest extends TestCase {
 
   public function testUpdateSecret() {
 
-    $request = $this->client->updateSecret($this->json->clientTest->secret->name, [
-      'username' => $this->json->clientTest->secret->user,
-      'password' => $this->json->clientTest->secret->alt_pass,
+    $request = $this->client->updateSecret($this->json->clientTest->testSecret->name, [
+      'username' => $this->json->clientTest->testSecret->user,
+      'password' => $this->json->clientTest->testSecret->alt_pass,
     ]);
 
     $this->assertEquals(
@@ -73,7 +73,7 @@ class ClientTest extends TestCase {
 
   public function testCreateImageStream() {
 
-    $request = $this->client->createImageStream($this->json->clientTest->image_stream);
+    $request = $this->client->createImageStream($this->json->clientTest->artifacts . '-stream');
 
     $this->assertEquals(
       201,
@@ -83,7 +83,7 @@ class ClientTest extends TestCase {
   }
 
   public function testGetImageStream() {
-    $request = $this->client->getImageStream($this->json->clientTest->image_stream);
+    $request = $this->client->getImageStream($this->json->clientTest->artifacts . '-stream');
 
     $this->assertEquals(
       200,
@@ -98,6 +98,36 @@ class ClientTest extends TestCase {
 
   }
 
+  public function testCreatePersistentVolumeClaim1() {
+
+    $request = $this->client->createPersistentVolumeClaim(
+      $this->json->clientTest->artifacts . '-private',
+      'ReadWriteMany',
+      '10Gi'
+    );
+
+    $this->assertEquals(
+      201,
+      $request['response'],
+      'Unable to create persistent volume claim.'
+    );
+  }
+
+  public function testCreatePersistentVolumeClaim2() {
+
+    $request = $this->client->createPersistentVolumeClaim(
+       $this->json->clientTest->artifacts . '-public',
+      'ReadWriteMany',
+      '10Gi'
+    );
+
+    $this->assertEquals(
+      201,
+      $request['response'],
+      'Unable to create persistent volume claim.'
+    );
+  }
+
   public function testCreateBuildConfig() {
     $data = [
       'git' => [
@@ -110,7 +140,12 @@ class ClientTest extends TestCase {
       ],
     ];
 
-    $request = $this->client->createBuildConfig($this->json->clientTest->artifacts . '-build', $this->json->clientTest->secret->name, $this->json->clientTest->image_stream, $data);
+    $request = $this->client->createBuildConfig(
+      $this->json->clientTest->artifacts . '-build',
+      $this->json->clientTest->buildSecret,
+      $this->json->clientTest->artifacts . '-stream',
+      $data
+    );
 
     $this->assertEquals(
       201,
@@ -140,12 +175,20 @@ class ClientTest extends TestCase {
       'containerPort' => 8080,
       'memory_limit' => 128,
       'env_vars' => $this->json->clientTest->envVars,
+      'public_volume' => $this->json->clientTest->artifacts . '-public',
+      'private_volume' => $this->json->clientTest->artifacts . '-private',
     ];
-    $name = $this->json->clientTest->artifacts . '-deploy';
-    $image_stream_tag = $this->json->clientTest->image_stream;
-    $image_name = $this->json->clientTest->image_name;
 
-    $request = $this->client->createDeploymentConfig($name, $image_stream_tag, $image_name, $data);
+    $name = $this->json->clientTest->artifacts . '-deploy';
+    $image_stream_tag = $this->json->clientTest->artifacts . '-stream';
+    $image_name = $this->json->clientTest->artifacts . '-image';
+
+    $request = $this->client->createDeploymentConfig(
+      $name,
+      $image_stream_tag,
+      $image_name,
+      $data
+    );
 
     $this->assertEquals(
       201,
@@ -178,6 +221,7 @@ class ClientTest extends TestCase {
       'protocol' => 'TCP',
       'port' => 8080,
       'targetPort' => 8080,
+      'deployment' => $this->json->clientTest->artifacts . '-deploy'
     ];
 
     $name = $this->json->clientTest->artifacts . '-service';
@@ -255,9 +299,33 @@ class ClientTest extends TestCase {
     }
   }
 
+  public function testDeletePersistentVolumeClaim1() {
+    if ($this->json->clientTest->delete) {
+      $request = $this->client->deletePersistentVolumeClaim($this->json->clientTest->artifacts . '-private');
+
+      $this->assertEquals(
+        200,
+        $request['response'],
+        'Unable to delete persistent volume claim.'
+      );
+    }
+  }
+
+  public function testDeletePersistentVolumeClaim2() {
+    if ($this->json->clientTest->delete) {
+      $request = $this->client->deletePersistentVolumeClaim($this->json->clientTest->artifacts . '-public');
+
+      $this->assertEquals(
+        200,
+        $request['response'],
+        'Unable to delete persistent volume claim.'
+      );
+    }
+  }
+
   public function testDeleteImageStream() {
     if ($this->json->clientTest->delete) {
-      $request = $this->client->deleteImageStream($this->json->clientTest->image_stream);
+      $request = $this->client->deleteImageStream($this->json->clientTest->artifacts . '-stream');
 
       $this->assertEquals(
         200,
@@ -269,7 +337,7 @@ class ClientTest extends TestCase {
 
   public function testDeleteSecret() {
     if ($this->json->clientTest->delete) {
-      $request = $this->client->deleteSecret($this->json->clientTest->secret->name);
+      $request = $this->client->deleteSecret($this->json->clientTest->testSecret->name);
 
       $this->assertEquals(
         200,

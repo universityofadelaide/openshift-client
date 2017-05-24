@@ -3,15 +3,14 @@
     "delete": true,
     "project": "myproject",
     "artifacts": "pied-piper",
-    "image_name": "shepherd",
-    "image_stream": "pied-stream",
     "domain": "example.com",
-    "secret": {
+    "testSecret": {
       "name": "pied-secret",
       "user": "pied-piper",
       "pass": "This guy..",
       "alt_pass": "Middleout"
     },
+    "buildSecret": "pre-configured-key",
     "source": {
       "git": {
         "ref": "add-ref",
@@ -23,9 +22,6 @@
         "kind": "DockerImage",
         "name": "uofa/s2i-shepherd-drupal:develop"
       },
-      "pullSecret": {
-        "name": "pied-secret"
-      }
     },
     "envVars": [
       {

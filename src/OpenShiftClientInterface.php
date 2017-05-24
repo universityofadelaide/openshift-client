@@ -201,11 +201,27 @@ interface OpenShiftClientInterface {
 
   public function getPersistentVolumeClaim();
 
-  public function createPersistentVolumeClaim();
+  /**
+   * Create a persistent volume claim.
+   *
+   * @param $name
+   * @param $access_mode
+   * @param $storage
+   *
+   * @return mixed
+   */
+  public function createPersistentVolumeClaim($name, $access_mode, $storage);
 
   public function updatePersistentVolumeClaim();
 
-  public function deletePersistentVolumeClaim();
+  /**
+   * Delete a persistent volume claim.
+   *
+   * @param $name
+   *
+   * @return mixed
+   */
+  public function deletePersistentVolumeClaim($name);
 
   /**
    * Retrieves all deployment configs binded to the current working namespace.
