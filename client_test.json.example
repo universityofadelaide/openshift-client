@@ -3,7 +3,7 @@
     "delete": true,
     "project": "myproject",
     "artifacts": "pied-piper",
-    "domain": "example.com",
+    "domain": "leave-blank-for-auto",
     "testSecret": {
       "name": "pied-secret",
       "user": "pied-piper",
