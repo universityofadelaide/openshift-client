@@ -161,6 +161,25 @@ class Client implements OpenShiftClientInterface {
         'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}'
       ]
     ],
+    'persistentvolumeclaim' => [
+      'create' => [
+        'action' => 'POST',
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims'
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}'
+      ],
+      'get' => [
+        // lists all persistentvolumeclaims.
+        'action' => 'GET',
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims'
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}'
+      ]
+    ],
   ];
 
   /**
@@ -449,7 +468,7 @@ class Client implements OpenShiftClientInterface {
           ],
         ],
         'selector' => [
-          'name' => $name,
+          'name' => $data['deployment'],
         ],
       ],
     ];
@@ -637,7 +656,14 @@ class Client implements OpenShiftClientInterface {
           'type' => 'Source'
         ],
         // @todo - figure out github and other types of triggers
-        'triggers' => [],
+        'triggers' => [
+          [
+            'type' => 'ImageChange',
+          ],
+          [
+            'type' => 'ConfigChange'
+          ],
+        ],
         'status' => [
           'lastversion' => time()
         ],
@@ -827,8 +853,37 @@ class Client implements OpenShiftClientInterface {
   /**
    * @inheritdoc
    */
-  public function createPersistentVolumeClaim() {
-    // TODO: Implement createPersistentVolumeClaim() method.
+  public function createPersistentVolumeClaim($name, $access_mode, $storage) {
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+
+    $persistentVolumeClaim = [
+      'apiVersion' => 'v1',
+      'kind' => 'PersistentVolumeClaim',
+      'metadata' => [
+        'name' => $name,
+      ],
+      'spec' => [
+        'accessModes' => [
+          $access_mode,
+        ],
+        'resources' => [
+          'requests' => [
+            'storage' => $storage,
+          ],
+        ],
+      ],
+    ];
+
+    $response = $this->request($resourceMethod['action'], $uri, $persistentVolumeClaim);
+
+    if ($response['response'] === 201) {
+      return $response;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
@@ -841,8 +896,21 @@ class Client implements OpenShiftClientInterface {
   /**
    * @inheritdoc
    */
-  public function deletePersistentVolumeClaim() {
-    // TODO: Implement deletePersistentVolumeClaim() method.
+  public function deletePersistentVolumeClaim($name) {
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => (string) $name
+    ]);
+
+    $response = $this->request($resourceMethod['action'], $uri);
+
+    if($response['response'] === 200) {
+      return $response;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
@@ -936,11 +1004,11 @@ class Client implements OpenShiftClientInterface {
                         [
                           [
                             'mountPath' => '/code/web/sites/default/files',
-                            'name' => $name . '-public',
+                            'name' => $data['public_volume'],
                           ],
                           [
                             'mountPath' => '/code/private',
-                            'name' => $name . '-private',
+                            'name' => $data['private_volume'],
                           ],
                         ],
                     ],
@@ -952,17 +1020,17 @@ class Client implements OpenShiftClientInterface {
                 'volumes' =>
                   [
                     [
-                      'name' => $name . '-public',
+                      'name' => $data['public_volume'],
                       'persistentVolumeClaim' =>
                         [
-                          'claimName' => $name . '-public',
+                          'claimName' => $data['public_volume'],
                         ],
                     ],
                     [
-                      'name' => $name . '-private',
+                      'name' => $data['private_volume'],
                       'persistentVolumeClaim' =>
                         [
-                          'claimName' => $name . '-private',
+                          'claimName' => $data['private_volume'],
                         ],
                     ],
                   ],
