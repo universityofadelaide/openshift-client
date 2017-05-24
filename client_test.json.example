@@ -25,15 +25,19 @@
     },
     "envVars": [
       {
-        "name": "MYSQL_DATABASE",
+        "name": "DATABASE_DATABASE",
         "value": "mysql"
       },
       {
-        "name": "MYSQL_USER",
+        "name": "DATABASE_USER",
         "value": "mysql"
       },
       {
-        "name": "MYSQL_PASSWORD",
+        "name": "DATABASE_PASSWORD",
+        "value": "mysql"
+      },
+      {
+        "name": "DATABASE_HOST",
         "value": "mysql"
       }
     ]
