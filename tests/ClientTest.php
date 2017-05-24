@@ -173,7 +173,7 @@ class ClientTest extends TestCase {
   public function testCreateDeploymentConfig() {
     $data = [
       'containerPort' => 8080,
-      'memory_limit' => 128,
+      'memory_limit' => '128Mi',
       'env_vars' => $this->json->clientTest->envVars,
       'public_volume' => $this->json->clientTest->artifacts . '-public',
       'private_volume' => $this->json->clientTest->artifacts . '-private',

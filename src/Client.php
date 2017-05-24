@@ -656,7 +656,14 @@ class Client implements OpenShiftClientInterface {
           'type' => 'Source'
         ],
         // @todo - figure out github and other types of triggers
-        'triggers' => [],
+        'triggers' => [
+          [
+            'type' => 'ImageChange',
+          ],
+          [
+            'type' => 'ConfigChange'
+          ],
+        ],
         'status' => [
           'lastversion' => time()
         ],
