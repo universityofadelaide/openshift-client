@@ -71,6 +71,17 @@ class ClientTest extends TestCase {
     );
   }
 
+  public function testGetSecret() {
+
+    $request = $this->client->getSecret($this->json->clientTest->testSecret->name);
+
+    $this->assertEquals(
+      200,
+      $request['response'],
+      'Unable to request secret.'
+    )
+  }
+
   public function testCreateImageStream() {
 
     $request = $this->client->createImageStream($this->json->clientTest->artifacts . '-stream');
