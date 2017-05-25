@@ -357,9 +357,13 @@ class Client implements OpenShiftClientInterface {
    */
   public function getSecret($name) {
 
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name
+    ]);
 
-    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), []);
+    $response = $this->request($resourceMethod['action'], $uri, []);
 
     return $response;
   }
