@@ -60,7 +60,7 @@ class Client implements OpenShiftClientInterface {
       ],
       'get' => [
         'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/secrets'
+        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}'
       ],
       'update' => [
         // PUT replaces the entire secret.

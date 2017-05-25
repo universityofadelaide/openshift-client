@@ -79,7 +79,7 @@ class ClientTest extends TestCase {
       200,
       $request['response'],
       'Unable to request secret.'
-    )
+    );
   }
 
   public function testCreateImageStream() {
