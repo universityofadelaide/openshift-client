@@ -365,7 +365,12 @@ class Client implements OpenShiftClientInterface {
 
     $response = $this->request($resourceMethod['action'], $uri, []);
 
-    return $response;
+    if ($response['response'] === 200) {
+      return $response;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
