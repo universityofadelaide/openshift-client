@@ -604,7 +604,7 @@ class Client implements OpenShiftClientInterface {
   /**
    * @inheritdoc
    */
-  public function createBuildConfig($name, $secret, $imagestream, $data) {
+  public function createBuildConfig($name, $secret, $image_stream_tag, $data) {
 
     $method = __METHOD__;
     $resourceMethod = $this->getResourceMethod($method);
@@ -622,7 +622,7 @@ class Client implements OpenShiftClientInterface {
         'output' => [
           'to' => [
             'kind' => 'ImageStreamTag',
-            'name' => $imagestream . ':latest'
+            'name' => $image_stream_tag,
           ]
         ],
         'source' => [
@@ -1044,7 +1044,7 @@ class Client implements OpenShiftClientInterface {
                   'containerNames' => [ $name ],
                   'from' => [
                       'kind' => 'ImageStreamTag',
-                      'name' => $image_stream_tag . ':latest',
+                      'name' => $image_stream_tag,
                     ],
                 ],
               'type' => 'ImageChange',
