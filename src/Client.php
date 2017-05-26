@@ -265,15 +265,16 @@ class Client implements OpenShiftClientInterface {
 
     try {
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
+      $code = $response->getStatusCode();
+      $body = $response->getBody()->getContents();
     } catch (RequestException $exception) {
-      // @todo - handel the exception;
-      $message = $exception->getMessage();
-      var_dump($message);
-      die();
+      $code = $exception->getCode();
+      $body = $exception->getResponse()->getBody()->getContents();
     }
+
     return [
-      'response' => $response->getStatusCode(),
-      'body' => json_decode($response->getBody()->getContents())
+      'response' => $code,
+      'body' => json_decode($body)
     ];
   }
 
