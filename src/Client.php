@@ -60,7 +60,7 @@ class Client implements OpenShiftClientInterface {
       ],
       'get' => [
         'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/secrets'
+        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}'
       ],
       'update' => [
         // PUT replaces the entire secret.
@@ -265,15 +265,16 @@ class Client implements OpenShiftClientInterface {
 
     try {
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
+      $code = $response->getStatusCode();
+      $body = $response->getBody()->getContents();
     } catch (RequestException $exception) {
-      // @todo - handel the exception;
-      $message = $exception->getMessage();
-      var_dump($message);
-      die();
+      $code = $exception->getCode();
+      $body = $exception->getResponse()->getBody()->getContents();
     }
+
     return [
-      'response' => $response->getStatusCode(),
-      'body' => json_decode($response->getBody()->getContents())
+      'response' => $code,
+      'body' => json_decode($body)
     ];
   }
 
@@ -357,11 +358,20 @@ class Client implements OpenShiftClientInterface {
    */
   public function getSecret($name) {
 
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name
+    ]);
 
-    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), []);
+    $response = $this->request($resourceMethod['action'], $uri, []);
 
-    return $response;
+    if ($response['response'] === 200) {
+      return $response;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
