@@ -453,9 +453,6 @@ class Client implements OpenShiftClientInterface {
       'kind'     => 'Service',
       'metadata' => [
         'name'        => (string) $name,
-        'annotations' => [
-          'description' => isset($data['description']) ? $data['description'] : '',
-        ],
       ],
       'spec' => [
         'ports' => [
@@ -687,7 +684,9 @@ class Client implements OpenShiftClientInterface {
 
     $method = __METHOD__;
     $resourceMethod = $this->getResourceMethod($method);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name
+    ]);
 
     $buildConfig = [
       'kind' => 'BuildConfig',
