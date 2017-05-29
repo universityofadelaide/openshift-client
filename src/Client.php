@@ -695,7 +695,80 @@ class Client implements OpenShiftClientInterface {
    * @inheritdoc
    */
   public function updateBuildConfig($name, $secret, $imagestream, $data) {
-    // TODO: Implement updateBuildConfig() method.
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+
+    $buildConfig = [
+      'kind' => 'BuildConfig',
+      'metadata' => [
+        'annotations' => [
+          'description' => 'Defines how to build the application',
+        ],
+        'name' => $name,
+      ],
+      'spec' => [
+        'output' => [
+          'to' => [
+            'kind' => 'ImageStreamTag',
+            'name' => $imagestream . ':latest'
+          ]
+        ],
+        'source' => [
+          'type' => 'Git',
+          'git' => [
+            'ref' => (string) $data['git']['ref'],
+            'uri' => (string) $data['git']['uri'],
+          ],
+          'secrets' => [
+            [
+              'destinationDir' => '.',
+              'secret' => [
+                'name' => $secret
+              ],
+            ]
+          ],
+          'sourceSecret' => [
+            'name' => $secret
+          ],
+        ],
+        'strategy' => [
+          'sourceStrategy' => [
+            'from' => [
+              'kind' => (string) $data['source']['type'],
+              'name' => (string) $data['source']['name']
+            ],
+            'pullSecret' => [
+              'name' => $secret
+            ]
+          ],
+          'type' => 'Source'
+        ],
+        // @todo - figure out github and other types of triggers
+        'triggers' => [
+          [
+            'type' => 'ImageChange',
+          ],
+          [
+            'type' => 'ConfigChange'
+          ],
+        ],
+        'status' => [
+          'lastversion' => time()
+        ],
+      ],
+    ];
+
+    $response = $this->request($resourceMethod['action'], $uri, $buildConfig);
+
+    if ($response['response'] === 200) {
+      return $response;
+    }
+    else {
+      return FALSE;
+    }
+
   }
 
   /**
