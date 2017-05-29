@@ -134,22 +134,22 @@ interface OpenShiftClientInterface {
    *
    * @param string $name Name of build config.
    * @param string $secret Name of existing secret to use.
-   * @param string $imagestream Name of imagestream.
+   * @param string $image_stream_tag Name of imagestream.
    * @param array $data Build config data.
    * @return mixed
    */
-  public function createBuildConfig($name, $secret, $imagestream, $data);
+  public function createBuildConfig($name, $secret, $image_stream_tag, $data);
 
   /**
    * Updates an existing build config by name.
    *
    * @param string $name Name of build config.
    * @param string $secret Name of existing secret to use.
-   * @param string $imagestream Name of imagestream.
+   * @param string $image_stream_tag Name of imagestream.
    * @param array $data Build config data.
    * @return mixed
    */
-  public function updateBuildConfig($name, $secret, $imagestream, $data);
+  public function updateBuildConfig($name, $secret, $image_stream_tag, $data);
 
   /**
    * Deletes a build config by name.
@@ -170,7 +170,7 @@ interface OpenShiftClientInterface {
   /**
    * Creates an image stream, needed for buildConfig.
    *
-   * @param string $name Name of imagestream, '-imagestream' appended to string.
+   * @param string $name Name of imagestream.
    * @return mixed
    */
   public function createImageStream($name);
@@ -178,7 +178,7 @@ interface OpenShiftClientInterface {
   /**
    * Updates an image stream.
    *
-   * @param string $name Name of imagestream, '-imagestream' appended to string.
+   * @param string $name Name of imagestream.
    * @return mixed
    */
   public function updateImageStream($name);
@@ -186,7 +186,7 @@ interface OpenShiftClientInterface {
   /**
    * Deletes an image stream.
    *
-   * @param string $name Name of imagestream, '-imagestream' appended to string.
+   * @param string $name Name of imagestream.
    * @return mixed
    */
   public function deleteImageStream($name);
