@@ -448,31 +448,20 @@ class Client implements OpenShiftClientInterface {
     $resourceMethod = $this->getResourceMethod($method);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
-    if (isset($data['dependencies'])) {
-      // @todo - json_encode this.
-      $dependencies = json_encode([
-        $data['dependencies']
-      ]);
-    }
-
     // @todo - use a model.
     $service = [
       'kind'     => 'Service',
       'metadata' => [
         'name'        => (string) $name,
-        //'namespace'   => $this->namespace,
         'annotations' => [
           'description' => isset($data['description']) ? $data['description'] : '',
-          //'service.alpha.openshift.io/dependencies' => isset($dependencies) ? $dependencies : '',
         ],
       ],
       'spec' => [
-        // This may be an array.
         'ports' => [
           // Defaults to TCP.
           [
             'name'       => 'web',
-            //'protocol'   => isset($data['protocol']) ? $data['protocol'] : 'TCP',
             'port'       => (int) $data['port'],
             'targetPort' => (int) $data['targetPort'],
           ],
