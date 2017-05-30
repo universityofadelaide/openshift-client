@@ -180,6 +180,12 @@ class Client implements OpenShiftClientInterface {
         'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}'
       ]
     ],
+    'imagestreamtag' => [
+      'get' => [
+        'action' => 'GET',
+        'uri' => 'oapi/v1/namespaces/{namespace}/imagestreamtags/{name}'
+      ],
+    ]
   ];
 
   /**
@@ -889,8 +895,23 @@ class Client implements OpenShiftClientInterface {
   /**
    * @inheritdoc
    */
-  public function getImageStreamTag() {
-    // TODO: Implement getImageStreamTag() method.
+  public function getImageStreamTag($name) {
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'],[
+      'name' => $name
+    ]);
+
+    $response = $this->request($resourceMethod['action'], $uri);
+
+    if ($response['response'] === 200) {
+      return $response;
+    }
+    else {
+      return FALSE;
+    }
+
   }
 
   /**
