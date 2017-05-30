@@ -79,7 +79,7 @@ class Client implements OpenShiftClientInterface {
       ],
       'get' => [
         'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams'
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}'
       ],
       'update' => [
         // PUT replaces the imagestream.
@@ -98,7 +98,7 @@ class Client implements OpenShiftClientInterface {
       ],
       'get' => [
         'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs'
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}'
       ],
       'update' => [
         'action' => 'PUT',
