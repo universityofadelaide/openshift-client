@@ -181,6 +181,17 @@ class ClientTest extends TestCase {
 
   }
 
+  public function getImageStreamTag() {
+
+    $request = $this->client->getImageStreamTag($this->json->clientTest->artifacts . '-stream:master');
+
+    $this->assertEquals(
+      200,
+      $request['response'],
+      'Unable to retrieve image stream tag'
+    );
+  }
+
   public function testCreateDeploymentConfig() {
     $data = [
       'containerPort' => 8080,
