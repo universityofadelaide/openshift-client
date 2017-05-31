@@ -276,8 +276,8 @@ class Client implements OpenShiftClientInterface {
 
     if ($method != 'DELETE') {
       $requestOptions = [
-        'query' => is_array($query) ? $query : [],
-        'body' => is_array($body) ? json_encode($body) : $body,
+        'query' => $query,
+        'body' => json_encode($body),
       ];
     }
 
@@ -290,10 +290,7 @@ class Client implements OpenShiftClientInterface {
       $body = $exception->getResponse()->getBody()->getContents();
     }
 
-    return [
-      'code' => $code,
-      'body' => json_decode($body, true)
-    ];
+    return $code === $this->responseCodes[$method] ? json_decode($body, true) : FALSE;
   }
 
   /**
@@ -321,7 +318,6 @@ class Client implements OpenShiftClientInterface {
    * @return string The request uri.
    */
   protected function createRequestUri($uri, array $params = []) {
-
     // By default replace the {namespace} this is set in configuration.
     if ($this->namespace !== NULL) {
       $uri = str_replace('{' . 'namespace' . '}', $this->namespace, $uri);
@@ -339,9 +335,7 @@ class Client implements OpenShiftClientInterface {
    * @inheritdoc
    */
   public function createSecret($name, array $data) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
 
     // base64 the data
     foreach ($data as $key => $value) {
@@ -359,32 +353,26 @@ class Client implements OpenShiftClientInterface {
       'data' => $data
     ];
 
-    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $secret);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $secret);
   }
 
   /**
    * @inheritdoc
    */
   public function getSecret($name) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name
     ]);
 
-    $response = $this->request($resourceMethod['action'], $uri, []);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri, []);
   }
 
   /**
    * @inheritdoc
    */
   public function updateSecret($name, array $data) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name
     ]);
@@ -404,23 +392,19 @@ class Client implements OpenShiftClientInterface {
       'data' => $data
     ];
 
-    $response = $this->request($resourceMethod['action'], $uri, $secret);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri, $secret);
   }
 
   /**
    * @inheritdoc
    */
   public function deleteSecret($name) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name
     ]);
 
-    $response = $this->request($resourceMethod['action'], $uri);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri);
   }
 
   /**
@@ -434,9 +418,7 @@ class Client implements OpenShiftClientInterface {
    * @inheritdoc
    */
   public function createService($name, array $data) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
     // @todo - use a model.
@@ -460,8 +442,7 @@ class Client implements OpenShiftClientInterface {
       ],
     ];
 
-    $response = $this->request($resourceMethod['action'], $uri, $service);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri, $service);
   }
 
   /**
@@ -475,14 +456,12 @@ class Client implements OpenShiftClientInterface {
    * @inheritdoc
    */
   public function deleteService($name) {
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name
     ]);
 
-    $response = $this->request($resourceMethod['action'], $uri);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri);
   }
 
   /**
@@ -496,9 +475,7 @@ class Client implements OpenShiftClientInterface {
    * @inheritdoc
    */
   public function createRoute($name, $service_name, $application_domain) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
     $route = [
@@ -519,8 +496,7 @@ class Client implements OpenShiftClientInterface {
       ]
     ];
 
-    $response = $this->request($resourceMethod['action'], $uri, $route);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri, $route);
   }
 
   /**
@@ -534,37 +510,31 @@ class Client implements OpenShiftClientInterface {
    * @inheritdoc
    */
   public function deleteRoute($name) {
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name
     ]);
 
-    $response = $this->request($resourceMethod['action'], $uri);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri);
   }
 
   /**
    * @inheritdoc
    */
   public function getBuildConfig($name) {
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'],[
       'name' => $name
     ]);
 
-    $response = $this->request($resourceMethod['action'], $uri);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri);
   }
 
   /**
    * @inheritdoc
    */
   public function createBuildConfig($name, $secret, $image_stream_tag, $data) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
     $buildConfig = [
@@ -627,17 +597,14 @@ class Client implements OpenShiftClientInterface {
       ],
     ];
 
-    $response = $this->request($resourceMethod['action'], $uri, $buildConfig);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri, $buildConfig);
   }
 
   /**
    * @inheritdoc
    */
   public function updateBuildConfig($name, $secret, $imagestream, $data) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name
     ]);
@@ -702,47 +669,38 @@ class Client implements OpenShiftClientInterface {
       ],
     ];
 
-    $response = $this->request($resourceMethod['action'], $uri, $buildConfig);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri, $buildConfig);
   }
 
   /**
    * @inheritdoc
    */
   public function deleteBuildConfig($name) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name
     ]);
 
-    $response = $this->request($resourceMethod['action'], $uri);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri);
   }
 
   /**
    * @inheritdoc
    */
   public function getImageStream($name) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'],[
       'name' => $name
     ]);
 
-    $response = $this->request($resourceMethod['action'], $uri);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri);
   }
 
   /**
    * @inheritdoc
    */
   public function createImageStream($name) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
 
     $imageStream = [
       'kind' => 'ImageStream',
@@ -757,17 +715,14 @@ class Client implements OpenShiftClientInterface {
       ]
     ];
 
-    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
   }
 
   /**
    * @inheritdoc
    */
   public function updateImageStream($name) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
 
     $imageStream = [
       'kind' => 'ImageStream',
@@ -782,37 +737,30 @@ class Client implements OpenShiftClientInterface {
       ]
     ];
 
-    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
   }
 
   /**
    * @inheritdoc
    */
   public function deleteImageStream($name) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name
     ]);
-    $response = $this->request($resourceMethod['action'], $uri);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri);
   }
 
   /**
    * @inheritdoc
    */
   public function getImageStreamTag($name) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'],[
       'name' => $name
     ]);
 
-    $response = $this->request($resourceMethod['action'], $uri);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri);
   }
 
   /**
@@ -847,8 +795,7 @@ class Client implements OpenShiftClientInterface {
    * @inheritdoc
    */
   public function createPersistentVolumeClaim($name, $access_mode, $storage) {
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
     $persistentVolumeClaim = [
@@ -869,8 +816,7 @@ class Client implements OpenShiftClientInterface {
       ],
     ];
 
-    $response = $this->request($resourceMethod['action'], $uri, $persistentVolumeClaim);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri, $persistentVolumeClaim);
   }
 
   /**
@@ -884,38 +830,31 @@ class Client implements OpenShiftClientInterface {
    * @inheritdoc
    */
   public function deletePersistentVolumeClaim($name) {
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name
     ]);
 
-    $response = $this->request($resourceMethod['action'], $uri);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri);
   }
 
   /**
    * @inheritdoc
    */
   public function getDeploymentConfig($name) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'],[
       'name' => $name
     ]);
 
-    $response = $this->request($resourceMethod['action'], $uri);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri);
   }
 
   /**
    * @inheritdoc
    */
   public function createDeploymentConfig($name, $image_stream_tag, $image_name, $data) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
     $deploymentConfig = [
@@ -1040,16 +979,14 @@ class Client implements OpenShiftClientInterface {
       ]
     ];
 
-    $response = $this->request($resourceMethod['action'], $uri, $deploymentConfig);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri, $deploymentConfig);
   }
 
   /**
    * @inheritdoc
    */
   public function updateDeploymentConfig($name, $image_stream_tag, $image_name, $data) {
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name
     ]);
@@ -1166,22 +1103,18 @@ class Client implements OpenShiftClientInterface {
       ]
     ];
 
-    $response = $this->request($resourceMethod['action'], $uri, $deploymentConfig);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri, $deploymentConfig);
   }
 
   /**
    * @inheritdoc
    */
   public function deleteDeploymentConfig($name) {
-
-    $method = __METHOD__;
-    $resourceMethod = $this->getResourceMethod($method);
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name
     ]);
 
-    $response = $this->request($resourceMethod['action'], $uri);
-    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
+    return $this->request($resourceMethod['action'], $uri);
   }
 }
