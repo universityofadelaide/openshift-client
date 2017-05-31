@@ -79,7 +79,7 @@ class Client implements OpenShiftClientInterface {
       ],
       'get' => [
         'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams'
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}'
       ],
       'update' => [
         // PUT replaces the imagestream.
@@ -98,7 +98,7 @@ class Client implements OpenShiftClientInterface {
       ],
       'get' => [
         'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs'
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}'
       ],
       'update' => [
         'action' => 'PUT',
@@ -180,6 +180,12 @@ class Client implements OpenShiftClientInterface {
         'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}'
       ]
     ],
+    'imagestreamtag' => [
+      'get' => [
+        'action' => 'GET',
+        'uri' => 'oapi/v1/namespaces/{namespace}/imagestreamtags/{name}'
+      ],
+    ]
   ];
 
   /**
@@ -448,31 +454,17 @@ class Client implements OpenShiftClientInterface {
     $resourceMethod = $this->getResourceMethod($method);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
-    if (isset($data['dependencies'])) {
-      // @todo - json_encode this.
-      $dependencies = json_encode([
-        $data['dependencies']
-      ]);
-    }
-
     // @todo - use a model.
     $service = [
       'kind'     => 'Service',
       'metadata' => [
         'name'        => (string) $name,
-        //'namespace'   => $this->namespace,
-        'annotations' => [
-          'description' => isset($data['description']) ? $data['description'] : '',
-          //'service.alpha.openshift.io/dependencies' => isset($dependencies) ? $dependencies : '',
-        ],
       ],
       'spec' => [
-        // This may be an array.
         'ports' => [
           // Defaults to TCP.
           [
             'name'       => 'web',
-            //'protocol'   => isset($data['protocol']) ? $data['protocol'] : 'TCP',
             'port'       => (int) $data['port'],
             'targetPort' => (int) $data['targetPort'],
           ],
@@ -698,7 +690,9 @@ class Client implements OpenShiftClientInterface {
 
     $method = __METHOD__;
     $resourceMethod = $this->getResourceMethod($method);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name
+    ]);
 
     $buildConfig = [
       'kind' => 'BuildConfig',
@@ -901,8 +895,23 @@ class Client implements OpenShiftClientInterface {
   /**
    * @inheritdoc
    */
-  public function getImageStreamTag() {
-    // TODO: Implement getImageStreamTag() method.
+  public function getImageStreamTag($name) {
+
+    $method = __METHOD__;
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'],[
+      'name' => $name
+    ]);
+
+    $response = $this->request($resourceMethod['action'], $uri);
+
+    if ($response['response'] === 200) {
+      return $response;
+    }
+    else {
+      return FALSE;
+    }
+
   }
 
   /**

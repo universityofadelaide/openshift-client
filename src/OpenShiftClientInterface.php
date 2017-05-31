@@ -191,7 +191,13 @@ interface OpenShiftClientInterface {
    */
   public function deleteImageStream($name);
 
-  public function getImageStreamTag();
+  /**
+   * Retrieves the specified ImageStreamTag.
+   *
+   * @param string $name Name of the image stream tag.
+   * @return mixed
+   */
+  public function getImageStreamTag($name);
 
   public function createImageSteamTag();
 
