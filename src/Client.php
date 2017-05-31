@@ -231,7 +231,6 @@ class Client implements OpenShiftClientInterface {
     }
 
     $this->guzzleClient = new GuzzleClient($guzzle_options);
-
   }
 
   /**
@@ -269,7 +268,7 @@ class Client implements OpenShiftClientInterface {
    * @param array $body Request body to be converted to JSON.
    * @param array $query Query params
    *
-   * @return array Returns the status code and json_decoded body contents.
+   * @return array|bool Returns json_decoded body contents or FALSE.
    */
   protected function request($method, $uri, array $body = [], array $query = []) {
     $requestOptions = [];
@@ -283,45 +282,46 @@ class Client implements OpenShiftClientInterface {
 
     try {
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
-      $code = $response->getStatusCode();
-      $body = $response->getBody()->getContents();
     } catch (RequestException $exception) {
-      $code = $exception->getCode();
-      $body = $exception->getResponse()->getBody()->getContents();
+      // @todo Handle errors.
+      return FALSE;
     }
 
-    return $code === $this->responseCodes[$method] ? json_decode($body, true) : FALSE;
+    return json_decode($response->getBody()->getContents(), true);
   }
 
   /**
-   * Gets the uri and action from the resourceMap from the class Method.
+   * Gets the uri and action from the resourceMap using the class method name.
    *
-   * @param string $method The class method name.
+   * @param string $methodName
+   *   The class method name, typically from __METHOD__ magic constant.
    * @return array
    */
-  protected function getResourceMethod($method) {
-    $name = explode('::', $method);
-    $nameArray = preg_split('/(?=[A-Z])/', end($name));
-    // the first element is the action
-    $action = array_shift($nameArray);
-    $method = strtolower(implode('', $nameArray));
-    return $this->resourceMap[$method][$action];
+  protected function getResourceMethod($methodName) {
+    // Strip class name if present.
+    $methodName = end(explode('::', $methodName));
+    // Split into array by snakeCaseWordBoundaries.
+    $nameParts = preg_split('/(?=[A-Z])/', $methodName);
+    // The first element is the action (e.g. 'create').
+    $action = array_shift($nameParts);
+    // The remaining elements are the resource (e.g. 'deploymentconfig').
+    $resource = strtolower(implode('', $nameParts));
+
+    return $this->resourceMap[$resource][$action];
   }
 
   /**
    * Creates a relative request url.
    *
-   * @param $uri
-   * @param array $params Params that map to the uri resource path e.g
+   * @param string $uri The URI to be parsed.
+   * @param array $params Params that map to the uri resource path e.g.
    * /api/{namespace}/{name}
    *
    * @return string The request uri.
    */
-  protected function createRequestUri($uri, array $params = []) {
+  protected function createRequestUri(string $uri, array $params = []) {
     // By default replace the {namespace} this is set in configuration.
-    if ($this->namespace !== NULL) {
-      $uri = str_replace('{' . 'namespace' . '}', $this->namespace, $uri);
-    }
+    $params['namespace'] = $this->namespace;
 
     foreach ($params as $key => $param) {
       // perform a string replace on the uri.
@@ -337,7 +337,7 @@ class Client implements OpenShiftClientInterface {
   public function createSecret($name, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
 
-    // base64 the data
+    // Base64 encode the data.
     foreach ($data as $key => $value) {
       $data[$key] = base64_encode($value);
     }
@@ -377,7 +377,7 @@ class Client implements OpenShiftClientInterface {
       'name' => $name
     ]);
 
-    // base64 the data
+    // Base64 encode the data.
     foreach ($data as $key => $value) {
       $data[$key] = base64_encode($value);
     }
