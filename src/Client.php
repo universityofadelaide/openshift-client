@@ -189,6 +189,18 @@ class Client implements OpenShiftClientInterface {
   ];
 
   /**
+   * Expected response codes map.
+   *
+   * @var array
+   */
+  protected $responseCodes = [
+    'POST' => 201,
+    'DELETE' => 200,
+    'GET' => 200,
+    'PUT' => 200,
+  ];
+
+  /**
    * Client constructor.
    *
    * @param string $host The hostname.
@@ -280,7 +292,7 @@ class Client implements OpenShiftClientInterface {
 
     return [
       'code' => $code,
-      'body' => json_decode($body)
+      'body' => json_decode($body, true)
     ];
   }
 
@@ -348,15 +360,7 @@ class Client implements OpenShiftClientInterface {
     ];
 
     $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $secret);
-
-    if ($response['response'] === 201) {
-      return $response;
-    }
-    else {
-      // something failed.
-      return FALSE;
-    }
-
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -371,13 +375,7 @@ class Client implements OpenShiftClientInterface {
     ]);
 
     $response = $this->request($resourceMethod['action'], $uri, []);
-
-    if ($response['response'] === 200) {
-      return $response;
-    }
-    else {
-      return FALSE;
-    }
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -407,14 +405,7 @@ class Client implements OpenShiftClientInterface {
     ];
 
     $response = $this->request($resourceMethod['action'], $uri, $secret);
-
-    if ($response['response'] === 200) {
-      return $response;
-    }
-    else {
-      // something failed.
-      return FALSE;
-    }
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -429,13 +420,7 @@ class Client implements OpenShiftClientInterface {
     ]);
 
     $response = $this->request($resourceMethod['action'], $uri);
-
-    if ($response['response'] === 200) {
-      return $response;
-    }
-    else {
-      return FALSE;
-    }
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -476,13 +461,7 @@ class Client implements OpenShiftClientInterface {
     ];
 
     $response = $this->request($resourceMethod['action'], $uri, $service);
-
-    if ($response['response'] === 201) {
-      return $response;
-    }
-    else {
-      return FALSE;
-    }
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -503,13 +482,7 @@ class Client implements OpenShiftClientInterface {
     ]);
 
     $response = $this->request($resourceMethod['action'], $uri);
-
-    if ($response['response'] === 200) {
-      return $response;
-    }
-    else {
-      return FALSE;
-    }
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -547,13 +520,7 @@ class Client implements OpenShiftClientInterface {
     ];
 
     $response = $this->request($resourceMethod['action'], $uri, $route);
-
-    if ($response['response'] === 201) {
-      return $response;
-    }
-    else {
-      return FALSE;
-    }
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -574,13 +541,7 @@ class Client implements OpenShiftClientInterface {
     ]);
 
     $response = $this->request($resourceMethod['action'], $uri);
-
-    if ($response['response'] === 200) {
-      return $response;
-    }
-    else {
-      return FALSE;
-    }
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -593,7 +554,8 @@ class Client implements OpenShiftClientInterface {
       'name' => $name
     ]);
 
-    return $this->request($resourceMethod['action'], $uri);
+    $response = $this->request($resourceMethod['action'], $uri);
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -665,7 +627,8 @@ class Client implements OpenShiftClientInterface {
       ],
     ];
 
-    return $this->request($resourceMethod['action'], $uri, $buildConfig);
+    $response = $this->request($resourceMethod['action'], $uri, $buildConfig);
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -740,14 +703,7 @@ class Client implements OpenShiftClientInterface {
     ];
 
     $response = $this->request($resourceMethod['action'], $uri, $buildConfig);
-
-    if ($response['response'] === 200) {
-      return $response;
-    }
-    else {
-      return FALSE;
-    }
-
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -762,13 +718,7 @@ class Client implements OpenShiftClientInterface {
     ]);
 
     $response = $this->request($resourceMethod['action'], $uri);
-
-    if ($response['response'] === 200) {
-      return $response;
-    }
-    else {
-      return FALSE;
-    }
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -783,14 +733,7 @@ class Client implements OpenShiftClientInterface {
     ]);
 
     $response = $this->request($resourceMethod['action'], $uri);
-
-    if ($response['response'] === 200) {
-      return $response;
-    }
-    else {
-      return FALSE;
-    }
-
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -814,7 +757,8 @@ class Client implements OpenShiftClientInterface {
       ]
     ];
 
-    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
+    $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -839,13 +783,7 @@ class Client implements OpenShiftClientInterface {
     ];
 
     $response = $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
-
-    if ($response['response'] === 200) {
-      return $response;
-    }
-    else {
-      return FALSE;
-    }
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
@@ -859,13 +797,7 @@ class Client implements OpenShiftClientInterface {
       'name' => $name
     ]);
     $response = $this->request($resourceMethod['action'], $uri);
-
-    if ($response['response'] === 200) {
-      return $response;
-    }
-    else {
-      return FALSE;
-    }
+    return $response['code'] === $this->responseCodes[$resourceMethod['action']] ? $response['body'] : FALSE;
   }
 
   /**
