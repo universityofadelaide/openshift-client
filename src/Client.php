@@ -923,6 +923,11 @@ class Client implements OpenShiftClientInterface {
                             'mountPath' => '/code/private',
                             'name' => $data['private_volume'],
                           ],
+                          [
+                            'mountPath' => '/etc/secret-volume',
+                            'name' => 'secret-volume',
+                            'readOnly' => TRUE,
+                          ],
                         ],
                     ],
                   ],
@@ -946,6 +951,12 @@ class Client implements OpenShiftClientInterface {
                           'claimName' => $data['private_volume'],
                         ],
                     ],
+                    [
+                      'name' => 'secret-volume',
+                      'secret' => [
+                        'secretName' => $data['secret-volume'],
+                      ]
+                    ]
                   ],
               ],
           ],
