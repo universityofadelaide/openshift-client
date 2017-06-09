@@ -857,6 +857,37 @@ class Client implements OpenShiftClientInterface {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
+    // @todo Move 'volumes' out of $data array into first-class argument.
+    // Construct volume configuration.
+    $volumes_config = [];
+    $volume_mounts = [];
+    foreach ($data['volumes'] as $volume) {
+      if ($volume['type'] === 'pvc') {
+        $volumes_config[] = [
+          'name' => $volume['name'],
+          'persistentVolumeClaim' => [
+            'claimName' => $volume['name'],
+          ],
+        ];
+        $volume_mounts[] = [
+          'mountPath' => $volume['path'],
+          'name' => $volume['name'],
+        ];
+      } elseif ($volume['type'] === 'secret') {
+        $volumes_config[] = [
+          'name' => $volume['name'],
+          'secret' => [
+            'secretName' => $volume['secret'],
+          ]
+        ];
+        $volume_mounts[] = [
+          'mountPath' => $volume['path'],
+          'name' => $volume['name'],
+          'readOnly' => TRUE,
+        ];
+      }
+    }
+
     $deploymentConfig = [
       'apiVersion' => 'v1',
       'kind' => 'DeploymentConfig',
@@ -913,51 +944,14 @@ class Client implements OpenShiftClientInterface {
                               'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
                             ],
                         ],
-                      'volumeMounts' =>
-                        [
-                          [
-                            'mountPath' => '/code/web/sites/default/files',
-                            'name' => $data['public_volume'],
-                          ],
-                          [
-                            'mountPath' => '/code/private',
-                            'name' => $data['private_volume'],
-                          ],
-                          [
-                            'mountPath' => '/etc/secret-volume',
-                            'name' => 'secret-volume',
-                            'readOnly' => TRUE,
-                          ],
-                        ],
+                      'volumeMounts' => $volume_mounts,
                     ],
                   ],
                 'dnsPolicy' => 'ClusterFirst',
                 'restartPolicy' => 'Always',
                 'securityContext' => [],
                 'terminationGracePeriodSeconds' => 30,
-                'volumes' =>
-                  [
-                    [
-                      'name' => $data['public_volume'],
-                      'persistentVolumeClaim' =>
-                        [
-                          'claimName' => $data['public_volume'],
-                        ],
-                    ],
-                    [
-                      'name' => $data['private_volume'],
-                      'persistentVolumeClaim' =>
-                        [
-                          'claimName' => $data['private_volume'],
-                        ],
-                    ],
-                    [
-                      'name' => 'secret-volume',
-                      'secret' => [
-                        'secretName' => $data['secret-volume'],
-                      ]
-                    ]
-                  ],
+                'volumes' => $volumes_config,
               ],
           ],
         'test' => FALSE,
@@ -1001,6 +995,37 @@ class Client implements OpenShiftClientInterface {
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name
     ]);
+
+    // @todo Move 'volumes' out of $data array into first-class argument.
+    // Construct volume configuration.
+    $volumes_config = [];
+    $volume_mounts = [];
+    foreach ($data['volumes'] as $volume) {
+      if ($volume['type'] === 'pvc') {
+        $volumes_config[] = [
+          'name' => $volume['name'],
+          'persistentVolumeClaim' => [
+            'claimName' => $volume['name'],
+          ],
+        ];
+        $volume_mounts[] = [
+          'mountPath' => $volume['path'],
+          'name' => $volume['name'],
+        ];
+      } elseif ($volume['type'] === 'secret') {
+        $volumes_config[] = [
+          'name' => $volume['name'],
+          'secret' => [
+            'secretName' => $volume['secret'],
+          ]
+        ];
+        $volume_mounts[] = [
+          'mountPath' => $volume['path'],
+          'name' => $volume['name'],
+          'readOnly' => TRUE,
+        ];
+      }
+    }
 
     $deploymentConfig = [
       'apiVersion' => 'v1',
@@ -1058,40 +1083,14 @@ class Client implements OpenShiftClientInterface {
                             'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
                           ],
                       ],
-                    'volumeMounts' =>
-                      [
-                        [
-                          'mountPath' => '/code/web/sites/default/files',
-                          'name' => $name . '-public',
-                        ],
-                        [
-                          'mountPath' => '/code/private',
-                          'name' => $name . '-private',
-                        ],
-                      ],
+                    'volumeMounts' => $volume_mounts,
                   ],
                 ],
               'dnsPolicy' => 'ClusterFirst',
               'restartPolicy' => 'Always',
               'securityContext' => [],
               'terminationGracePeriodSeconds' => 30,
-              'volumes' =>
-                [
-                  [
-                    'name' => $name . '-public',
-                    'persistentVolumeClaim' =>
-                      [
-                        'claimName' => $name . '-public',
-                      ],
-                  ],
-                  [
-                    'name' => $name . '-private',
-                    'persistentVolumeClaim' =>
-                      [
-                        'claimName' => $name . '-private',
-                      ],
-                  ],
-                ],
+              'volumes' => $volumes_config,
             ],
         ],
         'test' => FALSE,
