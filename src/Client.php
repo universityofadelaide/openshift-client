@@ -888,13 +888,15 @@ class Client implements OpenShiftClientInterface {
       }
     }
 
+    // Collate annotations.
+    $annotations = array_key_exists('annotations', $data) &&
+      is_array($data['annotations']) ? $data['annotations'] : [];
+
     $deploymentConfig = [
       'apiVersion' => 'v1',
       'kind' => 'DeploymentConfig',
       'metadata' => [
-        'annotations' => [
-          'description' => 'Defines how to deploy the application server',
-        ],
+        'annotations' => $annotations,
         'name' => $name,
       ],
       'spec' => [
