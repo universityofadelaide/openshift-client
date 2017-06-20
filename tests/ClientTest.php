@@ -11,8 +11,16 @@ class ClientTest extends TestCase {
   private $namespace;
   private $json;
 
+  /**
+   * Protected client variable.
+   *
+   * @var \UniversityOfAdelaide\OpenShift\OpenShiftClientInterface
+   */
   protected $client;
 
+  /**
+   * Setup things required for the tests.
+   */
   public function setUp() {
     global $argv, $argc;
 
@@ -34,8 +42,11 @@ class ClientTest extends TestCase {
 
   }
 
+  /**
+   * Setup the guzzle client for testing.
+   */
   public function testGetGuzzleClient() {
-    // Test creating the client
+    // Test creating the client.
     $this->assertInstanceOf(
       GuzzleClient::class,
       $this->client->getGuzzleClient(),
@@ -43,102 +54,120 @@ class ClientTest extends TestCase {
     );
   }
 
+  /**
+   * Test secret creation.
+   */
   public function testCreateSecret() {
 
-    $request = $this->client->createSecret($this->json->clientTest->testSecret->name, [
+    $response = $this->client->createSecret($this->json->clientTest->testSecret->name, [
       'username' => $this->json->clientTest->testSecret->user,
       'password' => $this->json->clientTest->testSecret->pass,
     ]);
 
-    $this->assertEquals(
-      201,
-      $request['response'],
-      'Unable to create secret.'
+    $this->assertNotFalse(
+      $response,
+      'Unable to create secret - ' . print_r($response, TRUE)
     );
   }
 
+  /**
+   * Test updating a secret.
+   */
   public function testUpdateSecret() {
 
-    $request = $this->client->updateSecret($this->json->clientTest->testSecret->name, [
+    $response = $this->client->updateSecret($this->json->clientTest->testSecret->name, [
       'username' => $this->json->clientTest->testSecret->user,
       'password' => $this->json->clientTest->testSecret->alt_pass,
     ]);
 
-    $this->assertEquals(
-      200,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to update secret.'
     );
   }
 
+  /**
+   * Test retrieving a secret.
+   */
   public function testGetSecret() {
 
-    $request = $this->client->getSecret($this->json->clientTest->testSecret->name);
+    $response = $this->client->getSecret($this->json->clientTest->testSecret->name);
 
-    $this->assertEquals(
-      200,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to request secret.'
     );
   }
 
+  /**
+   * Test creating an image stream.
+   */
   public function testCreateImageStream() {
 
-    $request = $this->client->createImageStream($this->json->clientTest->artifacts . '-stream');
+    $response = $this->client->createImageStream($this->json->clientTest->artifacts . '-stream');
 
-    $this->assertEquals(
-      201,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to create image stream.'
     );
   }
 
+  /**
+   * Test retrieving an image stream.
+   */
   public function testGetImageStream() {
-    $request = $this->client->getImageStream($this->json->clientTest->artifacts . '-stream');
+    $response = $this->client->getImageStream($this->json->clientTest->artifacts . '-stream');
 
-    $this->assertEquals(
-      200,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to retrieve image stream.'
     );
 
-    $this->assertObjectHasAttribute(
-      'items',
-      $request['body']
+    $this->assertInternalType(
+      'array',
+      $response,
+      'Returned type for image stream incorrect.'
     );
 
   }
 
+  /**
+   * Test creating a persistent volume claim.
+   */
   public function testCreatePersistentVolumeClaim1() {
 
-    $request = $this->client->createPersistentVolumeClaim(
+    $response = $this->client->createPersistentVolumeClaim(
       $this->json->clientTest->artifacts . '-private',
       'ReadWriteMany',
       '10Gi'
     );
 
-    $this->assertEquals(
-      201,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to create persistent volume claim.'
     );
   }
 
+  /**
+   * Test creating a second persistent volume claim.
+   */
   public function testCreatePersistentVolumeClaim2() {
 
-    $request = $this->client->createPersistentVolumeClaim(
+    $response = $this->client->createPersistentVolumeClaim(
        $this->json->clientTest->artifacts . '-public',
       'ReadWriteMany',
       '10Gi'
     );
 
-    $this->assertEquals(
-      201,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to create persistent volume claim.'
     );
   }
 
+  /**
+   * Test creating a build config.
+   */
   public function testCreateBuildConfig() {
     $data = [
       'git' => [
@@ -151,91 +180,123 @@ class ClientTest extends TestCase {
       ],
     ];
 
-    $request = $this->client->createBuildConfig(
+    $response = $this->client->createBuildConfig(
       $this->json->clientTest->artifacts . '-build',
       $this->json->clientTest->buildSecret,
-      $this->json->clientTest->artifacts . '-stream',
+      $this->json->clientTest->artifacts . '-stream:master',
       $data
     );
 
-    $this->assertEquals(
-      201,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to create build config.'
     );
   }
 
+  /**
+   * Test retrieving a build config.
+   */
   public function testGetBuildConfig() {
-    $request = $this->client->getBuildConfig($this->json->clientTest->artifacts . '-build');
+    $response = $this->client->getBuildConfig($this->json->clientTest->artifacts . '-build');
 
-    $this->assertEquals(
-      200,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to retrieve build config.'
     );
 
-    $this->assertObjectHasAttribute(
-      'items',
-      $request['body']
+    $this->assertInternalType(
+      'array',
+      $response
     );
 
   }
 
+  /**
+   * Test retrieving an image stream tag.
+   */
   public function getImageStreamTag() {
 
-    $request = $this->client->getImageStreamTag($this->json->clientTest->artifacts . '-stream:master');
+    $response = $this->client->getImageStreamTag($this->json->clientTest->artifacts . '-stream:master');
 
-    $this->assertEquals(
-      200,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to retrieve image stream tag'
     );
   }
 
+  /**
+   * Test creating a deployment config.
+   */
   public function testCreateDeploymentConfig() {
+    $volumes = [
+      [
+        'type' => 'pvc',
+        'name' => 'public-volume',
+        'path' => $this->json->clientTest->artifacts . '-public',
+      ],
+      [
+        'type' => 'pvc',
+        'name' => 'private-volume',
+        'path' => $this->json->clientTest->artifacts . '-private',
+      ],
+    ];
+
+    $deploy_env_vars = [];
+    foreach ($this->json->clientTest->envVars as $env_var) {
+      $deploy_env_vars[] = [
+        'name' => $env_var->name,
+        'value' => $env_var->value,
+      ];
+    }
+
     $data = [
       'containerPort' => 8080,
       'memory_limit' => '128Mi',
-      'env_vars' => $this->json->clientTest->envVars,
-      'public_volume' => $this->json->clientTest->artifacts . '-public',
-      'private_volume' => $this->json->clientTest->artifacts . '-private',
+      'env_vars' => $deploy_env_vars,
+      'annotations' => [
+        'test' => 'tester',
+      ],
     ];
 
     $name = $this->json->clientTest->artifacts . '-deploy';
-    $image_stream_tag = $this->json->clientTest->artifacts . '-stream';
+    $image_stream_tag = $this->json->clientTest->artifacts . '-stream:master';
     $image_name = $this->json->clientTest->artifacts . '-image';
 
-    $request = $this->client->createDeploymentConfig(
+    $response = $this->client->createDeploymentConfig(
       $name,
       $image_stream_tag,
       $image_name,
+      $volumes,
       $data
     );
 
-    $this->assertEquals(
-      201,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to create deployment config.'
     );
   }
 
-
+  /**
+   * Test retrieving the deployment config.
+   */
   public function testGetDeploymentConfig() {
-    $request = $this->client->getDeploymentConfig($this->json->clientTest->artifacts . '-deploy');
+    $response = $this->client->getDeploymentConfig($this->json->clientTest->artifacts . '-deploy');
 
-    $this->assertEquals(
-      200,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to retrieve deploy config.'
     );
 
-    $this->assertObjectHasAttribute(
-      'items',
-      $request['body']
+    $this->assertInternalType(
+      'array',
+      $response
     );
 
   }
 
+  /**
+   * Test creating a service.
+   */
   public function testCreateService() {
     $data = [
       'dependencies' => '',
@@ -243,127 +304,144 @@ class ClientTest extends TestCase {
       'protocol' => 'TCP',
       'port' => 8080,
       'targetPort' => 8080,
-      'deployment' => $this->json->clientTest->artifacts . '-deploy'
+      'deployment' => $this->json->clientTest->artifacts . '-deploy',
     ];
 
     $name = $this->json->clientTest->artifacts . '-service';
 
-    $request = $this->client->createService($name, $data);
+    $response = $this->client->createService($name, $data);
 
-    $this->assertEquals(
-      201,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to create service.'
     );
 
   }
 
+  /**
+   * Test creating a route for the service.
+   */
   public function testCreateRoute() {
     $name = $this->json->clientTest->artifacts . '-route';
     $service = $this->json->clientTest->artifacts . '-service';
     $application_domain = $this->json->clientTest->domain;
 
-    $request = $this->client->createRoute($name, $service, $application_domain);
+    $response = $this->client->createRoute($name, $service, $application_domain);
 
-    $this->assertEquals(
-      201,
-      $request['response'],
+    $this->assertNotFalse(
+      $response,
       'Unable to create service.'
     );
 
   }
 
+  /**
+   * Test deleting the route.
+   */
   public function testDeleteRoute() {
     if ($this->json->clientTest->delete) {
-      $request = $this->client->deleteRoute($this->json->clientTest->artifacts . '-route');
+      $response = $this->client->deleteRoute($this->json->clientTest->artifacts . '-route');
 
-      $this->assertEquals(
-        200,
-        $request['response'],
+      $this->assertNotFalse(
+        $response,
         'Unable to delete route.'
       );
     }
   }
 
+  /**
+   * Test deleting the service.
+   */
   public function testDeleteService() {
     if ($this->json->clientTest->delete) {
-      $request = $this->client->deleteService($this->json->clientTest->artifacts . '-service');
+      $response = $this->client->deleteService($this->json->clientTest->artifacts . '-service');
 
-      $this->assertEquals(
-        200,
-        $request['response'],
+      $this->assertNotFalse(
+        $response,
         'Unable to delete route.'
       );
     }
   }
 
+  /**
+   * Test deleting the deployment configuration.
+   */
   public function testDeleteDeploymentConfig() {
     if ($this->json->clientTest->delete) {
-      $request = $this->client->deleteDeploymentConfig($this->json->clientTest->artifacts . '-deploy');
+      $response = $this->client->deleteDeploymentConfig($this->json->clientTest->artifacts . '-deploy');
 
-      $this->assertEquals(
-        200,
-        $request['response'],
+      $this->assertNotFalse(
+        $response,
         'Unable to delete deploy config.'
       );
     }
   }
 
+  /**
+   * Test deleting the build configuration.
+   */
   public function testDeleteBuildConfig() {
     if ($this->json->clientTest->delete) {
-      $request = $this->client->deleteBuildConfig($this->json->clientTest->artifacts . '-build');
+      $response = $this->client->deleteBuildConfig($this->json->clientTest->artifacts . '-build');
 
-      $this->assertEquals(
-        200,
-        $request['response'],
+      $this->assertNotFalse(
+        $response,
         'Unable to delete build config.'
       );
     }
   }
 
+  /**
+   * Test deleting the persistent volume claim.
+   */
   public function testDeletePersistentVolumeClaim1() {
     if ($this->json->clientTest->delete) {
-      $request = $this->client->deletePersistentVolumeClaim($this->json->clientTest->artifacts . '-private');
+      $response = $this->client->deletePersistentVolumeClaim($this->json->clientTest->artifacts . '-private');
 
-      $this->assertEquals(
-        200,
-        $request['response'],
+      $this->assertNotFalse(
+        $response,
         'Unable to delete persistent volume claim.'
       );
     }
   }
 
+  /**
+   * Test deleting the persistent volume claim.
+   */
   public function testDeletePersistentVolumeClaim2() {
     if ($this->json->clientTest->delete) {
-      $request = $this->client->deletePersistentVolumeClaim($this->json->clientTest->artifacts . '-public');
+      $response = $this->client->deletePersistentVolumeClaim($this->json->clientTest->artifacts . '-public');
 
-      $this->assertEquals(
-        200,
-        $request['response'],
+      $this->assertNotFalse(
+        $response,
         'Unable to delete persistent volume claim.'
       );
     }
   }
 
+  /**
+   * Test deleting the image stream.
+   */
   public function testDeleteImageStream() {
     if ($this->json->clientTest->delete) {
-      $request = $this->client->deleteImageStream($this->json->clientTest->artifacts . '-stream');
+      $response = $this->client->deleteImageStream($this->json->clientTest->artifacts . '-stream');
 
-      $this->assertEquals(
-        200,
-        $request['response'],
+      $this->assertNotFalse(
+        $response,
         'Unable to delete image stream.'
       );
     }
   }
 
+  /**
+   * Test deleteing the secret.
+   */
   public function testDeleteSecret() {
     if ($this->json->clientTest->delete) {
-      $request = $this->client->deleteSecret($this->json->clientTest->testSecret->name);
+      $response = $this->client->deleteSecret($this->json->clientTest->testSecret->name);
 
-      $this->assertEquals(
-        200,
-        $request['response'],
+      $this->assertNotFalse(
+        $response,
         'Unable to delete secret.'
       );
     }

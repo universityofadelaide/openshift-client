@@ -57,7 +57,7 @@ oc login -u developer -p developer
 ```bash
 # Assumes myproject (default) is available.
 # From the /vendor/universityofadelaide/openshift-client directory
-../../bin/phpunit tests/ClientTest.php $(minishift console --url) $(oc whoami -t) myproject
+../../bin/phpunit tests/ClientTest.php $(minishift console --url) $(oc whoami -t) myproject client_test.json
 ```
 
 ## Actual deployment

@@ -273,7 +273,7 @@ class Client implements OpenShiftClientInterface {
    * @param string $apiVersion
    *   Api version number.
    */
-  public function setApiVersion($apiVersion) {
+  public function setApiVersion(string $apiVersion) {
     $this->apiVersion = (string) $apiVersion;
   }
 
@@ -302,7 +302,7 @@ class Client implements OpenShiftClientInterface {
    * @return array|bool
    *   Returns json_decoded body contents or FALSE.
    */
-  protected function request($method, $uri, array $body = [], array $query = []) {
+  protected function request(string $method, string $uri, array $body = [], array $query = []) {
     $requestOptions = [];
 
     if ($method != 'DELETE') {
@@ -316,7 +316,6 @@ class Client implements OpenShiftClientInterface {
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
     }
     catch (RequestException $exception) {
-      // @todo Handle errors.
       return FALSE;
     }
 
@@ -332,9 +331,10 @@ class Client implements OpenShiftClientInterface {
    * @return array
    *   The information on how to call the method.
    */
-  protected function getResourceMethod($methodName) {
+  protected function getResourceMethod(string $methodName) {
     // Strip class name if present.
-    $methodName = end(explode('::', $methodName));
+    $exploded_class = explode('::', $methodName);
+    $methodName = end($exploded_class);
     // Split into array by snakeCaseWordBoundaries.
     $nameParts = preg_split('/(?=[A-Z])/', $methodName);
     // The first element is the action (e.g. 'create').
@@ -370,9 +370,9 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function createSecret($name, array $data) {
+  public function createSecret(string $name, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
 
     // Base64 encode the data.
@@ -395,9 +395,9 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function getSecret($name) {
+  public function getSecret(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
@@ -407,9 +407,9 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function updateSecret($name, array $data) {
+  public function updateSecret(string $name, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
@@ -434,9 +434,9 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function deleteSecret($name) {
+  public function deleteSecret(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
@@ -446,16 +446,16 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function getService($name) {
+  public function getService(string $name) {
     // TODO: Implement getService() method.
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function createService($name, array $data) {
+  public function createService(string $name, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -484,16 +484,16 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function updateService() {
+  public function updateService(string $name, array $data) {
     // TODO: Implement updateService() method.
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function deleteService($name) {
+  public function deleteService(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
@@ -503,16 +503,16 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function getRoute($name) {
+  public function getRoute(string $name) {
     // TODO: Implement getRoute() method.
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function createRoute($name, $service_name, $application_domain) {
+  public function createRoute(string $name, string $service_name, string $application_domain) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -538,16 +538,16 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function updateRoute($name, $service_name, $application_domain) {
+  public function updateRoute(string $name, string $service_name, string $application_domain) {
     // TODO: Implement updateRoute() method.
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function deleteRoute($name) {
+  public function deleteRoute(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
@@ -557,11 +557,11 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function getBuildConfig($name) {
+  public function getBuildConfig(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri'],[
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
     ]);
 
@@ -569,9 +569,9 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function createBuildConfig($name, $secret, $image_stream_tag, $data) {
+  public function createBuildConfig(string $name, string $secret, string $image_stream_tag, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -640,9 +640,9 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function updateBuildConfig($name, $secret, $imagestream, $data) {
+  public function updateBuildConfig(string $name, string $secret, string $image_stream, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
@@ -660,7 +660,7 @@ class Client implements OpenShiftClientInterface {
         'output' => [
           'to' => [
             'kind' => 'ImageStreamTag',
-            'name' => $imagestream . ':latest',
+            'name' => $image_stream . ':latest',
           ],
         ],
         'source' => [
@@ -712,9 +712,9 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function deleteBuildConfig($name) {
+  public function deleteBuildConfig(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
@@ -724,11 +724,11 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function getImageStream($name) {
+  public function getImageStream(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri'],[
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
     ]);
 
@@ -736,9 +736,9 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function createImageStream($name) {
+  public function createImageStream(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
 
     $imageStream = [
@@ -758,9 +758,9 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function updateImageStream($name) {
+  public function updateImageStream(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
 
     $imageStream = [
@@ -780,9 +780,9 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function deleteImageStream($name) {
+  public function deleteImageStream(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
@@ -791,11 +791,11 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function getImageStreamTag($name) {
+  public function getImageStreamTag(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri'],[
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
     ]);
 
@@ -803,41 +803,41 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function createImageSteamTag() {
+  public function createImageSteamTag(string $name) {
     // TODO: Implement createImageSteamTag() method.
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function updateImageSteamTag() {
+  public function updateImageSteamTag(string $name) {
     // TODO: Implement updateImageSteamTag() method.
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function deleteImageSteamTag() {
+  public function deleteImageSteamTag(string $name) {
     // TODO: Implement deleteImageSteamTag() method.
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function getPersistentVolumeClaim() {
+  public function getPersistentVolumeClaim(string $name) {
     // TODO: Implement getPersistentVolumeClaim() method.
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function createPersistentVolumeClaim($name, $access_mode, $storage) {
+  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
-    $persistentVolumeClaim = [
+    $pvc = [
       'apiVersion' => 'v1',
       'kind' => 'PersistentVolumeClaim',
       'metadata' => [
@@ -855,20 +855,20 @@ class Client implements OpenShiftClientInterface {
       ],
     ];
 
-    return $this->request($resourceMethod['action'], $uri, $persistentVolumeClaim);
+    return $this->request($resourceMethod['action'], $uri, $pvc);
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function updatePersistentVolumeClaim() {
+  public function updatePersistentVolumeClaim(string $name, string $access_mode, string $storage) {
     // TODO: Implement updatePersistentVolumeClaim() method.
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function deletePersistentVolumeClaim($name) {
+  public function deletePersistentVolumeClaim(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name,
@@ -878,9 +878,9 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function getDeploymentConfig($name) {
+  public function getDeploymentConfig(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
@@ -890,45 +890,16 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function createDeploymentConfig($name, $image_stream_tag, $image_name, $data) {
+  public function createDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
-    // @todo Move 'volumes' out of $data array into first-class argument.
-    // Construct volume configuration.
-    $volumes_config = [];
-    $volume_mounts = [];
-    foreach ($data['volumes'] as $volume) {
-      if ($volume['type'] === 'pvc') {
-        $volumes_config[] = [
-          'name' => $volume['name'],
-          'persistentVolumeClaim' => [
-            'claimName' => $volume['name'],
-          ],
-        ];
-        $volume_mounts[] = [
-          'mountPath' => $volume['path'],
-          'name' => $volume['name'],
-        ];
-      }
-      elseif ($volume['type'] === 'secret') {
-        $volumes_config[] = [
-          'name' => $volume['name'],
-          'secret' => [
-            'secretName' => $volume['secret'],
-          ],
-        ];
-        $volume_mounts[] = [
-          'mountPath' => $volume['path'],
-          'name' => $volume['name'],
-          'readOnly' => TRUE,
-        ];
-      }
-    }
+    $volume_config = $this->setVolumes($volumes);
 
     // Collate annotations.
+    // @todo - empty annotations array doesn't work.
     $annotations = array_key_exists('annotations', $data) &&
       is_array($data['annotations']) ? $data['annotations'] : [];
 
@@ -986,14 +957,14 @@ class Client implements OpenShiftClientInterface {
                             'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
                           ],
                       ],
-                    'volumeMounts' => $volume_mounts,
+                    'volumeMounts' => $volume_config['mounts'],
                   ],
                 ],
               'dnsPolicy' => 'ClusterFirst',
               'restartPolicy' => 'Always',
               'securityContext' => [],
               'terminationGracePeriodSeconds' => 30,
-              'volumes' => $volumes_config,
+              'volumes' => $volume_config['config'],
             ],
         ],
         'test' => FALSE,
@@ -1030,45 +1001,15 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function updateDeploymentConfig($name, $image_stream_tag, $image_name, $data) {
+  public function updateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name,
     ]);
 
-    // @todo Move 'volumes' out of $data array into first-class argument.
-    // Construct volume configuration.
-    $volumes_config = [];
-    $volume_mounts = [];
-    foreach ($data['volumes'] as $volume) {
-      if ($volume['type'] === 'pvc') {
-        $volumes_config[] = [
-          'name' => $volume['name'],
-          'persistentVolumeClaim' => [
-            'claimName' => $volume['name'],
-          ],
-        ];
-        $volume_mounts[] = [
-          'mountPath' => $volume['path'],
-          'name' => $volume['name'],
-        ];
-      }
-      elseif ($volume['type'] === 'secret') {
-        $volumes_config[] = [
-          'name' => $volume['name'],
-          'secret' => [
-            'secretName' => $volume['secret'],
-          ],
-        ];
-        $volume_mounts[] = [
-          'mountPath' => $volume['path'],
-          'name' => $volume['name'],
-          'readOnly' => TRUE,
-        ];
-      }
-    }
+    $volume_config = $this->setVolumes($volumes);
 
     $deploymentConfig = [
       'apiVersion' => 'v1',
@@ -1126,14 +1067,14 @@ class Client implements OpenShiftClientInterface {
                             'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
                           ],
                       ],
-                    'volumeMounts' => $volume_mounts,
+                    'volumeMounts' => $volume_config['mounts'],
                   ],
                 ],
               'dnsPolicy' => 'ClusterFirst',
               'restartPolicy' => 'Always',
               'securityContext' => [],
               'terminationGracePeriodSeconds' => 30,
-              'volumes' => $volumes_config,
+              'volumes' => $volume_config['config'],
             ],
         ],
         'test' => FALSE,
@@ -1160,9 +1101,9 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function deleteDeploymentConfig($name) {
+  public function deleteDeploymentConfig(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name,
@@ -1170,4 +1111,52 @@ class Client implements OpenShiftClientInterface {
 
     return $this->request($resourceMethod['action'], $uri);
   }
+
+  /**
+   * Given an array of volumes, structure it into an array for openshift.
+   *
+   * @param array $volumes
+   *   The array of volumes to format.
+   *
+   * @return array
+   *   The formatted volume structure.
+   */
+  private static function setVolumes(array $volumes) {
+    // Construct volume configuration.
+    $volumes_config = [];
+    $volume_mounts = [];
+
+    foreach ($volumes as $volume) {
+      if ($volume['type'] === 'pvc') {
+        $volumes_config[] = [
+          'name' => $volume['name'],
+          'persistentVolumeClaim' => [
+            'claimName' => $volume['name'],
+          ],
+        ];
+        $volume_mounts[] = [
+          'mountPath' => $volume['path'],
+          'name' => $volume['name'],
+        ];
+      }
+      elseif ($volume['type'] === 'secret') {
+        $volumes_config[] = [
+          'name' => $volume['name'],
+          'secret' => [
+            'secretName' => $volume['secret'],
+          ],
+        ];
+        $volume_mounts[] = [
+          'mountPath' => $volume['path'],
+          'name' => $volume['name'],
+          'readOnly' => TRUE,
+        ];
+      }
+    }
+    return [
+      'mounts' => $volume_mounts,
+      'config' => $volumes_config,
+    ];
+  }
+
 }
