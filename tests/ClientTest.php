@@ -277,6 +277,64 @@ class ClientTest extends TestCase {
   }
 
   /**
+   * Test creation of a cron job task.
+   */
+  public function testCreateCronJob() {
+    $volumes = [
+      [
+        'type' => 'pvc',
+        'name' => 'public-volume',
+        'path' => $this->json->clientTest->artifacts . '-public',
+      ],
+      [
+        'type' => 'pvc',
+        'name' => 'private-volume',
+        'path' => $this->json->clientTest->artifacts . '-private',
+      ],
+    ];
+
+    $deploy_env_vars = [];
+    foreach ($this->json->clientTest->envVars as $env_var) {
+      $deploy_env_vars[] = [
+        'name' => $env_var->name,
+        'value' => $env_var->value,
+      ];
+    }
+
+    $data = [
+      'memory_limit' => '128Mi',
+      'env_vars' => $deploy_env_vars,
+      'annotations' => [
+        'test' => 'tester',
+      ],
+    ];
+
+    $name = $this->json->clientTest->artifacts . '-deploy';
+    $image_name = $this->json->clientTest->artifacts . '-image';
+
+    $args = [
+      '/bin/sh',
+      '-c',
+      'cd /code; drush -r web cron',
+    ];
+
+    $response = $this->client->createCronJob(
+      $name,
+      $image_name,
+      '*/30 * * * *',
+      $args,
+      $volumes,
+      $data
+    );
+
+    $this->assertNotFalse(
+      $response,
+      'Unable to create cron job config.'
+    );
+
+  }
+
+  /**
    * Test retrieving the deployment config.
    */
   public function testGetDeploymentConfig() {

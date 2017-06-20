@@ -443,4 +443,69 @@ interface OpenShiftClientInterface {
    */
   public function deleteDeploymentConfig(string $name);
 
+  /**
+   * Retrieve a deployment configs.
+   *
+   * @param string $name
+   *   Name of deployment config.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 200.
+   */
+  public function getCronJob(string $name);
+
+  /**
+   * Creates a deployment config.
+   *
+   * @param string $name
+   *   Name of the deploymentconfig.
+   *   Image stream to manage the deployment.
+   * @param string $image_name
+   *   Image name for deployment.
+   * @param string $schedule
+   *   The cron styl schedule to run the job.
+   * @param array $args
+   *   The commands to run, each entry in the array is a command.
+   * @param array $volumes
+   *   Volumes to attach to the deployment config.
+   * @param array $data
+   *   Configuration data for deployment config.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 201.
+   */
+  public function createCronJob(string $name, string $image_name, string $schedule, array $args, array $volumes, array $data);
+
+  /**
+   * Updates and existing deployment config.
+   *
+   * @param string $name
+   *   Name of the deploymentconfig.
+   * @param string $image_name
+   *   Image name for deployment.
+   * @param array $volumes
+   *   Volumes to attach to the deployment config.
+   * @param array $data
+   *   Configuration data for deployment config.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
+   */
+  public function updateCronJob(string $name, string $image_name, array $volumes, array $data);
+
+  /**
+   * Deletes a deployment config by name.
+   *
+   * @param string $name
+   *   Name of deployment config to delete.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
+   */
+  public function deleteCronJob(string $name);
+
 }
