@@ -6,7 +6,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
 
 /**
- * Class Client
+ * Class Client.
  *
  * Provides a client using guzzle to interact easily
  * with the OpenShift api.
@@ -37,7 +37,7 @@ class Client implements OpenShiftClientInterface {
   private $host;
 
   /**
-   * Guzzle HTTP Client
+   * Guzzle HTTP Client.
    *
    * @var \GuzzleHttp\Client
    */
@@ -56,136 +56,156 @@ class Client implements OpenShiftClientInterface {
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}'
+        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}',
       ],
       'get' => [
         'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}'
+        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}',
       ],
       'update' => [
         // PUT replaces the entire secret.
         'action' => 'PUT',
-        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}'
+        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}',
       ],
     ],
     'imagestream' => [
       'create' => [
         'action' => 'POST',
-        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams'
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}'
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
       'get' => [
         'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}'
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
       'update' => [
         // PUT replaces the imagestream.
         'action' => 'PUT',
-        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}'
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
     ],
     'buildconfig' => [
       'create' => [
         'action' => 'POST',
-        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs'
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}'
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
       'get' => [
         'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}'
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}'
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
     ],
     'deploymentconfig' => [
       'create' => [
         'action' => 'POST',
-        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs'
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}'
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
       ],
       'get' => [
         'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs'
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}'
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
       ],
     ],
     'service' => [
       'create' => [
         'action' => 'POST',
-        'uri' => '/api/v1/namespaces/{namespace}/services'
+        'uri' => '/api/v1/namespaces/{namespace}/services',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => '/api/v1/namespaces/{namespace}/services/{name}'
+        'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
       ],
       'get' => [
-        // lists all services.
+        // Lists all services.
         'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/services'
+        'uri' => '/api/v1/namespaces/{namespace}/services',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri' => '/api/v1/namespaces/{namespace}/services/{name}'
-      ]
+        'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
+      ],
     ],
     'route' => [
       'create' => [
         'action' => 'POST',
-        'uri' => '/oapi/v1/namespaces/{namespace}/routes'
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}'
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}',
       ],
       'get' => [
-        // lists all routes.
+        // Lists all routes.
         'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/routes'
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}'
-      ]
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+      ],
     ],
     'persistentvolumeclaim' => [
       'create' => [
         'action' => 'POST',
-        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims'
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}'
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
       ],
       'get' => [
-        // lists all persistentvolumeclaims.
+        // Lists all persistentvolumeclaims.
         'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims'
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}'
-      ]
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
+      ],
     ],
     'imagestreamtag' => [
       'get' => [
         'action' => 'GET',
-        'uri' => 'oapi/v1/namespaces/{namespace}/imagestreamtags/{name}'
+        'uri' => 'oapi/v1/namespaces/{namespace}/imagestreamtags/{name}',
       ],
-    ]
+    ],
+    'cronjob' => [
+      'create' => [
+        'action' => 'POST',
+        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
+      ],
+      'get' => [
+        // Lists all cronjobs.
+        'action' => 'GET',
+        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
+      ],
+    ],
+
   ];
 
   /**
@@ -203,10 +223,14 @@ class Client implements OpenShiftClientInterface {
   /**
    * Client constructor.
    *
-   * @param string $host The hostname.
-   * @param string $token A generated Auth token.
-   * @param string $namespace Namespace/project on which to operate methods on.
-   * @param bool $devMode Turn debug mode on or off.
+   * @param string $host
+   *   The hostname.
+   * @param string $token
+   *   A generated Auth token.
+   * @param string $namespace
+   *   Namespace/project on which to operate methods on.
+   * @param bool $devMode
+   *   Turn debug mode on or off.
    */
   public function __construct($host, $token, $namespace, $devMode = FALSE) {
 
@@ -237,6 +261,7 @@ class Client implements OpenShiftClientInterface {
    * Returns the api version.
    *
    * @return string
+   *   The currently supported api version.
    */
   public function getApiVersion() {
     return $this->apiVersion;
@@ -245,7 +270,8 @@ class Client implements OpenShiftClientInterface {
   /**
    * Set the api version number.
    *
-   * @param string $apiVersion Api version number.
+   * @param string $apiVersion
+   *   Api version number.
    */
   public function setApiVersion($apiVersion) {
     $this->apiVersion = (string) $apiVersion;
@@ -255,20 +281,26 @@ class Client implements OpenShiftClientInterface {
    * Returns the guzzle client.
    *
    * @return \GuzzleHttp\Client
+   *   Return the guzzle client.
    */
   public function getGuzzleClient() {
     return $this->guzzleClient;
   }
 
   /**
-   * Sends a request via the guzzle http client
+   * Sends a request via the guzzle http client.
    *
-   * @param string $method HTTP VERB
-   * @param string $uri Path the endpoint
-   * @param array $body Request body to be converted to JSON.
-   * @param array $query Query params
+   * @param string $method
+   *   HTTP VERB.
+   * @param string $uri
+   *   Path the endpoint.
+   * @param array $body
+   *   Request body to be converted to JSON.
+   * @param array $query
+   *   Query params.
    *
-   * @return array|bool Returns json_decoded body contents or FALSE.
+   * @return array|bool
+   *   Returns json_decoded body contents or FALSE.
    */
   protected function request($method, $uri, array $body = [], array $query = []) {
     $requestOptions = [];
@@ -282,12 +314,13 @@ class Client implements OpenShiftClientInterface {
 
     try {
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
-    } catch (RequestException $exception) {
+    }
+    catch (RequestException $exception) {
       // @todo Handle errors.
       return FALSE;
     }
 
-    return json_decode($response->getBody()->getContents(), true);
+    return json_decode($response->getBody()->getContents(), TRUE);
   }
 
   /**
@@ -295,7 +328,9 @@ class Client implements OpenShiftClientInterface {
    *
    * @param string $methodName
    *   The class method name, typically from __METHOD__ magic constant.
+   *
    * @return array
+   *   The information on how to call the method.
    */
   protected function getResourceMethod($methodName) {
     // Strip class name if present.
@@ -313,18 +348,21 @@ class Client implements OpenShiftClientInterface {
   /**
    * Creates a relative request url.
    *
-   * @param string $uri The URI to be parsed.
-   * @param array $params Params that map to the uri resource path e.g.
-   * /api/{namespace}/{name}
+   * @param string $uri
+   *   The URI to be parsed.
+   * @param array $params
+   *   Params that map to the uri resource path e.g.
+   *   /api/{namespace}/{name}.
    *
-   * @return string The request uri.
+   * @return string
+   *   The request uri.
    */
   protected function createRequestUri(string $uri, array $params = []) {
     // By default replace the {namespace} this is set in configuration.
     $params['namespace'] = $this->namespace;
 
     foreach ($params as $key => $param) {
-      // perform a string replace on the uri.
+      // Perform a string replace on the uri.
       $uri = str_replace('{' . $key . '}', $param, $uri);
     }
 
@@ -347,10 +385,10 @@ class Client implements OpenShiftClientInterface {
       'api_version' => 'v1',
       'kind' => 'Secret',
       'metadata' => [
-        'name' => $name
+        'name' => $name,
       ],
       'type' => 'Opaque',
-      'data' => $data
+      'data' => $data,
     ];
 
     return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $secret);
@@ -362,7 +400,7 @@ class Client implements OpenShiftClientInterface {
   public function getSecret($name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => $name
+      'name' => $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri, []);
@@ -374,7 +412,7 @@ class Client implements OpenShiftClientInterface {
   public function updateSecret($name, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => $name
+      'name' => $name,
     ]);
 
     // Base64 encode the data.
@@ -386,10 +424,10 @@ class Client implements OpenShiftClientInterface {
       'api_version' => 'v1',
       'kind' => 'Secret',
       'metadata' => [
-        'name' => $name
+        'name' => $name,
       ],
       'type' => 'Opaque',
-      'data' => $data
+      'data' => $data,
     ];
 
     return $this->request($resourceMethod['action'], $uri, $secret);
@@ -401,7 +439,7 @@ class Client implements OpenShiftClientInterface {
   public function deleteSecret($name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => $name
+      'name' => $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri);
@@ -458,7 +496,7 @@ class Client implements OpenShiftClientInterface {
   public function deleteService($name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => $name
+      'name' => $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri);
@@ -487,13 +525,13 @@ class Client implements OpenShiftClientInterface {
         'host' => (string) $application_domain,
         'to' => [
           'kind' => 'Service',
-          'name' => (string) $service_name
-        ]
+          'name' => (string) $service_name,
+        ],
       ],
       // Unsure if required. @see : https://docs.openshift.org/latest/rest_api/openshift_v1.html#v1-routestatus
       'status' => [
-        'ingress' => []
-      ]
+        'ingress' => [],
+      ],
     ];
 
     return $this->request($resourceMethod['action'], $uri, $route);
@@ -512,7 +550,7 @@ class Client implements OpenShiftClientInterface {
   public function deleteRoute($name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => $name
+      'name' => $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri);
@@ -524,7 +562,7 @@ class Client implements OpenShiftClientInterface {
   public function getBuildConfig($name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'],[
-      'name' => $name
+      'name' => $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri);
@@ -550,7 +588,7 @@ class Client implements OpenShiftClientInterface {
           'to' => [
             'kind' => 'ImageStreamTag',
             'name' => $image_stream_tag,
-          ]
+          ],
         ],
         'source' => [
           'type' => 'Git',
@@ -562,26 +600,26 @@ class Client implements OpenShiftClientInterface {
             [
               'destinationDir' => '.',
               'secret' => [
-                'name' => $secret
+                'name' => $secret,
               ],
-            ]
+            ],
           ],
           'sourceSecret' => [
-            'name' => $secret
+            'name' => $secret,
           ],
         ],
         'strategy' => [
           'sourceStrategy' => [
-            'incremental' => true,
+            'incremental' => TRUE,
             'from' => [
               'kind' => (string) $data['source']['type'],
-              'name' => (string) $data['source']['name']
+              'name' => (string) $data['source']['name'],
             ],
             'pullSecret' => [
-              'name' => $secret
-            ]
+              'name' => $secret,
+            ],
           ],
-          'type' => 'Source'
+          'type' => 'Source',
         ],
         // @todo - figure out github and other types of triggers
         'triggers' => [
@@ -589,11 +627,11 @@ class Client implements OpenShiftClientInterface {
             'type' => 'ImageChange',
           ],
           [
-            'type' => 'ConfigChange'
+            'type' => 'ConfigChange',
           ],
         ],
         'status' => [
-          'lastversion' => time()
+          'lastversion' => time(),
         ],
       ],
     ];
@@ -607,7 +645,7 @@ class Client implements OpenShiftClientInterface {
   public function updateBuildConfig($name, $secret, $imagestream, $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => $name
+      'name' => $name,
     ]);
 
     $buildConfig = [
@@ -622,8 +660,8 @@ class Client implements OpenShiftClientInterface {
         'output' => [
           'to' => [
             'kind' => 'ImageStreamTag',
-            'name' => $imagestream . ':latest'
-          ]
+            'name' => $imagestream . ':latest',
+          ],
         ],
         'source' => [
           'type' => 'Git',
@@ -635,25 +673,25 @@ class Client implements OpenShiftClientInterface {
             [
               'destinationDir' => '.',
               'secret' => [
-                'name' => $secret
+                'name' => $secret,
               ],
-            ]
+            ],
           ],
           'sourceSecret' => [
-            'name' => $secret
+            'name' => $secret,
           ],
         ],
         'strategy' => [
           'sourceStrategy' => [
             'from' => [
               'kind' => (string) $data['source']['type'],
-              'name' => (string) $data['source']['name']
+              'name' => (string) $data['source']['name'],
             ],
             'pullSecret' => [
-              'name' => $secret
-            ]
+              'name' => $secret,
+            ],
           ],
-          'type' => 'Source'
+          'type' => 'Source',
         ],
         // @todo - figure out github and other types of triggers
         'triggers' => [
@@ -661,11 +699,11 @@ class Client implements OpenShiftClientInterface {
             'type' => 'ImageChange',
           ],
           [
-            'type' => 'ConfigChange'
+            'type' => 'ConfigChange',
           ],
         ],
         'status' => [
-          'lastversion' => time()
+          'lastversion' => time(),
         ],
       ],
     ];
@@ -679,7 +717,7 @@ class Client implements OpenShiftClientInterface {
   public function deleteBuildConfig($name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => $name
+      'name' => $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri);
@@ -691,7 +729,7 @@ class Client implements OpenShiftClientInterface {
   public function getImageStream($name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'],[
-      'name' => $name
+      'name' => $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri);
@@ -708,12 +746,12 @@ class Client implements OpenShiftClientInterface {
       'metadata' => [
         'name' => $name,
         'annotations' => [
-          'description' => 'Keeps track of changes in the application image'
-        ]
+          'description' => 'Keeps track of changes in the application image',
+        ],
       ],
       'spec' => [
-        'dockerImageRepository' => ''
-      ]
+        'dockerImageRepository' => '',
+      ],
     ];
 
     return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
@@ -730,12 +768,12 @@ class Client implements OpenShiftClientInterface {
       'metadata' => [
         'name' => $name,
         'annotations' => [
-          'description' => 'Keeps track of changes in the application image'
-        ]
+          'description' => 'Keeps track of changes in the application image',
+        ],
       ],
       'spec' => [
-        'dockerImageRepository' => ''
-      ]
+        'dockerImageRepository' => '',
+      ],
     ];
 
     return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
@@ -747,7 +785,7 @@ class Client implements OpenShiftClientInterface {
   public function deleteImageStream($name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => $name
+      'name' => $name,
     ]);
     return $this->request($resourceMethod['action'], $uri);
   }
@@ -758,7 +796,7 @@ class Client implements OpenShiftClientInterface {
   public function getImageStreamTag($name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'],[
-      'name' => $name
+      'name' => $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri);
@@ -833,7 +871,7 @@ class Client implements OpenShiftClientInterface {
   public function deletePersistentVolumeClaim($name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => (string) $name
+      'name' => (string) $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri);
@@ -844,8 +882,8 @@ class Client implements OpenShiftClientInterface {
    */
   public function getDeploymentConfig($name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri'],[
-      'name' => $name
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri);
@@ -874,12 +912,13 @@ class Client implements OpenShiftClientInterface {
           'mountPath' => $volume['path'],
           'name' => $volume['name'],
         ];
-      } elseif ($volume['type'] === 'secret') {
+      }
+      elseif ($volume['type'] === 'secret') {
         $volumes_config[] = [
           'name' => $volume['name'],
           'secret' => [
             'secretName' => $volume['secret'],
-          ]
+          ],
         ];
         $volume_mounts[] = [
           'mountPath' => $volume['path'],
@@ -908,66 +947,66 @@ class Client implements OpenShiftClientInterface {
         'strategy' => [
           'resources' => [],
           'rollingParams' => [
-              'intervalSeconds' => 1,
-              'maxSurge' => '25%',
-              'maxUnavailable' => '25%',
-              'timeoutSeconds' => 600,
-              'updatePeriodSeconds' => 1,
+            'intervalSeconds' => 1,
+            'maxSurge' => '25%',
+            'maxUnavailable' => '25%',
+            'timeoutSeconds' => 600,
+            'updatePeriodSeconds' => 1,
           ],
           'type' => 'Rolling',
         ],
         'template' => [
-            'metadata' => [
-                'annotations' => [
-                    'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
-                  ],
-                'labels' => [
-                    'name' => $name,
-                  ],
-                'name' => $name,
+          'metadata' => [
+            'annotations' => [
+              'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
             ],
-            'spec' =>
-              [
-                'containers' =>
-                  [
-                    [
-                      'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
-                      'image' => ' ',
-                      'name' => $name,
-                      'ports' =>
-                        [
-                          [
-                            'containerPort' => isset($data['containerPort']) ? $data['containerPort'] : NULL
-                          ],
-                        ],
-                      'resources' =>
-                        [
-                          'limits' =>
-                            [
-                              'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
-                            ],
-                        ],
-                      'volumeMounts' => $volume_mounts,
-                    ],
-                  ],
-                'dnsPolicy' => 'ClusterFirst',
-                'restartPolicy' => 'Always',
-                'securityContext' => [],
-                'terminationGracePeriodSeconds' => 30,
-                'volumes' => $volumes_config,
-              ],
+            'labels' => [
+              'name' => $name,
+            ],
+            'name' => $name,
           ],
+          'spec' =>
+            [
+              'containers' =>
+                [
+                  [
+                    'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
+                    'image' => ' ',
+                    'name' => $name,
+                    'ports' =>
+                      [
+                        [
+                          'containerPort' => isset($data['containerPort']) ? $data['containerPort'] : NULL,
+                        ],
+                      ],
+                    'resources' =>
+                      [
+                        'limits' =>
+                          [
+                            'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
+                          ],
+                      ],
+                    'volumeMounts' => $volume_mounts,
+                  ],
+                ],
+              'dnsPolicy' => 'ClusterFirst',
+              'restartPolicy' => 'Always',
+              'securityContext' => [],
+              'terminationGracePeriodSeconds' => 30,
+              'volumes' => $volumes_config,
+            ],
+        ],
         'test' => FALSE,
         'triggers' => [
             [
               'imageChangeParams' => [
-                  'automatic' => TRUE,
-                  'containerNames' => [ $name ],
-                  'from' => [
-                      'kind' => 'ImageStreamTag',
-                      'name' => $image_stream_tag,
-                    ],
+                'automatic' => TRUE,
+                'containerNames' => [$name],
+                'from' => [
+                  'kind' => 'ImageStreamTag',
+                  'name' => $image_stream_tag,
                 ],
+              ],
               'type' => 'ImageChange',
             ],
             [
@@ -984,7 +1023,7 @@ class Client implements OpenShiftClientInterface {
         'updatedReplicas' => 0,
         'availableReplicas' => 0,
         'unavailableReplicas' => 0,
-      ]
+      ],
     ];
 
     return $this->request($resourceMethod['action'], $uri, $deploymentConfig);
@@ -996,7 +1035,7 @@ class Client implements OpenShiftClientInterface {
   public function updateDeploymentConfig($name, $image_stream_tag, $image_name, $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => (string) $name
+      'name' => (string) $name,
     ]);
 
     // @todo Move 'volumes' out of $data array into first-class argument.
@@ -1015,12 +1054,13 @@ class Client implements OpenShiftClientInterface {
           'mountPath' => $volume['path'],
           'name' => $volume['name'],
         ];
-      } elseif ($volume['type'] === 'secret') {
+      }
+      elseif ($volume['type'] === 'secret') {
         $volumes_config[] = [
           'name' => $volume['name'],
           'secret' => [
             'secretName' => $volume['secret'],
-          ]
+          ],
         ];
         $volume_mounts[] = [
           'mountPath' => $volume['path'],
@@ -1076,7 +1116,7 @@ class Client implements OpenShiftClientInterface {
                     'ports' =>
                       [
                         [
-                          'containerPort' => isset($data['containerPort']) ? $data['containerPort'] : NULL
+                          'containerPort' => isset($data['containerPort']) ? $data['containerPort'] : NULL,
                         ],
                       ],
                     'resources' =>
@@ -1101,7 +1141,7 @@ class Client implements OpenShiftClientInterface {
           [
             'imageChangeParams' => [
               'automatic' => TRUE,
-              'containerNames' => [ $name ],
+              'containerNames' => [$name],
               'from' => [
                 'kind' => 'ImageStreamTag',
                 'name' => $image_stream_tag . ':latest',
@@ -1113,7 +1153,7 @@ class Client implements OpenShiftClientInterface {
             'type' => 'ConfigChange',
           ],
         ],
-      ]
+      ],
     ];
 
     return $this->request($resourceMethod['action'], $uri, $deploymentConfig);
@@ -1125,7 +1165,7 @@ class Client implements OpenShiftClientInterface {
   public function deleteDeploymentConfig($name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => (string) $name
+      'name' => (string) $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri);
