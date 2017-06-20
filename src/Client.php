@@ -572,6 +572,7 @@ class Client implements OpenShiftClientInterface {
         ],
         'strategy' => [
           'sourceStrategy' => [
+            'incremental' => true,
             'from' => [
               'kind' => (string) $data['source']['type'],
               'name' => (string) $data['source']['name']
