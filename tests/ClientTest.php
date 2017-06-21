@@ -72,7 +72,6 @@ class ClientTest extends TestCase {
    * Test secret creation.
    */
   public function testCreateSecret() {
-
     $response = $this->client->createSecret($this->json->clientTest->testSecret->name, [
       'username' => $this->json->clientTest->testSecret->user,
       'password' => $this->json->clientTest->testSecret->pass,
@@ -104,7 +103,6 @@ class ClientTest extends TestCase {
    * Test retrieving a secret.
    */
   public function testGetSecret() {
-
     $response = $this->client->getSecret($this->json->clientTest->testSecret->name);
 
     $this->assertNotFalse(
@@ -117,7 +115,6 @@ class ClientTest extends TestCase {
    * Test creating an image stream.
    */
   public function testCreateImageStream() {
-
     $response = $this->client->createImageStream($this->json->clientTest->artifacts . '-stream');
 
     $this->assertNotFalse(
@@ -166,7 +163,6 @@ class ClientTest extends TestCase {
    * Test creating a second persistent volume claim.
    */
   public function testCreatePersistentVolumeClaim2() {
-
     $response = $this->client->createPersistentVolumeClaim(
        $this->json->clientTest->artifacts . '-public',
       'ReadWriteMany',
@@ -222,14 +218,12 @@ class ClientTest extends TestCase {
       'array',
       $response
     );
-
   }
 
   /**
    * Test retrieving an image stream tag.
    */
   public function getImageStreamTag() {
-
     $response = $this->client->getImageStreamTag($this->json->clientTest->artifacts . '-stream:master');
 
     $this->assertNotFalse(
@@ -297,7 +291,7 @@ class ClientTest extends TestCase {
       ],
     ];
 
-    $name = $this->json->clientTest->artifacts . '-deploy';
+    $name = $this->json->clientTest->artifacts . '-cron';
     $image_name = $this->json->clientTest->artifacts . '-image';
 
     $args = [
@@ -319,7 +313,6 @@ class ClientTest extends TestCase {
       $response,
       'Unable to create cron job config.'
     );
-
   }
 
   /**
@@ -337,7 +330,6 @@ class ClientTest extends TestCase {
       'array',
       $response
     );
-
   }
 
   /**
@@ -361,7 +353,6 @@ class ClientTest extends TestCase {
       $response,
       'Unable to create service.'
     );
-
   }
 
   /**
@@ -378,7 +369,6 @@ class ClientTest extends TestCase {
       $response,
       'Unable to create service.'
     );
-
   }
 
   /**
@@ -409,6 +399,19 @@ class ClientTest extends TestCase {
     }
   }
 
+  /**
+   * Test deleting the cronjob.
+   */
+  public function testDeleteCronJob() {
+    if ($this->json->clientTest->delete) {
+      $response = $this->client->deleteCronJob($this->json->clientTest->artifacts . '-cron');
+
+      $this->assertNotFalse(
+        $response,
+        'Unable to delete cronjob config.'
+      );
+    }
+  }
   /**
    * Test deleting the deployment configuration.
    */
