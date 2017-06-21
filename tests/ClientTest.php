@@ -11,6 +11,8 @@ class ClientTest extends TestCase {
   private $namespace;
   private $json;
 
+  private $volumes;
+
   /**
    * Protected client variable.
    *
@@ -40,6 +42,18 @@ class ClientTest extends TestCase {
 
     $this->client = new Client($this->host, $this->token, $this->namespace, TRUE);
 
+    $this->volumes = [
+      [
+        'type' => 'pvc',
+        'name' => $this->json->clientTest->artifacts . '-public',
+        'path' => '/web/sites/default/files',
+      ],
+      [
+        'type' => 'pvc',
+        'name' => $this->json->clientTest->artifacts . '-private',
+        'path' => '/web/private',
+      ],
+    ];
   }
 
   /**
@@ -228,19 +242,6 @@ class ClientTest extends TestCase {
    * Test creating a deployment config.
    */
   public function testCreateDeploymentConfig() {
-    $volumes = [
-      [
-        'type' => 'pvc',
-        'name' => 'public-volume',
-        'path' => $this->json->clientTest->artifacts . '-public',
-      ],
-      [
-        'type' => 'pvc',
-        'name' => 'private-volume',
-        'path' => $this->json->clientTest->artifacts . '-private',
-      ],
-    ];
-
     $deploy_env_vars = [];
     foreach ($this->json->clientTest->envVars as $env_var) {
       $deploy_env_vars[] = [
@@ -266,7 +267,7 @@ class ClientTest extends TestCase {
       $name,
       $image_stream_tag,
       $image_name,
-      $volumes,
+      $this->volumes,
       $data
     );
 
@@ -280,19 +281,6 @@ class ClientTest extends TestCase {
    * Test creation of a cron job task.
    */
   public function testCreateCronJob() {
-    $volumes = [
-      [
-        'type' => 'pvc',
-        'name' => 'public-volume',
-        'path' => $this->json->clientTest->artifacts . '-public',
-      ],
-      [
-        'type' => 'pvc',
-        'name' => 'private-volume',
-        'path' => $this->json->clientTest->artifacts . '-private',
-      ],
-    ];
-
     $deploy_env_vars = [];
     foreach ($this->json->clientTest->envVars as $env_var) {
       $deploy_env_vars[] = [
@@ -323,7 +311,7 @@ class ClientTest extends TestCase {
       $image_name,
       '*/30 * * * *',
       $args,
-      $volumes,
+      $this->volumes,
       $data
     );
 

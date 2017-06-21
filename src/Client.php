@@ -314,7 +314,8 @@ class Client implements OpenShiftClientInterface {
 
     try {
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
-    } catch (RequestException $exception) {
+    }
+    catch (RequestException $exception) {
       return FALSE;
     }
 
