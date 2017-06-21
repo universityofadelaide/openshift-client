@@ -412,6 +412,7 @@ class ClientTest extends TestCase {
       );
     }
   }
+
   /**
    * Test deleting the deployment configuration.
    */
