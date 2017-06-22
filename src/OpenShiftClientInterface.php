@@ -444,10 +444,10 @@ interface OpenShiftClientInterface {
   public function deleteDeploymentConfig(string $name);
 
   /**
-   * Retrieve a deployment configs.
+   * Retrieve a cron job.
    *
    * @param string $name
-   *   Name of deployment config.
+   *   Name of cron job.
    *
    * @return mixed
    *   Returns the body response if successful
@@ -456,10 +456,10 @@ interface OpenShiftClientInterface {
   public function getCronJob(string $name);
 
   /**
-   * Creates a deployment config.
+   * Creates a cron job.
    *
    * @param string $name
-   *   Name of the deploymentconfig.
+   *   Name of cron job.
    *   Image stream to manage the deployment.
    * @param string $image_name
    *   Image name for deployment.
@@ -479,10 +479,10 @@ interface OpenShiftClientInterface {
   public function createCronJob(string $name, string $image_name, string $schedule, array $args, array $volumes, array $data);
 
   /**
-   * Updates and existing deployment config.
+   * Updates an existing cron job.
    *
    * @param string $name
-   *   Name of the deploymentconfig.
+   *   Name of cron job..
    * @param string $image_name
    *   Image name for deployment.
    * @param array $volumes
@@ -497,7 +497,7 @@ interface OpenShiftClientInterface {
   public function updateCronJob(string $name, string $image_name, array $volumes, array $data);
 
   /**
-   * Deletes a deployment config by name.
+   * Deletes a cron job by name.
    *
    * @param string $name
    *   Name of deployment config to delete.
@@ -507,5 +507,31 @@ interface OpenShiftClientInterface {
    *   otherwise false if request fails.
    */
   public function deleteCronJob(string $name);
+
+  /**
+   * Retrieve a pod.
+   *
+   * @param string $name
+   *   Name of pod.
+   * @param string $label
+   *   Label of items to retrieve.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 200.
+   */
+  public function getPod($name, $label);
+
+  /**
+   * Deletes a pod by name.
+   *
+   * @param string $name
+   *   Name of deployment config to delete.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
+   */
+  public function deletePod(string $name);
 
 }

@@ -186,6 +186,16 @@ class Client implements OpenShiftClientInterface {
         'uri'    => 'oapi/v1/namespaces/{namespace}/imagestreamtags/{name}',
       ],
     ],
+    'pod' => [
+      'get' => [
+        'action' => 'GET',
+        'uri' => 'api/v1/namespaces/{namespace}/pods/{name}',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri' => 'api/v1/namespaces/{namespace}/pods/{name}',
+      ],
+    ],
     'cronjob'               => [
       'create' => [
         'action' => 'POST',
@@ -825,7 +835,7 @@ class Client implements OpenShiftClientInterface {
    * {@inheritdoc}
    */
   public function deletePersistentVolumeClaim(string $name) {
-    $this->apiCall(__METHOD__, $name);
+    return $this->apiCall(__METHOD__, $name);
   }
 
   /**
@@ -848,7 +858,7 @@ class Client implements OpenShiftClientInterface {
       'apiVersion' => 'v1',
       'kind'       => 'DeploymentConfig',
       'metadata'   => [
-        'name'        => $name,
+        'name' => $name,
       ],
       'spec'       => [
         'replicas' => 1,
@@ -959,7 +969,7 @@ class Client implements OpenShiftClientInterface {
       'apiVersion' => 'v1',
       'kind'       => 'DeploymentConfig',
       'metadata'   => [
-        'name'        => $name,
+        'name' => $name,
       ],
       'spec'       => [
         'replicas' => 1,
@@ -1142,6 +1152,20 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getPod($name, $label = NULL) {
+    return $this->apiCall(__METHOD__, $name, $label);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deletePod(string $name) {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
    * Merge annotations into the config, if there are any.
    *
    * Applying a blank annotation causes failures, is why this function exists.
@@ -1211,17 +1235,24 @@ class Client implements OpenShiftClientInterface {
    *   Method calling get, to lookup the uri.
    * @param string $name
    *   Name of the item to retrieve.
+   * @param string $label
+   *   Label of items to retrieve.
    *
    * @return array|bool
    *   Return the item, or false if the retrieve failed.
    */
-  private function apiCall($method, $name) {
+  private function apiCall(string $method, $name = '', $label = NULL) {
     $resourceMethod = $this->getResourceMethod($method);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name,
     ]);
 
-    return $this->request($resourceMethod['action'], $uri);
+    $query = [];
+    if (!empty($label)) {
+      $query = ['labelSelector' => $label];
+    }
+
+    return $this->request($resourceMethod['action'], $uri, [], $query);
   }
 
 }
