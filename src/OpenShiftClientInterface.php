@@ -3,11 +3,12 @@
 namespace UniversityOfAdelaide\OpenShift;
 
 /**
- * Interface OpenShiftClientInterface
+ * Interface OpenShiftClientInterface.
  *
  * @package UnviersityofAdelaide\OpenShift.
  */
 interface OpenShiftClientInterface {
+
   /**
    * Retrieves a secret that matches the name/tag.
    *
@@ -17,7 +18,7 @@ interface OpenShiftClientInterface {
    * @return mixed
    *   Returns the secret, base64 decoded.
    */
-  public function getSecret($name);
+  public function getSecret(string $name);
 
   /**
    * Creates a new secret using the name provided.
@@ -28,9 +29,10 @@ interface OpenShiftClientInterface {
    *   Array of key => values to be stored. These will base64 encoded.
    *
    * @return bool|mixed
-   *   Returns the body response if successful otherwise false if request fails to get back a 201.
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 201.
    */
-  public function createSecret($name, array $data);
+  public function createSecret(string $name, array $data);
 
   /**
    * Updates an existing secret using the name provided.
@@ -41,9 +43,22 @@ interface OpenShiftClientInterface {
    *   Array of key => values to be stored. These will be base64 encoded.
    *
    * @return mixed
-   *   Returns the body response if successful otherwise false if request fails.
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
    */
-  public function updateSecret($name, array $data);
+  public function updateSecret(string $name, array $data);
+
+  /**
+   * Delete an existing secret using the name provided.
+   *
+   * @param string $name
+   *   Name of the secret to be updated.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
+   */
+  public function deleteSecret(string $name);
 
   /**
    * Retrieves a service that matches the name.
@@ -52,220 +67,445 @@ interface OpenShiftClientInterface {
    *   Name of the service to retrieved.
    *
    * @return mixed
-   *   Returns the body response if successful otherwise false if request fails to get back a 200.
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 200.
    */
-  public function getService($name);
+  public function getService(string $name);
 
   /**
    * Creates a new service based on the name and config data given.
    *
    * @param string $name
-   *    Name of service.
+   *   Name of service.
    * @param array $data
-   *    Configuration data for service.
+   *   Configuration data for service.
    *
    * @return mixed
-   *   Returns the body response if successful otherwise false if request fails to get back a 201.
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 201.
    */
-  public function createService($name, array $data);
+  public function createService(string $name, array $data);
 
   /**
+   * Update and existing service.
+   *
+   * @param string $name
+   *   Name of service.
+   * @param array $data
+   *   Configuration data for service.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
    */
-  public function updateService();
+  public function updateService(string $name, array $data);
 
   /**
    * Deletes a named service.
    *
-   * @param string $name Name of service
+   * @param string $name
+   *   Name of service to delete.
+   *
    * @return mixed
-   *   Returns the body response if successful otherwise false if request fails.
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
    */
-  public function deleteService($name);
+  public function deleteService(string $name);
 
   /**
    * Gets all routes for the current working namespace.
    *
    * @param string $name
+   *   The name of the route to retrieve.
+   *
    * @return mixed
+   *   Details of the route.
    */
-  public function getRoute($name);
+  public function getRoute(string $name);
 
   /**
    * Creates a route.
    *
    * @param string $name
+   *   Name for the route.
    * @param string $service_name
+   *   The service name to associate with the route.
    * @param string $application_domain
-   * @param array $data
+   *   The application domain to associate with the route.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 201.
    */
-  public function createRoute($name, $service_name, $application_domain);
+  public function createRoute(string $name, string $service_name, string $application_domain);
 
   /**
    * Updates an existing named route.
    *
    * @param string $name
+   *   Name of the route.
    * @param string $service_name
+   *   The service name to associate with the route.
    * @param string $application_domain
-   * @param array $data
+   *   The application domain to associate with the route.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
    */
-  public function updateRoute($name, $service_name, $application_domain);
+  public function updateRoute(string $name, string $service_name, string $application_domain);
 
   /**
    * Deletes a named routes.
    *
    * @param string $name
+   *   Name of the route.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
    */
-  public function deleteRoute($name);
+  public function deleteRoute(string $name);
 
   /**
    * Retrieves all build configs binded to current working namespace.
    *
-   * @param string $name Name of build config.
+   * @param string $name
+   *   Name of build config.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 200.
    */
-  public function getBuildConfig($name);
+  public function getBuildConfig(string $name);
 
   /**
    * Create build config.
    *
-   * @param string $name Name of build config.
-   * @param string $secret Name of existing secret to use.
-   * @param string $image_stream_tag Name of imagestream.
-   * @param array $data Build config data.
+   * @param string $name
+   *   Name of build config.
+   * @param string $secret
+   *   Name of existing secret to use.
+   * @param string $image_stream_tag
+   *   Name of imagestream.
+   * @param array $data
+   *   Build config data.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 201.
    */
-  public function createBuildConfig($name, $secret, $image_stream_tag, $data);
+  public function createBuildConfig(string $name, string $secret, string $image_stream_tag, array $data);
 
   /**
    * Updates an existing build config by name.
    *
-   * @param string $name Name of build config.
-   * @param string $secret Name of existing secret to use.
-   * @param string $image_stream_tag Name of imagestream.
-   * @param array $data Build config data.
+   * @param string $name
+   *   Name of build config.
+   * @param string $secret
+   *   Name of existing secret to use.
+   * @param string $image_stream_tag
+   *   Name of imagestream.
+   * @param array $data
+   *   Build config data.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
    */
-  public function updateBuildConfig($name, $secret, $image_stream_tag, $data);
+  public function updateBuildConfig(string $name, string $secret, string $image_stream_tag, array $data);
 
   /**
    * Deletes a build config by name.
    *
-   * @param string $name Name of build config.
+   * @param string $name
+   *   Name of build config.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
    */
-  public function deleteBuildConfig($name);
+  public function deleteBuildConfig(string $name);
 
   /**
    * Retrieves all image streams under current namespace.
    *
-   * @param string $name Name of build config.
+   * @param string $name
+   *   Name of image stream.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 200.
    */
-  public function getImageStream($name);
+  public function getImageStream(string $name);
 
   /**
    * Creates an image stream, needed for buildConfig.
    *
-   * @param string $name Name of imagestream.
+   * @param string $name
+   *   Name of imagestream to create.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 201.
    */
-  public function createImageStream($name);
+  public function createImageStream(string $name);
 
   /**
    * Updates an image stream.
    *
-   * @param string $name Name of imagestream.
+   * @param string $name
+   *   Name of imagestream to update.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
    */
-  public function updateImageStream($name);
+  public function updateImageStream(string $name);
 
   /**
    * Deletes an image stream.
    *
-   * @param string $name Name of imagestream.
+   * @param string $name
+   *   Name of imagestream to delete.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
    */
-  public function deleteImageStream($name);
+  public function deleteImageStream(string $name);
 
   /**
    * Retrieves the specified ImageStreamTag.
    *
-   * @param string $name Name of the image stream tag.
+   * @param string $name
+   *   Name of the image stream tag.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 200.
    */
-  public function getImageStreamTag($name);
+  public function getImageStreamTag(string $name);
 
-  public function createImageSteamTag();
+  /**
+   * Create an ImageStreamTag.
+   *
+   * @param string $name
+   *   Name of the image stream tag.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 201.
+   */
+  public function createImageSteamTag(string $name);
 
-  public function updateImageSteamTag();
+  /**
+   * Update an ImageStreamTag.
+   *
+   * @param string $name
+   *   Name of the image stream tag.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
+   */
+  public function updateImageSteamTag(string $name);
 
-  public function deleteImageSteamTag();
+  /**
+   * Delete an ImageStreamTag.
+   *
+   * @param string $name
+   *   Name of the image stream tag.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
+   */
+  public function deleteImageSteamTag(string $name);
 
-  public function getPersistentVolumeClaim();
+  /**
+   * Retrieve a persistent volume claim.
+   *
+   * @param string $name
+   *   Name of the service to retrieved.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 200.
+   */
+  public function getPersistentVolumeClaim(string $name);
 
   /**
    * Create a persistent volume claim.
    *
-   * @param $name
-   * @param $access_mode
-   * @param $storage
+   * @param string $name
+   *   Name of the PersistentVolumeClaim.
+   * @param string $access_mode
+   *   Access mode of the PersistentVolumeClaim.
+   * @param string $storage
+   *   Amount of storage to allocated to the PersistentVolumeClaim.
    *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 201.
    */
-  public function createPersistentVolumeClaim($name, $access_mode, $storage);
+  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage);
 
-  public function updatePersistentVolumeClaim();
+  /**
+   * Update a persistent volume claim.
+   *
+   * @param string $name
+   *   Name of the PersistentVolumeClaim.
+   * @param string $access_mode
+   *   Access mode of the PersistentVolumeClaim.
+   * @param string $storage
+   *   Amount of storage to allocated to the PersistentVolumeClaim.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
+   */
+  public function updatePersistentVolumeClaim(string $name, string $access_mode, string $storage);
 
   /**
    * Delete a persistent volume claim.
    *
-   * @param $name
+   * @param string $name
+   *   Name of persistent volume claim to delete.
    *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
    */
-  public function deletePersistentVolumeClaim($name);
+  public function deletePersistentVolumeClaim(string $name);
 
   /**
-   * Retrieves all deployment configs binded to the current working namespace.
+   * Retrieve a deployment configs.
    *
-   * @param string $name Name of build config.
+   * @param string $name
+   *   Name of deployment config.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 200.
    */
-  public function getDeploymentConfig($name);
+  public function getDeploymentConfig(string $name);
 
   /**
    * Creates a deployment config.
    *
    * @param string $name
+   *   Name of the deploymentconfig.
    * @param string $image_stream_tag
+   *   Image stream to manage the deployment.
    * @param string $image_name
+   *   Image name for deployment.
+   * @param array $volumes
+   *   Volumes to attach to the deployment config.
    * @param array $data
+   *   Configuration data for deployment config.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 201.
    */
-  public function createDeploymentConfig($name, $image_stream_tag, $image_name, $data);
+  public function createDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data);
 
   /**
    * Updates and existing deployment config.
    *
-   * @param $name
-   * @param $image_stream_tag
-   * @param $image_name
-   * @param $data
+   * @param string $name
+   *   Name of the deploymentconfig.
+   * @param string $image_stream_tag
+   *   Image stream to manage the deployment.
+   * @param string $image_name
+   *   Image name for deployment.
+   * @param array $volumes
+   *   Volumes to attach to the deployment config.
+   * @param array $data
+   *   Configuration data for deployment config.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
    */
-  public function updateDeploymentConfig($name, $image_stream_tag, $image_name, $data);
+  public function updateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data);
 
   /**
    * Deletes a deployment config by name.
    *
-   * @param string $name Name of deployment config.
+   * @param string $name
+   *   Name of deployment config to delete.
+   *
    * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
    */
-  public function deleteDeploymentConfig($name);
+  public function deleteDeploymentConfig(string $name);
 
+  /**
+   * Retrieve a deployment configs.
+   *
+   * @param string $name
+   *   Name of deployment config.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 200.
+   */
+  public function getCronJob(string $name);
+
+  /**
+   * Creates a deployment config.
+   *
+   * @param string $name
+   *   Name of the deploymentconfig.
+   *   Image stream to manage the deployment.
+   * @param string $image_name
+   *   Image name for deployment.
+   * @param string $schedule
+   *   The cron styl schedule to run the job.
+   * @param array $args
+   *   The commands to run, each entry in the array is a command.
+   * @param array $volumes
+   *   Volumes to attach to the deployment config.
+   * @param array $data
+   *   Configuration data for deployment config.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 201.
+   */
+  public function createCronJob(string $name, string $image_name, string $schedule, array $args, array $volumes, array $data);
+
+  /**
+   * Updates and existing deployment config.
+   *
+   * @param string $name
+   *   Name of the deploymentconfig.
+   * @param string $image_name
+   *   Image name for deployment.
+   * @param array $volumes
+   *   Volumes to attach to the deployment config.
+   * @param array $data
+   *   Configuration data for deployment config.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
+   */
+  public function updateCronJob(string $name, string $image_name, array $volumes, array $data);
+
+  /**
+   * Deletes a deployment config by name.
+   *
+   * @param string $name
+   *   Name of deployment config to delete.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
+   */
+  public function deleteCronJob(string $name);
 
 }

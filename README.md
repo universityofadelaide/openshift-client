@@ -57,7 +57,7 @@ oc login -u developer -p developer
 ```bash
 # Assumes myproject (default) is available.
 # From the /vendor/universityofadelaide/openshift-client directory
-../../bin/phpunit tests/ClientTest.php $(minishift console --url) $(oc whoami -t) myproject
+../../bin/phpunit tests/ClientTest.php $(minishift console --url) $(oc whoami -t) myproject client_test.json
 ```
 
 ## Actual deployment
@@ -69,7 +69,7 @@ Manually create a mysql container in openshift, make note of the db name, userna
 Remove all objects created during tests : 
 ```bash
 # Assuming all the names for items created contain 'pied'
-name=pied; for type in dc bc is svc pvc route pods secrets; do for item in $(oc get "${type}" | grep ${name} | awk '{ print $1 }'); do oc delete ${type} ${item}; done; done
+name=pied; for type in dc bc is svc pvc route pods job cronjob secrets; do for item in $(oc get "${type}" | grep ${name} | awk '{ print $1 }'); do oc delete ${type} ${item}; done; done
 ```
 
 ## Todo
