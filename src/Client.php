@@ -116,7 +116,7 @@ class Client implements OpenShiftClientInterface {
       ],
       'get'    => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
@@ -183,27 +183,31 @@ class Client implements OpenShiftClientInterface {
     'imagestreamtag'        => [
       'get' => [
         'action' => 'GET',
-        'uri'    => 'oapi/v1/namespaces/{namespace}/imagestreamtags/{name}',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreamtags/{name}',
       ],
     ],
     'pod' => [
       'get' => [
         'action' => 'GET',
-        'uri' => 'api/v1/namespaces/{namespace}/pods/{name}',
+        'uri' => '/api/v1/namespaces/{namespace}/pods/{name}',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => 'api/v1/namespaces/{namespace}/pods/{name}',
+        'uri' => '/api/v1/namespaces/{namespace}/pods/{name}',
       ],
     ],
     'replicationcontrollers' => [
       'get' => [
         'action' => 'GET',
-        'uri' => 'api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
+        'uri' => '/api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => 'api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
+        'uri' => '/api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri' => '/api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
       ],
     ],
     'cronjob'               => [
@@ -967,100 +971,18 @@ class Client implements OpenShiftClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function updateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data) {
+  public function updateDeploymentConfig(string $name, int $replica_count) {
+    $deploymentConfig = $this->getDeploymentConfig($name);
+    if ($replica_count === NULL) {
+      return $deploymentConfig;
+    }
+
+    $deploymentConfig['spec']['replicas'] = $replica_count;
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name,
     ]);
 
-    $volume_config = $this->setVolumes($volumes);
-
-    $deploymentConfig = [
-      'apiVersion' => 'v1',
-      'kind'       => 'DeploymentConfig',
-      'metadata'   => [
-        'name' => $name,
-      ],
-      'spec'       => [
-        'replicas' => 1,
-        'selector' => [
-          'name' => $name,
-        ],
-        'strategy' => [
-          'resources'     => [],
-          'rollingParams' => [
-            'intervalSeconds'     => 1,
-            'maxSurge'            => '25%',
-            'maxUnavailable'      => '25%',
-            'timeoutSeconds'      => 600,
-            'updatePeriodSeconds' => 1,
-          ],
-          'type'          => 'Rolling',
-        ],
-        'template' => [
-          'metadata' => [
-            'annotations' => [
-              'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
-            ],
-            'labels'      => [
-              'name' => $name,
-            ],
-            'name'        => $name,
-          ],
-          'spec'     =>
-            [
-              'containers'                    =>
-                [
-                  [
-                    'env'          => isset($data['env_vars']) ? $data['env_vars'] : [],
-                    'image'        => ' ',
-                    'name'         => $name,
-                    'ports'        =>
-                      [
-                        [
-                          'containerPort' => isset($data['containerPort']) ? $data['containerPort'] : NULL,
-                        ],
-                      ],
-                    'resources'    =>
-                      [
-                        'limits' =>
-                          [
-                            'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
-                          ],
-                      ],
-                    'volumeMounts' => $volume_config['mounts'],
-                  ],
-                ],
-              'dnsPolicy'                     => 'ClusterFirst',
-              'restartPolicy'                 => 'Always',
-              'securityContext'               => [],
-              'terminationGracePeriodSeconds' => 30,
-              'volumes'                       => $volume_config['config'],
-            ],
-        ],
-        'test'     => FALSE,
-        'triggers' => [
-          [
-            'imageChangeParams' => [
-              'automatic'      => TRUE,
-              'containerNames' => [$name],
-              'from'           => [
-                'kind' => 'ImageStreamTag',
-                'name' => $image_stream_tag . ':latest',
-              ],
-            ],
-            'type'              => 'ImageChange',
-          ],
-          [
-            'type' => 'ConfigChange',
-          ],
-        ],
-      ],
-    ];
-
-    if (array_key_exists('annotations', $data)) {
-      $this->applyAnnotations($deploymentConfig, $data['annotations']);
-    }
 
     return $this->request($resourceMethod['action'], $uri, $deploymentConfig);
   }
@@ -1185,8 +1107,61 @@ class Client implements OpenShiftClientInterface {
   /**
    * {@inheritdoc}
    */
+  public function updateReplicationControllers($name, $label = NULL, $replica_count = NULL) {
+    $result = FALSE;
+
+    $repControllers = $this->getReplicationControllers($name, $label);
+    if ($replica_count === NULL) {
+      return $repControllers;
+    }
+
+    // If queried with the label, there will be an array of controllers.
+    if (isset($repControllers['items'])) {
+      foreach ($repControllers['items'] as $controller) {
+        $result = $this->updateReplicationControllers($controller['metadata']['name'], NULL, $replica_count);
+        if (!$result) {
+          return FALSE;
+        }
+        // @todo this feels wrong, build an array of results?
+      }
+    }
+    else {
+      $resourceMethod = $this->getResourceMethod(__METHOD__);
+      $uri = $this->createRequestUri($resourceMethod['uri'], [
+        'name' => (string) $name,
+      ]);
+
+      $repControllers['spec']['replicas'] = $replica_count;
+
+      $result = $this->request($resourceMethod['action'], $uri, $repControllers);
+    }
+
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function deleteReplicationControllers($name, $label = NULL) {
-    return $this->apiCall(__METHOD__, $name, $label);
+    $result = FALSE;
+
+    $repControllers = $this->getReplicationControllers($name, $label);
+
+    // If queried with the label, there will be an array of controllers.
+    if (isset($repControllers['items'])) {
+      foreach ($repControllers['items'] as $controller) {
+        $result = $this->deleteReplicationControllers($controller['metadata']['name'], NULL);
+        if (!$result) {
+          return FALSE;
+        }
+        // @todo this feels wrong, build an array of results?
+      }
+    }
+    else {
+      $result = $this->apiCall(__METHOD__, $name, $label);
+    }
+
+    return $result;
   }
 
   /**
