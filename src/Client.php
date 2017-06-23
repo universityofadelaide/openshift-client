@@ -196,6 +196,16 @@ class Client implements OpenShiftClientInterface {
         'uri' => 'api/v1/namespaces/{namespace}/pods/{name}',
       ],
     ],
+    'replicationcontrollers' => [
+      'get' => [
+        'action' => 'GET',
+        'uri' => 'api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri' => 'api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
+      ],
+    ],
     'cronjob'               => [
       'create' => [
         'action' => 'POST',
@@ -1163,6 +1173,20 @@ class Client implements OpenShiftClientInterface {
    */
   public function deletePod(string $name) {
     return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getReplicationControllers($name, $label = NULL) {
+    return $this->apiCall(__METHOD__, $name, $label);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteReplicationControllers($name, $label = NULL) {
+    return $this->apiCall(__METHOD__, $name, $label);
   }
 
   /**

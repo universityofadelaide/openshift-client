@@ -534,4 +534,32 @@ interface OpenShiftClientInterface {
    */
   public function deletePod(string $name);
 
+  /**
+   * Retrieve a replication controller..
+   *
+   * @param string $name
+   *   Name of pod.
+   * @param string $label
+   *   Label of items to retrieve.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 200.
+   */
+  public function getReplicationControllers($name, $label);
+
+  /**
+   * Deletes a replicaion controller by name.
+   *
+   * @param string $name
+   *   Name of deployment config to delete.
+   * @param string $label
+   *   Label of items to delete.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails.
+   */
+  public function deleteReplicationControllers($name, $label);
+
 }
