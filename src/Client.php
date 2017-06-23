@@ -851,8 +851,8 @@ class Client implements OpenShiftClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDeploymentConfig(string $name) {
-    return $this->apiCall(__METHOD__, $name);
+  public function getDeploymentConfig(string $label) {
+    return $this->apiCall(__METHOD__, '', $label);
   }
 
   /**
@@ -1253,7 +1253,7 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * Common function for very simple requeste to the api.
+   * Common function for very simple request to the api.
    *
    * @param string $method
    *   Method calling get, to lookup the uri.
