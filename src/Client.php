@@ -87,7 +87,7 @@ class Client implements OpenShiftClientInterface {
         'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
     ],
-    'buildconfig'           => [
+    'buildconfig' => [
       'create' => [
         'action' => 'POST',
         'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs',
@@ -105,7 +105,7 @@ class Client implements OpenShiftClientInterface {
         'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
     ],
-    'deploymentconfig'      => [
+    'deploymentconfig' => [
       'create' => [
         'action' => 'POST',
         'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
@@ -121,6 +121,12 @@ class Client implements OpenShiftClientInterface {
       'update' => [
         'action' => 'PUT',
         'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+      ],
+    ],
+    'deploymentconfigs' => [
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
       ],
     ],
     'service'               => [
@@ -851,7 +857,14 @@ class Client implements OpenShiftClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDeploymentConfig(string $label) {
+  public function getDeploymentConfig(string $name) {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDeploymentConfigs(string $label) {
     return $this->apiCall(__METHOD__, '', $label);
   }
 
