@@ -444,7 +444,7 @@ interface OpenShiftClientInterface {
   public function deleteDeploymentConfig(string $name);
 
   /**
-   * Retrieve multiple deployment configs.
+   * Retrieve multiple deployment configs by label.
    *
    * @param string $label
    *   Label name of deployment configs to retrieve.
