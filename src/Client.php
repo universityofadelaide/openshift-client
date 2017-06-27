@@ -49,141 +49,147 @@ class Client implements OpenShiftClientInterface {
    * @var array
    */
   protected $resourceMap = [
-    'secret'                => [
+    'secret' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/api/v1/namespaces/{namespace}/secrets',
+        'uri' => '/api/v1/namespaces/{namespace}/secrets',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/api/v1/namespaces/{namespace}/secrets/{name}',
+        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}',
       ],
-      'get'    => [
+      'get' => [
         'action' => 'GET',
-        'uri'    => '/api/v1/namespaces/{namespace}/secrets/{name}',
+        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}',
       ],
       'update' => [
         // PUT replaces the entire secret.
         'action' => 'PUT',
-        'uri'    => '/api/v1/namespaces/{namespace}/secrets/{name}',
+        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}',
       ],
     ],
-    'imagestream'           => [
+    'imagestream' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams',
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
-      'get'    => [
+      'get' => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
       'update' => [
         // PUT replaces the imagestream.
         'action' => 'PUT',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
+        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
     ],
-    'buildconfig'           => [
+    'buildconfig' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs',
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
-      'get'    => [
+      'get' => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
+        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
     ],
-    'deploymentconfig'      => [
+    'deploymentconfig' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
       ],
-      'get'    => [
+      'get' => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
       ],
     ],
-    'service'               => [
+    'deploymentconfigs' => [
+      'get' => [
+        'action' => 'GET',
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
+      ],
+    ],
+    'service' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/api/v1/namespaces/{namespace}/services',
+        'uri' => '/api/v1/namespaces/{namespace}/services',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/api/v1/namespaces/{namespace}/services/{name}',
+        'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
       ],
-      'get'    => [
+      'get' => [
         // Lists all services.
         'action' => 'GET',
-        'uri'    => '/api/v1/namespaces/{namespace}/services',
+        'uri' => '/api/v1/namespaces/{namespace}/services',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/api/v1/namespaces/{namespace}/services/{name}',
+        'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
       ],
     ],
-    'route'                 => [
+    'route' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/routes',
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}',
       ],
-      'get'    => [
+      'get' => [
         // Lists all routes.
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/routes',
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}',
       ],
     ],
     'persistentvolumeclaim' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/api/v1/namespaces/{namespace}/persistentvolumeclaims',
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
       ],
-      'get'    => [
+      'get' => [
         // Lists all persistentvolumeclaims.
         'action' => 'GET',
-        'uri'    => '/api/v1/namespaces/{namespace}/persistentvolumeclaims',
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
       ],
     ],
-    'imagestreamtag'        => [
+    'imagestreamtag' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => 'oapi/v1/namespaces/{namespace}/imagestreamtags/{name}',
+        'uri' => 'oapi/v1/namespaces/{namespace}/imagestreamtags/{name}',
       ],
     ],
     'pod' => [
@@ -206,26 +212,25 @@ class Client implements OpenShiftClientInterface {
         'uri' => 'api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
       ],
     ],
-    'cronjob'               => [
+    'cronjob' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs',
+        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
+        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
       ],
-      'get'    => [
+      'get' => [
         // Lists all cronjobs.
         'action' => 'GET',
-        'uri'    => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs',
+        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
+        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
       ],
     ],
-
   ];
 
   /**
@@ -858,6 +863,13 @@ class Client implements OpenShiftClientInterface {
   /**
    * {@inheritdoc}
    */
+  public function getDeploymentConfigs(string $label) {
+    return $this->apiCall(__METHOD__, '', $label);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function createDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
@@ -1253,7 +1265,7 @@ class Client implements OpenShiftClientInterface {
   }
 
   /**
-   * Common function for very simple requeste to the api.
+   * Common function for very simple request to the api.
    *
    * @param string $method
    *   Method calling get, to lookup the uri.

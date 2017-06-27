@@ -382,14 +382,14 @@ interface OpenShiftClientInterface {
   /**
    * Retrieve a deployment configs.
    *
-   * @param string $name
-   *   Name of deployment config.
+   * @param string $label
+   *   Label name of deployment configs to retrieve.
    *
    * @return mixed
    *   Returns the body response if successful
    *   otherwise false if request fails to get back a 200.
    */
-  public function getDeploymentConfig(string $name);
+  public function getDeploymentConfig(string $label);
 
   /**
    * Creates a deployment config.
@@ -442,6 +442,18 @@ interface OpenShiftClientInterface {
    *   otherwise false if request fails.
    */
   public function deleteDeploymentConfig(string $name);
+
+  /**
+   * Retrieve multiple deployment configs by label.
+   *
+   * @param string $label
+   *   Label name of deployment configs to retrieve.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 200.
+   */
+  public function getDeploymentConfigs(string $label);
 
   /**
    * Retrieve a cron job.
