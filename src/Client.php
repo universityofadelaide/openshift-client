@@ -878,51 +878,50 @@ class Client implements OpenShiftClientInterface {
 
     $deploymentConfig = [
       'apiVersion' => 'v1',
-      'kind'       => 'DeploymentConfig',
-      'metadata'   => [
+      'kind' => 'DeploymentConfig',
+      'metadata' => [
         'name' => $name,
+        'labels' => isset($data['labels']) ? $data['labels'] : [],
       ],
-      'spec'       => [
+      'spec' => [
         'replicas' => 1,
         'selector' => [
           'name' => $name,
         ],
         'strategy' => [
-          'resources'     => [],
+          'resources' => [],
           'rollingParams' => [
-            'intervalSeconds'     => 1,
-            'maxSurge'            => '25%',
-            'maxUnavailable'      => '25%',
-            'timeoutSeconds'      => 600,
+            'intervalSeconds' => 1,
+            'maxSurge' => '25%',
+            'maxUnavailable' => '25%',
+            'timeoutSeconds' => 600,
             'updatePeriodSeconds' => 1,
           ],
-          'type'          => 'Rolling',
+          'type' => 'Rolling',
         ],
         'template' => [
           'metadata' => [
             'annotations' => [
               'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
             ],
-            'labels'      => [
-              'name' => $name,
-            ],
-            'name'        => $name,
+            'labels' => isset($data['labels']) ? $data['labels'] : ['name' => $name],
+            'name' => $name,
           ],
-          'spec'     =>
+          'spec' =>
             [
-              'containers'                    =>
+              'containers' =>
                 [
                   [
-                    'env'          => isset($data['env_vars']) ? $data['env_vars'] : [],
-                    'image'        => ' ',
-                    'name'         => $name,
-                    'ports'        =>
+                    'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
+                    'image' => ' ',
+                    'name' => $name,
+                    'ports' =>
                       [
                         [
                           'containerPort' => isset($data['containerPort']) ? $data['containerPort'] : NULL,
                         ],
                       ],
-                    'resources'    =>
+                    'resources' =>
                       [
                         'limits' =>
                           [
@@ -932,25 +931,25 @@ class Client implements OpenShiftClientInterface {
                     'volumeMounts' => $volume_config['mounts'],
                   ],
                 ],
-              'dnsPolicy'                     => 'ClusterFirst',
-              'restartPolicy'                 => 'Always',
-              'securityContext'               => [],
+              'dnsPolicy' => 'ClusterFirst',
+              'restartPolicy' => 'Always',
+              'securityContext' => [],
               'terminationGracePeriodSeconds' => 30,
-              'volumes'                       => $volume_config['config'],
+              'volumes' => $volume_config['config'],
             ],
         ],
-        'test'     => FALSE,
+        'test' => FALSE,
         'triggers' => [
           [
             'imageChangeParams' => [
-              'automatic'      => TRUE,
+              'automatic' => TRUE,
               'containerNames' => [$name],
-              'from'           => [
+              'from' => [
                 'kind' => 'ImageStreamTag',
                 'name' => $image_stream_tag,
               ],
             ],
-            'type'              => 'ImageChange',
+            'type' => 'ImageChange',
           ],
           [
             'type' => 'ConfigChange',
@@ -959,12 +958,12 @@ class Client implements OpenShiftClientInterface {
       ],
       // According to the docs this is required.
       // @see : https://docs.openshift.org/latest/rest_api/openshift_v1.html#v1-deploymentconfig
-      'status'     => [
-        'lastestVersion'      => 0,
-        'observedGeneration'  => 0,
-        'replicas'            => 1,
-        'updatedReplicas'     => 0,
-        'availableReplicas'   => 0,
+      'status' => [
+        'lastestVersion' => 0,
+        'observedGeneration' => 0,
+        'replicas' => 1,
+        'updatedReplicas' => 0,
+        'availableReplicas' => 0,
         'unavailableReplicas' => 0,
       ],
     ];
@@ -989,51 +988,50 @@ class Client implements OpenShiftClientInterface {
 
     $deploymentConfig = [
       'apiVersion' => 'v1',
-      'kind'       => 'DeploymentConfig',
-      'metadata'   => [
+      'kind' => 'DeploymentConfig',
+      'metadata' => [
         'name' => $name,
+        'labels' => (isset($data['labels']) ? $data['labels'] : ['name' => $name],
       ],
-      'spec'       => [
+      'spec' => [
         'replicas' => 1,
         'selector' => [
           'name' => $name,
         ],
         'strategy' => [
-          'resources'     => [],
+          'resources' => [],
           'rollingParams' => [
-            'intervalSeconds'     => 1,
-            'maxSurge'            => '25%',
-            'maxUnavailable'      => '25%',
-            'timeoutSeconds'      => 600,
+            'intervalSeconds' => 1,
+            'maxSurge' => '25%',
+            'maxUnavailable' => '25%',
+            'timeoutSeconds' => 600,
             'updatePeriodSeconds' => 1,
           ],
-          'type'          => 'Rolling',
+          'type' => 'Rolling',
         ],
         'template' => [
           'metadata' => [
             'annotations' => [
               'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
             ],
-            'labels'      => [
-              'name' => $name,
-            ],
-            'name'        => $name,
+            'labels' => (isset($data['labels']) ? $data['labels'] : ['name' => $name],
+            'name' => $name,
           ],
-          'spec'     =>
+          'spec' =>
             [
-              'containers'                    =>
+              'containers' =>
                 [
                   [
-                    'env'          => isset($data['env_vars']) ? $data['env_vars'] : [],
-                    'image'        => ' ',
-                    'name'         => $name,
-                    'ports'        =>
+                    'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
+                    'image' => ' ',
+                    'name' => $name,
+                    'ports' =>
                       [
                         [
                           'containerPort' => isset($data['containerPort']) ? $data['containerPort'] : NULL,
                         ],
                       ],
-                    'resources'    =>
+                    'resources' =>
                       [
                         'limits' =>
                           [
@@ -1043,25 +1041,25 @@ class Client implements OpenShiftClientInterface {
                     'volumeMounts' => $volume_config['mounts'],
                   ],
                 ],
-              'dnsPolicy'                     => 'ClusterFirst',
-              'restartPolicy'                 => 'Always',
-              'securityContext'               => [],
+              'dnsPolicy' => 'ClusterFirst',
+              'restartPolicy' => 'Always',
+              'securityContext' => [],
               'terminationGracePeriodSeconds' => 30,
-              'volumes'                       => $volume_config['config'],
+              'volumes' => $volume_config['config'],
             ],
         ],
-        'test'     => FALSE,
+        'test' => FALSE,
         'triggers' => [
           [
             'imageChangeParams' => [
-              'automatic'      => TRUE,
+              'automatic' => TRUE,
               'containerNames' => [$name],
-              'from'           => [
+              'from' => [
                 'kind' => 'ImageStreamTag',
                 'name' => $image_stream_tag . ':latest',
               ],
             ],
-            'type'              => 'ImageChange',
+            'type' => 'ImageChange',
           ],
           [
             'type' => 'ConfigChange',
