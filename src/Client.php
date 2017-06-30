@@ -4,6 +4,8 @@ namespace UniversityOfAdelaide\OpenShift;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
+use UniversityOfAdelaide\OpenShift\Model\BuildConfig;
+use UniversityOfAdelaide\OpenShift\Model\Secret;
 
 /**
  * Class Client.
@@ -405,16 +407,12 @@ class Client implements OpenShiftClientInterface {
       $data[$key] = base64_encode($value);
     }
 
-    // @todo - this should use model.
-    $secret = [
-      'api_version' => 'v1',
-      'kind' => 'Secret',
+    $secret = Secret::create([
       'metadata' => [
         'name' => $name,
       ],
-      'type' => 'Opaque',
       'data' => $data,
-    ];
+    ]);
 
     return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $secret);
   }
@@ -436,19 +434,11 @@ class Client implements OpenShiftClientInterface {
     ]);
 
     // Base64 encode the data.
-    foreach ($data as $key => $value) {
+    foreach ($data['data'] as $key => $value) {
       $data[$key] = base64_encode($value);
     }
 
-    $secret = [
-      'api_version' => 'v1',
-      'kind' => 'Secret',
-      'metadata' => [
-        'name' => $name,
-      ],
-      'type' => 'Opaque',
-      'data' => $data,
-    ];
+    $secret = array_merge_recursive($this->getSecret($name), $data);
 
     return $this->request($resourceMethod['action'], $uri, $secret);
   }
@@ -575,30 +565,23 @@ class Client implements OpenShiftClientInterface {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
-    $buildConfig = [
-      'kind' => 'BuildConfig',
+    $buildConfig = BuildConfig::create([
       'metadata' => [
-        'annotations' => [
-          'description' => 'Defines how to build the application',
-        ],
         'name' => $name,
       ],
       'spec' => [
         'output' => [
           'to' => [
-            'kind' => 'ImageStreamTag',
             'name' => $image_stream_tag,
           ],
         ],
         'source' => [
-          'type' => 'Git',
           'git' => [
             'ref' => (string) $data['git']['ref'],
             'uri' => (string) $data['git']['uri'],
           ],
           'secrets' => [
             [
-              'destinationDir' => '.',
               'secret' => [
                 'name' => $secret,
               ],
@@ -610,7 +593,6 @@ class Client implements OpenShiftClientInterface {
         ],
         'strategy' => [
           'sourceStrategy' => [
-            'incremental' => TRUE,
             'from' => [
               'kind' => (string) $data['source']['type'],
               'name' => (string) $data['source']['name'],
@@ -621,20 +603,11 @@ class Client implements OpenShiftClientInterface {
           ],
           'type' => 'Source',
         ],
-        // @todo - figure out github and other types of triggers
-        'triggers' => [
-          [
-            'type' => 'ImageChange',
-          ],
-          [
-            'type' => 'ConfigChange',
-          ],
-        ],
         'status' => [
           'lastversion' => time(),
         ],
       ],
-    ];
+    ]);
 
     return $this->request($resourceMethod['action'], $uri, $buildConfig);
   }
@@ -642,71 +615,13 @@ class Client implements OpenShiftClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function updateBuildConfig(string $name, string $secret, string $image_stream, array $data) {
+  public function updateBuildConfig(string $name, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => $name,
     ]);
 
-    $buildConfig = [
-      'kind' => 'BuildConfig',
-      'metadata' => [
-        'annotations' => [
-          'description' => 'Defines how to build the application',
-        ],
-        'name' => $name,
-      ],
-      'spec' => [
-        'output' => [
-          'to' => [
-            'kind' => 'ImageStreamTag',
-            'name' => $image_stream . ':latest',
-          ],
-        ],
-        'source' => [
-          'type' => 'Git',
-          'git' => [
-            'ref' => (string) $data['git']['ref'],
-            'uri' => (string) $data['git']['uri'],
-          ],
-          'secrets' => [
-            [
-              'destinationDir' => '.',
-              'secret' => [
-                'name' => $secret,
-              ],
-            ],
-          ],
-          'sourceSecret' => [
-            'name' => $secret,
-          ],
-        ],
-        'strategy' => [
-          'sourceStrategy' => [
-            'from' => [
-              'kind' => (string) $data['source']['type'],
-              'name' => (string) $data['source']['name'],
-            ],
-            'pullSecret' => [
-              'name' => $secret,
-            ],
-          ],
-          'type' => 'Source',
-        ],
-        // @todo - figure out github and other types of triggers
-        'triggers' => [
-          [
-            'type' => 'ImageChange',
-          ],
-          [
-            'type' => 'ConfigChange',
-          ],
-        ],
-        'status' => [
-          'lastversion' => time(),
-        ],
-      ],
-    ];
+    $buildConfig = array_merge_recursive($this->getBuildConfig($name), $data);
 
     return $this->request($resourceMethod['action'], $uri, $buildConfig);
   }

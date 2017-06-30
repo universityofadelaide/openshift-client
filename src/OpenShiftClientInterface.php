@@ -202,10 +202,6 @@ interface OpenShiftClientInterface {
    *
    * @param string $name
    *   Name of build config.
-   * @param string $secret
-   *   Name of existing secret to use.
-   * @param string $image_stream_tag
-   *   Name of imagestream.
    * @param array $data
    *   Build config data.
    *
@@ -213,7 +209,7 @@ interface OpenShiftClientInterface {
    *   Returns the body response if successful
    *   otherwise false if request fails.
    */
-  public function updateBuildConfig(string $name, string $secret, string $image_stream_tag, array $data);
+  public function updateBuildConfig(string $name, array $data);
 
   /**
    * Deletes a build config by name.
