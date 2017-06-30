@@ -885,9 +885,7 @@ class Client implements OpenShiftClientInterface {
       ],
       'spec' => [
         'replicas' => 1,
-        'selector' => [
-          'name' => $name,
-        ],
+        'selector' => array_key_exists('labels', $data) ? $data['labels'] : [ 'name' => $name ],
         'strategy' => [
           'resources' => [],
           'rollingParams' => [
