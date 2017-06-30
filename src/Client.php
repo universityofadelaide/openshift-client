@@ -881,7 +881,7 @@ class Client implements OpenShiftClientInterface {
       'kind' => 'DeploymentConfig',
       'metadata' => [
         'name' => $name,
-        'labels' => array_key_exists('labels', $data) ? $data['labels'] : [ 'name' => $name ],
+        'labels' => array_key_exists('labels', $data) ? $data['labels'] : [],
       ],
       'spec' => [
         'replicas' => 1,
@@ -904,7 +904,7 @@ class Client implements OpenShiftClientInterface {
             'annotations' => [
               'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
             ],
-            'labels' => array_key_exists('labels', $data) ? $data['labels'] : ['name' => $name ],
+            'labels' => array_key_exists('labels', $data) ? $data['labels'] : [],
             'name' => $name,
           ],
           'spec' =>
@@ -991,7 +991,7 @@ class Client implements OpenShiftClientInterface {
       'kind' => 'DeploymentConfig',
       'metadata' => [
         'name' => $name,
-        'labels' => array_key_exists('labels', $data) ? $data['labels'] : ['name' => $name ],
+        'labels' => array_key_exists('labels', $data) ? $data['labels'] : [],
       ],
       'spec' => [
         'replicas' => 1,
@@ -1014,7 +1014,7 @@ class Client implements OpenShiftClientInterface {
             'annotations' => [
               'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
             ],
-            'labels' => array_key_exists('labels', $data) ? $data['labels'] : ['name' => $name ],
+            'labels' => array_key_exists('labels', $data) ? $data['labels'] : [],
             'name' => $name,
           ],
           'spec' =>
