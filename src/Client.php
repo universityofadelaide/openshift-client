@@ -881,7 +881,7 @@ class Client implements OpenShiftClientInterface {
       'kind' => 'DeploymentConfig',
       'metadata' => [
         'name' => $name,
-        'labels' => isset($data['labels']) ? $data['labels'] : [],
+        'labels' => isset($data['labels']) ? $data['labels'] : [ 'name' => $name ],
       ],
       'spec' => [
         'replicas' => 1,
@@ -904,7 +904,7 @@ class Client implements OpenShiftClientInterface {
             'annotations' => [
               'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
             ],
-            'labels' => isset($data['labels']) ? $data['labels'] : ['name' => $name],
+            'labels' => isset($data['labels']) ? $data['labels'] : ['name' => $name ],
             'name' => $name,
           ],
           'spec' =>
