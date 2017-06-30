@@ -239,10 +239,10 @@ class Client implements OpenShiftClientInterface {
    * @var array
    */
   protected $responseCodes = [
-    'POST'   => 201,
+    'POST' => 201,
     'DELETE' => 200,
-    'GET'    => 200,
-    'PUT'    => 200,
+    'GET' => 200,
+    'PUT' => 200,
   ];
 
   /**
@@ -263,13 +263,13 @@ class Client implements OpenShiftClientInterface {
     $this->namespace = $namespace;
 
     $guzzle_options = [
-      'verify'   => TRUE,
+      'verify' => TRUE,
       'base_uri' => $host,
-      'headers'  => [
+      'headers' => [
         'Authorization' => 'Bearer ' . $token,
         // @todo - make this configurable.
-        'Content-Type'  => 'application/json',
-        'Accept'        => 'application/json',
+        'Content-Type' => 'application/json',
+        'Accept' => 'application/json',
       ],
 
     ];
@@ -333,7 +333,7 @@ class Client implements OpenShiftClientInterface {
     if ($method != 'DELETE') {
       $requestOptions = [
         'query' => $query,
-        'body'  => json_encode($body),
+        'body' => json_encode($body),
       ];
     }
 
@@ -408,12 +408,12 @@ class Client implements OpenShiftClientInterface {
     // @todo - this should use model.
     $secret = [
       'api_version' => 'v1',
-      'kind'        => 'Secret',
-      'metadata'    => [
+      'kind' => 'Secret',
+      'metadata' => [
         'name' => $name,
       ],
-      'type'        => 'Opaque',
-      'data'        => $data,
+      'type' => 'Opaque',
+      'data' => $data,
     ];
 
     return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $secret);
@@ -442,12 +442,12 @@ class Client implements OpenShiftClientInterface {
 
     $secret = [
       'api_version' => 'v1',
-      'kind'        => 'Secret',
-      'metadata'    => [
+      'kind' => 'Secret',
+      'metadata' => [
         'name' => $name,
       ],
-      'type'        => 'Opaque',
-      'data'        => $data,
+      'type' => 'Opaque',
+      'data' => $data,
     ];
 
     return $this->request($resourceMethod['action'], $uri, $secret);
@@ -476,16 +476,16 @@ class Client implements OpenShiftClientInterface {
 
     // @todo - use a model.
     $service = [
-      'kind'     => 'Service',
+      'kind' => 'Service',
       'metadata' => [
         'name' => (string) $name,
       ],
-      'spec'     => [
-        'ports'    => [
+      'spec' => [
+        'ports' => [
           // Defaults to TCP.
           [
-            'name'       => 'web',
-            'port'       => (int) $data['port'],
+            'name' => 'web',
+            'port' => (int) $data['port'],
             'targetPort' => (int) $data['targetPort'],
           ],
         ],
@@ -527,19 +527,19 @@ class Client implements OpenShiftClientInterface {
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
     $route = [
-      'kind'     => 'Route',
+      'kind' => 'Route',
       'metadata' => [
         'name' => (string) $name,
       ],
-      'spec'     => [
+      'spec' => [
         'host' => (string) $application_domain,
-        'to'   => [
+        'to' => [
           'kind' => 'Service',
           'name' => (string) $service_name,
         ],
       ],
       // Unsure if required. @see : https://docs.openshift.org/latest/rest_api/openshift_v1.html#v1-routestatus
-      'status'   => [
+      'status' => [
         'ingress' => [],
       ],
     ];
@@ -576,30 +576,30 @@ class Client implements OpenShiftClientInterface {
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
     $buildConfig = [
-      'kind'     => 'BuildConfig',
+      'kind' => 'BuildConfig',
       'metadata' => [
         'annotations' => [
           'description' => 'Defines how to build the application',
         ],
-        'name'        => $name,
+        'name' => $name,
       ],
-      'spec'     => [
-        'output'   => [
+      'spec' => [
+        'output' => [
           'to' => [
             'kind' => 'ImageStreamTag',
             'name' => $image_stream_tag,
           ],
         ],
-        'source'   => [
-          'type'         => 'Git',
-          'git'          => [
+        'source' => [
+          'type' => 'Git',
+          'git' => [
             'ref' => (string) $data['git']['ref'],
             'uri' => (string) $data['git']['uri'],
           ],
-          'secrets'      => [
+          'secrets' => [
             [
               'destinationDir' => '.',
-              'secret'         => [
+              'secret' => [
                 'name' => $secret,
               ],
             ],
@@ -611,15 +611,15 @@ class Client implements OpenShiftClientInterface {
         'strategy' => [
           'sourceStrategy' => [
             'incremental' => TRUE,
-            'from'        => [
+            'from' => [
               'kind' => (string) $data['source']['type'],
               'name' => (string) $data['source']['name'],
             ],
-            'pullSecret'  => [
+            'pullSecret' => [
               'name' => $secret,
             ],
           ],
-          'type'           => 'Source',
+          'type' => 'Source',
         ],
         // @todo - figure out github and other types of triggers
         'triggers' => [
@@ -630,7 +630,7 @@ class Client implements OpenShiftClientInterface {
             'type' => 'ConfigChange',
           ],
         ],
-        'status'   => [
+        'status' => [
           'lastversion' => time(),
         ],
       ],
@@ -649,30 +649,30 @@ class Client implements OpenShiftClientInterface {
     ]);
 
     $buildConfig = [
-      'kind'     => 'BuildConfig',
+      'kind' => 'BuildConfig',
       'metadata' => [
         'annotations' => [
           'description' => 'Defines how to build the application',
         ],
-        'name'        => $name,
+        'name' => $name,
       ],
-      'spec'     => [
-        'output'   => [
+      'spec' => [
+        'output' => [
           'to' => [
             'kind' => 'ImageStreamTag',
             'name' => $image_stream . ':latest',
           ],
         ],
-        'source'   => [
-          'type'         => 'Git',
-          'git'          => [
+        'source' => [
+          'type' => 'Git',
+          'git' => [
             'ref' => (string) $data['git']['ref'],
             'uri' => (string) $data['git']['uri'],
           ],
-          'secrets'      => [
+          'secrets' => [
             [
               'destinationDir' => '.',
-              'secret'         => [
+              'secret' => [
                 'name' => $secret,
               ],
             ],
@@ -683,7 +683,7 @@ class Client implements OpenShiftClientInterface {
         ],
         'strategy' => [
           'sourceStrategy' => [
-            'from'       => [
+            'from' => [
               'kind' => (string) $data['source']['type'],
               'name' => (string) $data['source']['name'],
             ],
@@ -691,7 +691,7 @@ class Client implements OpenShiftClientInterface {
               'name' => $secret,
             ],
           ],
-          'type'           => 'Source',
+          'type' => 'Source',
         ],
         // @todo - figure out github and other types of triggers
         'triggers' => [
@@ -702,7 +702,7 @@ class Client implements OpenShiftClientInterface {
             'type' => 'ConfigChange',
           ],
         ],
-        'status'   => [
+        'status' => [
           'lastversion' => time(),
         ],
       ],
@@ -732,14 +732,14 @@ class Client implements OpenShiftClientInterface {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
 
     $imageStream = [
-      'kind'     => 'ImageStream',
+      'kind' => 'ImageStream',
       'metadata' => [
-        'name'        => $name,
+        'name' => $name,
         'annotations' => [
           'description' => 'Keeps track of changes in the application image',
         ],
       ],
-      'spec'     => [
+      'spec' => [
         'dockerImageRepository' => '',
       ],
     ];
@@ -754,14 +754,14 @@ class Client implements OpenShiftClientInterface {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
 
     $imageStream = [
-      'kind'     => 'ImageStream',
+      'kind' => 'ImageStream',
       'metadata' => [
-        'name'        => $name,
+        'name' => $name,
         'annotations' => [
           'description' => 'Keeps track of changes in the application image',
         ],
       ],
-      'spec'     => [
+      'spec' => [
         'dockerImageRepository' => '',
       ],
     ];
@@ -820,15 +820,15 @@ class Client implements OpenShiftClientInterface {
 
     $pvc = [
       'apiVersion' => 'v1',
-      'kind'       => 'PersistentVolumeClaim',
-      'metadata'   => [
+      'kind' => 'PersistentVolumeClaim',
+      'metadata' => [
         'name' => $name,
       ],
-      'spec'       => [
+      'spec' => [
         'accessModes' => [
           $access_mode,
         ],
-        'resources'   => [
+        'resources' => [
           'requests' => [
             'storage' => $storage,
           ],
@@ -1105,44 +1105,44 @@ class Client implements OpenShiftClientInterface {
 
     $cronConfig = [
       'apiVersion' => 'batch/v2alpha1',
-      'kind'       => 'CronJob',
-      'metadata'   => [
+      'kind' => 'CronJob',
+      'metadata' => [
         'name' => $name,
       ],
-      'spec'       => [
-        'concurrencyPolicy'          => 'Forbid',
-        'schedule'                   => $schedule,
-        'suspend'                    => FALSE,
-        'failedJobsHistoryLimit'     => 5,
+      'spec' => [
+        'concurrencyPolicy' => 'Forbid',
+        'schedule' => $schedule,
+        'suspend' => FALSE,
+        'failedJobsHistoryLimit' => 5,
         'successfulJobsHistoryLimit' => 5,
-        'jobTemplate'                => [
+        'jobTemplate' => [
           'spec' => [
             'template' => [
               'spec' =>
                 [
-                  'containers'                    =>
+                  'containers' =>
                     [
                       [
-                        'args'            => $args,
-                        'env'             => isset($data['env_vars']) ? $data['env_vars'] : [],
-                        'image'           => $image_name,
+                        'args' => $args,
+                        'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
+                        'image' => $image_name,
                         'imagePullPolicy' => 'Never',
-                        'name'            => $name,
-                        'resources'       =>
+                        'name' => $name,
+                        'resources' =>
                           [
                             'limits' =>
                               [
                                 'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
                               ],
                           ],
-                        'volumeMounts'    => $volume_config['mounts'],
+                        'volumeMounts' => $volume_config['mounts'],
                       ],
                     ],
-                  'dnsPolicy'                     => 'ClusterFirst',
-                  'restartPolicy'                 => 'Never',
-                  'securityContext'               => [],
+                  'dnsPolicy' => 'ClusterFirst',
+                  'restartPolicy' => 'Never',
+                  'securityContext' => [],
                   'terminationGracePeriodSeconds' => 30,
-                  'volumes'                       => $volume_config['config'],
+                  'volumes' => $volume_config['config'],
                 ],
             ],
           ],
@@ -1232,27 +1232,27 @@ class Client implements OpenShiftClientInterface {
     foreach ($volumes as $volume) {
       if ($volume['type'] === 'pvc') {
         $volumes_config[] = [
-          'name'                  => $volume['name'],
+          'name' => $volume['name'],
           'persistentVolumeClaim' => [
             'claimName' => $volume['name'],
           ],
         ];
         $volume_mounts[] = [
           'mountPath' => $volume['path'],
-          'name'      => $volume['name'],
+          'name' => $volume['name'],
         ];
       }
       elseif ($volume['type'] === 'secret') {
         $volumes_config[] = [
-          'name'   => $volume['name'],
+          'name' => $volume['name'],
           'secret' => [
             'secretName' => $volume['secret'],
           ],
         ];
         $volume_mounts[] = [
           'mountPath' => $volume['path'],
-          'name'      => $volume['name'],
-          'readOnly'  => TRUE,
+          'name' => $volume['name'],
+          'readOnly' => TRUE,
         ];
       }
     }
