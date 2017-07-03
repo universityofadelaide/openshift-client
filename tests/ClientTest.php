@@ -16,7 +16,7 @@ class ClientTest extends TestCase {
   /**
    * Protected client variable.
    *
-   * @var \UniversityOfAdelaide\OpenShift\OpenShiftClientInterface
+   * @var \UniversityOfAdelaide\OpenShift\ClientInterface
    */
   protected $client;
 
