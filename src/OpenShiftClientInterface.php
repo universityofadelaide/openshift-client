@@ -416,20 +416,14 @@ interface OpenShiftClientInterface {
    *
    * @param string $name
    *   Name of the deploymentconfig.
-   * @param string $image_stream_tag
-   *   Image stream to manage the deployment.
-   * @param string $image_name
-   *   Image name for deployment.
-   * @param array $volumes
-   *   Volumes to attach to the deployment config.
-   * @param array $data
-   *   Configuration data for deployment config.
+   * @param int $replica_count
+   *   The number of replicas to keep running.
    *
    * @return mixed
    *   Returns the body response if successful
    *   otherwise false if request fails.
    */
-  public function updateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data);
+  public function updateDeploymentConfig(string $name, int $replica_count);
 
   /**
    * Deletes a deployment config by name.
@@ -561,7 +555,23 @@ interface OpenShiftClientInterface {
   public function getReplicationControllers($name, $label);
 
   /**
-   * Deletes a replicaion controller by name.
+   * Update a replication controller.
+   *
+   * @param string $name
+   *   Name of pod.
+   * @param string $label
+   *   Label of items to retrieve.
+   * @param int $replica_count
+   *   Change the number of active replica's required.
+   *
+   * @return mixed
+   *   Returns the body response if successful
+   *   otherwise false if request fails to get back a 200.
+   */
+  public function updateReplicationControllers($name, $label, $replica_count);
+
+  /**
+   * Deletes a replication controller by name.
    *
    * @param string $name
    *   Name of deployment config to delete.
