@@ -164,7 +164,7 @@ class ClientTest extends TestCase {
    */
   public function testCreatePersistentVolumeClaim2() {
     $response = $this->client->createPersistentVolumeClaim(
-       $this->json->clientTest->artifacts . '-public',
+      $this->json->clientTest->artifacts . '-public',
       'ReadWriteMany',
       '10Gi'
     );
