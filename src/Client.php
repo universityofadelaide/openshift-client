@@ -13,7 +13,7 @@ use GuzzleHttp\Exception\RequestException;
  *
  * @package UniversityOfAdelaide\OpenShift
  */
-class Client implements OpenShiftClientInterface {
+class Client implements ClientInterface {
 
   /**
    * Api version.
@@ -330,6 +330,9 @@ class Client implements OpenShiftClientInterface {
    *
    * @return array|bool
    *   Returns json_decoded body contents or FALSE.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue performing request.
    */
   protected function request(string $method, string $uri, array $body = [], array $query = []) {
     $requestOptions = [];
@@ -344,10 +347,18 @@ class Client implements OpenShiftClientInterface {
     try {
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
     }
-    catch (RequestException $exception) {
-      return FALSE;
+    catch (RequestException $e) {
+      // If the exception is a 'not found' response to a GET, just return false.
+      if ($method === 'GET' && $e->getCode() === 404) {
+        return FALSE;
+      }
+      throw new ClientException(
+        $e->getMessage(),
+        $e->getCode(),
+        $e->getPrevious(),
+        $e->getResponse()->getBody()
+      );
     }
-
     return json_decode($response->getBody()->getContents(), TRUE);
   }
 
