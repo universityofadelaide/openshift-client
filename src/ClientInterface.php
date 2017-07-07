@@ -10,6 +10,40 @@ namespace UniversityOfAdelaide\OpenShift;
 interface ClientInterface {
 
   /**
+   * Client constructor.
+   *
+   * @param string $host
+   *   The hostname.
+   * @param string $token
+   *   A generated Auth token.
+   * @param string $namespace
+   *   Namespace/project on which to operate methods on.
+   * @param bool $verifyTls
+   *   TLS certificates are verified by default.
+   */
+  public function __construct($host, $token, $namespace, $verifyTls = TRUE);
+
+  /**
+   * Sends a request via the guzzle http client.
+   *
+   * @param string $method
+   *   HTTP VERB.
+   * @param string $uri
+   *   Path the endpoint.
+   * @param array $body
+   *   Request body to be converted to JSON.
+   * @param array $query
+   *   Query params.
+   *
+   * @return array|bool
+   *   Returns json_decoded body contents or FALSE.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue performing request.
+   */
+  public function request(string $method, string $uri, array $body = [], array $query = []);
+
+  /**
    * Retrieves a secret that matches the name/tag.
    *
    * @param string $name

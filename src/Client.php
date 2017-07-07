@@ -250,24 +250,13 @@ class Client implements ClientInterface {
   ];
 
   /**
-   * Client constructor.
-   *
-   * @param string $host
-   *   The hostname.
-   * @param string $token
-   *   A generated Auth token.
-   * @param string $namespace
-   *   Namespace/project on which to operate methods on.
-   * @param bool $devMode
-   *   Turn debug mode on or off.
+   * {@inheritdoc}
    */
-  public function __construct($host, $token, $namespace, $devMode = FALSE) {
-
+  public function __construct($host, $token, $namespace, $verifyTls = TRUE) {
     $this->host = $host;
     $this->namespace = $namespace;
-
-    $guzzle_options = [
-      'verify' => TRUE,
+    $this->guzzleClient = new GuzzleClient([
+      'verify' => $verifyTls,
       'base_uri' => $host,
       'headers' => [
         'Authorization' => 'Bearer ' . $token,
@@ -275,15 +264,7 @@ class Client implements ClientInterface {
         'Content-Type' => 'application/json',
         'Accept' => 'application/json',
       ],
-
-    ];
-
-    // If dev mode - turn off SSL Verification.
-    if ($devMode) {
-      $guzzle_options['verify'] = FALSE;
-    }
-
-    $this->guzzleClient = new GuzzleClient($guzzle_options);
+    ]);
   }
 
   /**
@@ -317,24 +298,9 @@ class Client implements ClientInterface {
   }
 
   /**
-   * Sends a request via the guzzle http client.
-   *
-   * @param string $method
-   *   HTTP VERB.
-   * @param string $uri
-   *   Path the endpoint.
-   * @param array $body
-   *   Request body to be converted to JSON.
-   * @param array $query
-   *   Query params.
-   *
-   * @return array|bool
-   *   Returns json_decoded body contents or FALSE.
-   *
-   * @throws ClientException
-   *   Throws exception if there is an issue performing request.
+   * {@inheritdoc}
    */
-  protected function request(string $method, string $uri, array $body = [], array $query = []) {
+  public function request(string $method, string $uri, array $body = [], array $query = []) {
     $requestOptions = [];
 
     if ($method != 'DELETE') {
