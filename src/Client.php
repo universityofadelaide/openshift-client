@@ -322,7 +322,7 @@ class Client implements ClientInterface {
         $e->getMessage(),
         $e->getCode(),
         $e->getPrevious(),
-        $e->getResponse()->getBody()
+        $e->hasResponse() ? $e->getResponse()->getBody() : ''
       );
     }
     return json_decode($response->getBody()->getContents(), TRUE);
