@@ -226,9 +226,8 @@ class Client implements ClientInterface {
         'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
       ],
       'get' => [
-        // Lists all cronjobs.
         'action' => 'GET',
-        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs',
+        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
@@ -238,19 +237,19 @@ class Client implements ClientInterface {
     'job' => [
       'create' => [
         'action' => 'POST',
-        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/jobs',
+        'uri' => '/apis/batch/v1/namespaces/{namespace}/jobs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/jobs/{name}',
+        'uri' => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
       ],
       'get' => [
         'action' => 'GET',
-        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/jobs/{name}',
+        'uri' => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/jobs/{name}',
+        'uri' => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
       ],
     ],
 
@@ -1075,7 +1074,7 @@ class Client implements ClientInterface {
     $job_template = $this->jobTemplate($name, $image_name, $args, $volume_config, $data);
 
     $jobConfig = [
-      'apiVersion' => 'batch/v2alpha1',
+      'apiVersion' => 'batch/v1',
       'kind' => 'Job',
       'metadata' => [
         'name' => $name,
@@ -1085,7 +1084,7 @@ class Client implements ClientInterface {
         'suspend' => FALSE,
         'failedJobsHistoryLimit' => 5,
         'successfulJobsHistoryLimit' => 5,
-        'jobTemplate' => $job_template,
+        'template' => $job_template['spec']['template'],
       ],
     ];
 
