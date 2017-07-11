@@ -570,11 +570,10 @@ interface ClientInterface {
    *
    * @param string $name
    *   Name of cron job.
-   *   Image stream to manage the deployment.
    * @param string $image_name
    *   Image name for deployment.
    * @param string $schedule
-   *   The cron styl schedule to run the job.
+   *   The cron style schedule to run the job.
    * @param array $args
    *   The commands to run, each entry in the array is a command.
    * @param array $volumes
@@ -597,6 +596,10 @@ interface ClientInterface {
    *   Name of cron job..
    * @param string $image_name
    *   Image name for deployment.
+   * @param string $schedule
+   *   The cron style schedule to run the job.
+   * @param array $args
+   *   The commands to run, each entry in the array is a command.
    * @param array $volumes
    *   Volumes to attach to the deployment config.
    * @param array $data
@@ -608,7 +611,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue updating cron job.
    */
-  public function updateCronJob(string $name, string $image_name, array $volumes, array $data);
+  public function updateCronJob(string $name, string $image_name, string $schedule, array $args, array $volumes, array $data);
 
   /**
    * Deletes a cron job by name.
@@ -623,6 +626,78 @@ interface ClientInterface {
    *   Throws exception if there is an issue deleting cron job.
    */
   public function deleteCronJob(string $name);
+
+  /**
+   * Retrieve a job.
+   *
+   * @param string $name
+   *   Name of job.
+   *
+   * @return array|bool
+   *   Returns the body response if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving job.
+   */
+  public function getJob(string $name);
+
+  /**
+   * Creates a job.
+   *
+   * @param string $name
+   *   Name of job.
+   * @param string $image_name
+   *   Image name for deployment.
+   * @param array $args
+   *   The commands to run, each entry in the array is a command.
+   * @param array $volumes
+   *   Volumes to attach to the deployment config.
+   * @param array $data
+   *   Configuration data for deployment config.
+   *
+   * @return array
+   *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating job.
+   */
+  public function createJob(string $name, string $image_name, array $args, array $volumes, array $data);
+
+  /**
+   * Updates an existing job.
+   *
+   * @param string $name
+   *   Name of job..
+   * @param string $image_name
+   *   Image name for deployment.
+   * @param array $args
+   *   The commands to run, each entry in the array is a command.
+   * @param array $volumes
+   *   Volumes to attach to the deployment config.
+   * @param array $data
+   *   Configuration data for deployment config.
+   *
+   * @return array
+   *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue updating job.
+   */
+  public function updateJob(string $name, string $image_name, array $args, array $volumes, array $data);
+
+  /**
+   * Deletes a job by name.
+   *
+   * @param string $name
+   *   Name of deployment config to delete.
+   *
+   * @return array
+   *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue deleting job.
+   */
+  public function deleteJob(string $name);
 
   /**
    * Retrieve a pod.

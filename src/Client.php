@@ -226,15 +226,33 @@ class Client implements ClientInterface {
         'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
       ],
       'get' => [
-        // Lists all cronjobs.
         'action' => 'GET',
-        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs',
+        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
         'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
       ],
     ],
+    'job' => [
+      'create' => [
+        'action' => 'POST',
+        'uri' => '/apis/batch/v1/namespaces/{namespace}/jobs',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri' => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
+      ],
+      'get' => [
+        'action' => 'GET',
+        'uri' => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri' => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
+      ],
+    ],
+
   ];
 
   /**
@@ -999,6 +1017,7 @@ class Client implements ClientInterface {
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
     $volume_config = $this->setVolumes($volumes);
+    $job_template = $this->jobTemplate($name, $image_name, $args, $volume_config, $data ) ;
 
     $cronConfig = [
       'apiVersion' => 'batch/v2alpha1',
@@ -1012,38 +1031,7 @@ class Client implements ClientInterface {
         'suspend' => FALSE,
         'failedJobsHistoryLimit' => 5,
         'successfulJobsHistoryLimit' => 5,
-        'jobTemplate' => [
-          'spec' => [
-            'template' => [
-              'spec' =>
-                [
-                  'containers' =>
-                    [
-                      [
-                        'args' => $args,
-                        'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
-                        'image' => $image_name,
-                        'imagePullPolicy' => 'Never',
-                        'name' => $name,
-                        'resources' =>
-                          [
-                            'limits' =>
-                              [
-                                'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
-                              ],
-                          ],
-                        'volumeMounts' => $volume_config['mounts'],
-                      ],
-                    ],
-                  'dnsPolicy' => 'ClusterFirst',
-                  'restartPolicy' => 'Never',
-                  'securityContext' => [],
-                  'terminationGracePeriodSeconds' => 30,
-                  'volumes' => $volume_config['config'],
-                ],
-            ],
-          ],
-        ],
+        'jobTemplate' => $job_template,
       ],
     ];
 
@@ -1057,7 +1045,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function updateCronJob(string $name, string $image_name, array $volumes, array $data) {
+  public function updateCronJob(string $name, string $image_name, string $schedule, array $args, array $volumes, array $data) {
 
   }
 
@@ -1067,6 +1055,61 @@ class Client implements ClientInterface {
   public function deleteCronJob(string $name) {
     return $this->apiCall(__METHOD__, $name);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getJob(string $name) {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createJob(string $name, string $image_name, array $args, array $volumes, array $data) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+
+    $volume_config = $this->setVolumes($volumes);
+    $job_template = $this->jobTemplate($name, $image_name, $args, $volume_config, $data);
+
+    $jobConfig = [
+      'apiVersion' => 'batch/v1',
+      'kind' => 'Job',
+      'metadata' => [
+        'name' => $name,
+      ],
+      'spec' => [
+        'concurrencyPolicy' => 'Forbid',
+        'suspend' => FALSE,
+        'failedJobsHistoryLimit' => 5,
+        'successfulJobsHistoryLimit' => 5,
+        'template' => $job_template['spec']['template'],
+      ],
+    ];
+
+    if (array_key_exists('annotations', $data)) {
+      $this->applyAnnotations($jobConfig, $data['annotations']);
+    }
+
+    return $this->request($resourceMethod['action'], $uri, $jobConfig);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateJob(string $name, string $image_name, array $args, array $volumes, array $data) {
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteJob(string $name) {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+
 
   /**
    * {@inheritdoc}
@@ -1210,6 +1253,57 @@ class Client implements ClientInterface {
       'mounts' => $volume_mounts,
       'config' => $volumes_config,
     ];
+  }
+
+  /**
+   * @param string $name
+   *   Name of job.
+   * @param string $image_name
+   *   Image name for deployment.
+   * @param array $args
+   *   The commands to run, each entry in the array is a command.
+   * @param array $volume_config
+   *   Volumes to attach to the deployment config.
+   * @param array $data
+   *   Configuration data for deployment config.
+   *
+   * @return array
+   */
+  private function jobTemplate($name, $image_name, $args, $volume_config, $data) {
+    $job_template = [
+      'spec' => [
+        'template' => [
+          'spec' =>
+            [
+              'containers' =>
+                [
+                  [
+                    'args' => $args,
+                    'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
+                    'image' => $image_name,
+                    'imagePullPolicy' => 'Never',
+                    'name' => $name,
+                    'resources' =>
+                      [
+                        'limits' =>
+                          [
+                            'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
+                          ],
+                      ],
+                    'volumeMounts' => $volume_config['mounts'],
+                  ],
+                ],
+              'dnsPolicy' => 'ClusterFirst',
+              'restartPolicy' => 'Never',
+              'securityContext' => [],
+              'terminationGracePeriodSeconds' => 30,
+              'volumes' => $volume_config['config'],
+            ],
+        ],
+      ],
+    ];
+
+    return $job_template;
   }
 
   /**
