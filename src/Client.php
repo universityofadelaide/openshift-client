@@ -642,72 +642,8 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function updateBuildConfig(string $name, string $secret, string $image_stream, array $data) {
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => $name,
-    ]);
-
-    $buildConfig = [
-      'kind' => 'BuildConfig',
-      'metadata' => [
-        'annotations' => [
-          'description' => 'Defines how to build the application',
-        ],
-        'name' => $name,
-      ],
-      'spec' => [
-        'output' => [
-          'to' => [
-            'kind' => 'ImageStreamTag',
-            'name' => $image_stream . ':latest',
-          ],
-        ],
-        'source' => [
-          'type' => 'Git',
-          'git' => [
-            'ref' => (string) $data['git']['ref'],
-            'uri' => (string) $data['git']['uri'],
-          ],
-          'secrets' => [
-            [
-              'destinationDir' => '.',
-              'secret' => [
-                'name' => $secret,
-              ],
-            ],
-          ],
-          'sourceSecret' => [
-            'name' => $secret,
-          ],
-        ],
-        'strategy' => [
-          'sourceStrategy' => [
-            'from' => [
-              'kind' => (string) $data['source']['type'],
-              'name' => (string) $data['source']['name'],
-            ],
-            'pullSecret' => [
-              'name' => $secret,
-            ],
-          ],
-          'type' => 'Source',
-        ],
-        // @todo - figure out github and other types of triggers
-        'triggers' => [
-          [
-            'type' => 'ImageChange',
-          ],
-          [
-            'type' => 'ConfigChange',
-          ],
-        ],
-        'status' => [
-          'lastversion' => time(),
-        ],
-      ],
-    ];
-
-    return $this->request($resourceMethod['action'], $uri, $buildConfig);
+    // @todo Implement updateBuildConfig() method.
+    return [];
   }
 
   /**
