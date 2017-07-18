@@ -158,9 +158,8 @@ class Client implements ClientInterface {
         'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}',
       ],
       'get' => [
-        // Lists all routes.
         'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/routes',
+        'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}',
       ],
       'update' => [
         'action' => 'PUT',
