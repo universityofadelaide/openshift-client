@@ -335,8 +335,12 @@ class Client implements ClientInterface {
       if ($method === 'GET' && $e->getCode() === 404) {
         return FALSE;
       }
+      // Do some special decoding for OpenShift
+      if ($e->hasResponse()) {
+        $message = json_decode($e->getResponse()->getBody()->getContents());
+      }
       throw new ClientException(
-        $e->getMessage(),
+        isset($message) ? $message->message : '',
         $e->getCode(),
         $e->getPrevious(),
         $e->hasResponse() ? $e->getResponse()->getBody() : ''
