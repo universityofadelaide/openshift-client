@@ -814,6 +814,14 @@ class Client implements ClientInterface {
 
     $volume_config = $this->setVolumes($volumes);
 
+    $securityContext = [];
+    if (array_key_exists('uid', $data)) {
+      $securityContext = [
+        'runAsUser' => $data['uid'],
+        'supplementalGroups' => array_key_exists('gid', $data) ? [$data['gid']] : [],
+      ];
+    }
+
     $deploymentConfig = [
       'apiVersion' => 'v1',
       'kind' => 'DeploymentConfig',
@@ -869,7 +877,7 @@ class Client implements ClientInterface {
                 ],
               'dnsPolicy' => 'ClusterFirst',
               'restartPolicy' => 'Always',
-              'securityContext' => [],
+              'securityContext' => $securityContext,
               'terminationGracePeriodSeconds' => 30,
               'volumes' => $volume_config['config'],
             ],
