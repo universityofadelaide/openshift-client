@@ -612,6 +612,7 @@ class Client implements ClientInterface {
         ],
         'strategy' => [
           'sourceStrategy' => [
+            'forcePull' => TRUE,
             'incremental' => TRUE,
             'from' => [
               'kind' => (string) $data['source']['type'],
