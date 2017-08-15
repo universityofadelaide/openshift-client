@@ -318,18 +318,18 @@ interface ClientInterface {
    * @return array Returns the body response if successful.
    *   Returns the body response if successful.
    */
-  public function setupImageStream(string $name);
+  public function generateImageStream(string $name);
 
   /**
    * Creates an image stream from the passing in array specification.
    *
-   * @param array $imageStream
+   * @param array $imageStreamConfig
    *   An image stream specification as an array.
    *
    * @return array Returns the body response if successful.
    *   Returns the body response if successful.
    */
-  public function createImageStream(array $imageStream);
+  public function createImageStream(array $imageStreamConfig);
 
   /**
    * Updates an image stream.
@@ -521,7 +521,7 @@ interface ClientInterface {
    * @return array
    *   Returns the body response if successful.
    */
-  public function setupDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data);
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data);
 
   /**
    * Updates and existing deployment config.

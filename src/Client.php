@@ -667,7 +667,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function setupImageStream(string $name) {
+  public function generateImageStream(string $name) {
     $imageStream = [
       'apiVersion' => 'v1',
       'kind' => 'ImageStream',
@@ -688,10 +688,10 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createImageStream(array $imageStream) {
+  public function createImageStream(array $imageStreamConfig) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
 
-    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStreamConfig);
   }
 
   /**
@@ -818,7 +818,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function setupDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data) {
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data) {
     $volume_config = $this->setVolumes($volumes);
 
     $securityContext = [];
