@@ -313,15 +313,23 @@ interface ClientInterface {
    * Creates an image stream, needed for buildConfig.
    *
    * @param string $name
-   *   Name of imagestream to create.
+   *   Name of image stream to create.
    *
-   * @return array
+   * @return array Returns the body response if successful.
    *   Returns the body response if successful.
-   *
-   * @throws ClientException
-   *   Throws exception if there is an issue creating image stream.
    */
-  public function createImageStream(string $name);
+  public function setupImageStream(string $name);
+
+  /**
+   * Creates an image stream from the passing in array specification.
+   *
+   * @param array $imageStream
+   *   An image stream specification as an array.
+   *
+   * @return array Returns the body response if successful.
+   *   Returns the body response if successful.
+   */
+  public function createImageStream(array $imageStream);
 
   /**
    * Updates an image stream.
@@ -472,6 +480,17 @@ interface ClientInterface {
   public function deletePersistentVolumeClaim(string $name);
 
   /**
+   * Create a deploymentConfig on the openshift instance
+   *
+   * @return array
+   *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating deployment config.
+   */
+  public function createDeploymentConfig(array $deploymentConfig);
+
+  /**
    * Retrieve a deployment configs.
    *
    * @param string $label
@@ -486,7 +505,7 @@ interface ClientInterface {
   public function getDeploymentConfig(string $label);
 
   /**
-   * Creates a deployment config.
+   * Sets up a deployment config.
    *
    * @param string $name
    *   Name of the deploymentconfig.
@@ -501,11 +520,8 @@ interface ClientInterface {
    *
    * @return array
    *   Returns the body response if successful.
-   *
-   * @throws ClientException
-   *   Throws exception if there is an issue creating deployment config.
    */
-  public function createDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data);
+  public function setupDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data);
 
   /**
    * Updates and existing deployment config.
