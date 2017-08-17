@@ -176,9 +176,8 @@ class Client implements ClientInterface {
         'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
       ],
       'get' => [
-        // Lists all persistentvolumeclaims.
         'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims',
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
       ],
       'update' => [
         'action' => 'PUT',
