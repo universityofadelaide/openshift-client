@@ -176,9 +176,8 @@ class Client implements ClientInterface {
         'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
       ],
       'get' => [
-        // Lists all persistentvolumeclaims.
         'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims',
+        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
       ],
       'update' => [
         'action' => 'PUT',
@@ -667,10 +666,9 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createImageStream(string $name) {
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
-
+  public function generateImageStream(string $name) {
     $imageStream = [
+      'apiVersion' => 'v1',
       'kind' => 'ImageStream',
       'metadata' => [
         'name' => $name,
@@ -683,7 +681,16 @@ class Client implements ClientInterface {
       ],
     ];
 
-    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
+    return $imageStream;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createImageStream(array $imageStreamConfig) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStreamConfig);
   }
 
   /**
@@ -693,6 +700,7 @@ class Client implements ClientInterface {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
 
     $imageStream = [
+      'apiVersion' => 'v1',
       'kind' => 'ImageStream',
       'metadata' => [
         'name' => $name,
@@ -809,10 +817,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data) {
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
-
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data) {
     $volume_config = $this->setVolumes($volumes);
 
     $securityContext = [];
@@ -901,21 +906,21 @@ class Client implements ClientInterface {
           ],
         ],
       ],
-      // According to the docs this is required.
-      // @see : https://docs.openshift.org/latest/rest_api/openshift_v1.html#v1-deploymentconfig
-      'status' => [
-        'lastestVersion' => 0,
-        'observedGeneration' => 0,
-        'replicas' => 1,
-        'updatedReplicas' => 0,
-        'availableReplicas' => 0,
-        'unavailableReplicas' => 0,
-      ],
     ];
 
     if (array_key_exists('annotations', $data)) {
       $this->applyAnnotations($deploymentConfig, $data['annotations']);
     }
+
+    return $deploymentConfig;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createDeploymentConfig(array $deploymentConfig) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
 
     return $this->request($resourceMethod['action'], $uri, $deploymentConfig);
   }
