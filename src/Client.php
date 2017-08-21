@@ -523,7 +523,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createRoute(string $name, string $service_name, string $application_domain) {
+  public function createRoute(string $name, string $service_name, string $domain, string $path = NULL) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -533,7 +533,8 @@ class Client implements ClientInterface {
         'name' => (string) $name,
       ],
       'spec' => [
-        'host' => (string) $application_domain,
+        'host' => (string) $domain,
+        'path' => (string) $path,
         'to' => [
           'kind' => 'Service',
           'name' => (string) $service_name,

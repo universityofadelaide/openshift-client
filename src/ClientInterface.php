@@ -184,8 +184,10 @@ interface ClientInterface {
    *   Name for the route.
    * @param string $service_name
    *   The service name to associate with the route.
-   * @param string $application_domain
-   *   The application domain to associate with the route.
+   * @param string $domain
+   *   The domain to associate with the route.
+   * @param string $path
+   *   The path to associate with the route. Optional.
    *
    * @return array
    *   Returns the body response if successful.
@@ -193,7 +195,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue creating route.
    */
-  public function createRoute(string $name, string $service_name, string $application_domain);
+  public function createRoute(string $name, string $service_name, string $domain, string $path = NULL);
 
   /**
    * Updates an existing named route.
