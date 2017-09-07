@@ -471,7 +471,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createService(string $name, array $data) {
+  public function createService(string $name, string $deployment_name, int $port, int $target_port) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -479,19 +479,20 @@ class Client implements ClientInterface {
     $service = [
       'kind' => 'Service',
       'metadata' => [
-        'name' => (string) $name,
+        'name' => $name,
       ],
       'spec' => [
         'ports' => [
           // Defaults to TCP.
           [
+            // @todo Does this have any impact when using non web ports?
             'name' => 'web',
-            'port' => (int) $data['port'],
-            'targetPort' => (int) $data['targetPort'],
+            'port' => $port,
+            'targetPort' => $target_port,
           ],
         ],
         'selector' => [
-          'name' => $data['deployment'],
+          'deploymentconfig' => $deployment_name,
         ],
       ],
     ];
