@@ -857,7 +857,6 @@ class Client implements ClientInterface {
               'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
             ],
             'labels' => array_key_exists('labels', $data) ? array_merge($data['labels'], ['name' => $name]) : [],
-            'name' => $name,
           ],
           'spec' =>
             [
