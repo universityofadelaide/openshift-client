@@ -480,7 +480,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createService(string $app_name, string $name, string $deployment_name, int $port, int $target_port) {
+  public function createService(string $name, string $deployment_name, int $port, int $target_port, string $app_name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -520,7 +520,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function updateService(string $app_name, string $name, string $deployment_name, int $port, int $target_port) {
+  public function updateService(string $name, string $deployment_name, int $port, int $target_port, string $app_name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 

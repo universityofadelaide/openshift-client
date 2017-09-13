@@ -120,8 +120,6 @@ interface ClientInterface {
   /**
    * Creates a new service based on the name and config data given.
    *
-   * @param string $app_name
-   *   The application which this service is part of.
    * @param string $name
    *   Name of service.
    * @param string $deployment_name
@@ -130,6 +128,8 @@ interface ClientInterface {
    *   The port to handle incoming traffic to this route.
    * @param int $target_port
    *   The port on the target pods to send traffic to.
+   * @param string $app_name
+   *   The application which this service is part of.
    *
    * @return array
    *   Returns the body response if successful.
@@ -137,13 +137,11 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue creating service.
    */
-  public function createService(string $app_name, string $name, string $deployment_name, int $port, int $target_port);
+  public function createService(string $name, string $deployment_name, int $port, int $target_port, string $app_name);
 
   /**
    * Update and existing service.
    *
-   * @param string $app_name
-   *   The application which this service is part of.
    * @param string $name
    *   Name of service.
    * @param string $deployment_name
@@ -152,6 +150,8 @@ interface ClientInterface {
    *   The port to handle incoming traffic to this route.
    * @param int $target_port
    *   The port on the target pods to send traffic to.
+   * @param string $app_name
+   *   The application which this service is part of.
    *
    * @return array
    *   Returns the body response if successful.
@@ -159,7 +159,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue updating service.
    */
-  public function updateService(string $app_name, string $name, string $deployment_name, int $port, int $target_port);
+  public function updateService(string $name, string $deployment_name, int $port, int $target_port, string $app_name);
 
   /**
    * Group services together in the UI.
