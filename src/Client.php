@@ -142,6 +142,10 @@ class Client implements ClientInterface {
         'action' => 'GET',
         'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
       ],
+      'group' => [
+        'action' => 'PATCH',
+        'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
+      ],
       'update' => [
         'action' => 'PUT',
         'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
@@ -502,23 +506,15 @@ class Client implements ClientInterface {
       ],
     ];
 
-    // If the app name and service names are different, use annotations
-    // to group them together with the app_name being the parent.
-    if ($app_name != $name) {
-      $parent_service = $this->getService($app_name);
-      if ($parent_service) {
-
-        $annotations['service.alpha.openshift.io/dependencies'] =
-          t('[{"name": "@name", "kind": "Service"}]', ['@name' => $name]);
-
-        $this->request('PATCH', $uri . '/' . $app_name, ['metadata' => ['annotations' => $annotations]]);
-      }
-    }
-
     $annotations = ['app' => $app_name];
     $this->applyAnnotations($service, $annotations);
 
-    return $this->request($resourceMethod['action'], $uri, $service);
+    $result = $this->request($resourceMethod['action'], $uri, $service);
+    if ($result && $app_name != $name) {
+      $this->groupService($app_name, $name);
+    }
+
+    return $result;
   }
 
   /**
@@ -530,23 +526,33 @@ class Client implements ClientInterface {
 
     $service = $this->getService($name);
 
-    // If the app name and service names are different, use annotations
-    // to group them together with the app_name being the parent.
-    if ($app_name != $name) {
-      $parent_service = $this->getService($app_name);
-      if ($parent_service) {
-
-        $annotations['service.alpha.openshift.io/dependencies'] =
-          t('[{"name": "@name", "kind": "Service"}]', ['@name' => $name]);
-
-        $this->request('PATCH', $uri . '/' . $app_name, ['metadata' => ['annotations' => $annotations]]);
-      }
-    }
-
     $annotations = ['app' => $app_name];
     $this->applyAnnotations($service, $annotations);
 
-    return $this->request($resourceMethod['action'], $uri, $service);
+    $result = $this->request($resourceMethod['action'], $uri, $service);
+    if ($result && $app_name != $name) {
+      $this->groupService($app_name, $name);
+    }
+
+    return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function groupService(string $app_name, string $name) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => (string) $app_name,
+    ]);
+
+    $parent_service = $this->getService($app_name);
+    if ($parent_service) {
+      $annotations['service.alpha.openshift.io/dependencies'] =
+        t('[{"name": "@name", "kind": "Service"}]', ['@name' => $name]);
+
+      $this->request($resourceMethod['action'], $uri, ['metadata' => ['annotations' => $annotations]]);
+    }
   }
 
   /**
@@ -1329,5 +1335,6 @@ class Client implements ClientInterface {
 
     return $this->request($resourceMethod['action'], $uri, [], $query);
   }
+
 
 }

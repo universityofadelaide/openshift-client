@@ -162,6 +162,16 @@ interface ClientInterface {
   public function updateService(string $app_name, string $name, string $deployment_name, int $port, int $target_port);
 
   /**
+   * Group services together in the UI.
+   *
+   * @param string $app_name
+   *   The application being deployed, that this service is part of.
+   * @param string $name
+   *   The service name being deployed.
+   */
+  public function groupService(string $app_name, string $name);
+
+  /**
    * Deletes a named service.
    *
    * @param string $name
