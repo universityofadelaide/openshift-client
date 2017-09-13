@@ -139,9 +139,8 @@ class Client implements ClientInterface {
         'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
       ],
       'get' => [
-        // Lists all services.
         'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/services',
+        'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
       ],
       'update' => [
         'action' => 'PUT',
@@ -263,6 +262,7 @@ class Client implements ClientInterface {
     'DELETE' => 200,
     'GET' => 200,
     'PUT' => 200,
+    'PATCH' => 200,
   ];
 
   /**
@@ -276,8 +276,6 @@ class Client implements ClientInterface {
       'base_uri' => $host,
       'headers' => [
         'Authorization' => 'Bearer ' . $token,
-        // @todo - make this configurable.
-        'Content-Type' => 'application/json',
         'Accept' => 'application/json',
       ],
     ]);
@@ -324,6 +322,13 @@ class Client implements ClientInterface {
         'query' => $query,
         'body' => json_encode($body),
       ];
+    }
+
+    if ($method == 'PATCH') {
+      $requestOptions['headers']['Content-Type'] = 'application/merge-patch+json';
+    }
+    else {
+      $requestOptions['headers']['Content-Type'] = 'application/json';
     }
 
     try {
@@ -471,7 +476,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createService(string $name, string $deployment_name, int $port, int $target_port) {
+  public function createService(string $app_name, string $name, string $deployment_name, int $port, int $target_port) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -497,14 +502,51 @@ class Client implements ClientInterface {
       ],
     ];
 
+    // If the app name and service names are different, use annotations
+    // to group them together with the app_name being the parent.
+    if ($app_name != $name) {
+      $parent_service = $this->getService($app_name);
+      if ($parent_service) {
+
+        $annotations['service.alpha.openshift.io/dependencies'] =
+          t('[{"name": "@name", "kind": "Service"}]', ['@name' => $name]);
+
+        $this->request('PATCH', $uri . '/' . $app_name, ['metadata' => ['annotations' => $annotations]]);
+      }
+    }
+
+    $annotations = ['app' => $app_name];
+    $this->applyAnnotations($service, $annotations);
+
     return $this->request($resourceMethod['action'], $uri, $service);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function updateService(string $name, array $data) {
-    // TODO: Implement updateService() method.
+  public function updateService(string $app_name, string $name, string $deployment_name, int $port, int $target_port) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+
+    $service = $this->getService($name);
+
+    // If the app name and service names are different, use annotations
+    // to group them together with the app_name being the parent.
+    if ($app_name != $name) {
+      $parent_service = $this->getService($app_name);
+      if ($parent_service) {
+
+        $annotations['service.alpha.openshift.io/dependencies'] =
+          t('[{"name": "@name", "kind": "Service"}]', ['@name' => $name]);
+
+        $this->request('PATCH', $uri . '/' . $app_name, ['metadata' => ['annotations' => $annotations]]);
+      }
+    }
+
+    $annotations = ['app' => $app_name];
+    $this->applyAnnotations($service, $annotations);
+
+    return $this->request($resourceMethod['action'], $uri, $service);
   }
 
   /**
