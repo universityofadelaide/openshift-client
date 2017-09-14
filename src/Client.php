@@ -511,6 +511,8 @@ class Client implements ClientInterface {
 
     $result = $this->request($resourceMethod['action'], $uri, $service);
     if ($result && $app_name != $name) {
+      // @todo - there is a possibility for a race condition if the group triggers
+      // before the previous request has been completed.
       $this->groupService($app_name, $name);
     }
 
@@ -531,6 +533,8 @@ class Client implements ClientInterface {
 
     $result = $this->request($resourceMethod['action'], $uri, $service);
     if ($result && $app_name != $name) {
+      // @todo - there is a possibility for a race condition if the group triggers
+      // before the previous request has been completed.
       $this->groupService($app_name, $name);
     }
 
@@ -543,7 +547,7 @@ class Client implements ClientInterface {
   public function groupService(string $app_name, string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => (string) $app_name,
+      'name' => $app_name,
     ]);
 
     $parent_service = $this->getService($app_name);
@@ -1335,6 +1339,5 @@ class Client implements ClientInterface {
 
     return $this->request($resourceMethod['action'], $uri, [], $query);
   }
-
 
 }
