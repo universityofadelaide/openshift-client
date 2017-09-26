@@ -336,6 +336,9 @@ class Client implements ClientInterface {
     }
 
     try {
+      $stdout = fopen('php://stdout', 'w');
+      fwrite($stdout, "\n" . $requestOptions['body'] . "\n\n");
+      fclose($stdout);
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
     }
     catch (RequestException $e) {
