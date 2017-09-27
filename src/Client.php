@@ -335,9 +335,8 @@ class Client implements ClientInterface {
       $requestOptions['headers']['Content-Type'] = 'application/json';
     }
 
-    $stdout = fopen('php://stdout', 'w');
     try {
-      fwrite($stdout, "\nRequest:\n" . $requestOptions['body'] . "\n\n");
+      $this->logRequest('Request', $requestOptions['body']);
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
     }
     catch (RequestException $e) {
@@ -348,8 +347,8 @@ class Client implements ClientInterface {
       // Do some special decoding for OpenShift
       if ($e->hasResponse()) {
         $contents = $e->getResponse()->getBody()->getContents();
+        $this->logRequest('Exception Response', $contents);
         $message = json_decode($contents);
-        fwrite($stdout, "\nException Response:\n" . $contents . "\n\n");
       }
       throw new ClientException(
         isset($message) ? $message->message : '',
@@ -359,9 +358,28 @@ class Client implements ClientInterface {
       );
     }
     $contents = $response->getBody()->getContents();
-    fwrite($stdout, "\nOK Response:\n" . $contents . "\n\n");
-    fclose($stdout);
+    $this->logRequest('OK Response', $contents);
+
     return json_decode($contents, TRUE);
+  }
+
+  /**
+   * If the environment variable is set, then log some debugging to stdout
+   *
+   * @param $prefix
+   *   A brief message to prefix the contents.
+   *
+   * @param $contents
+   *   The contents to be logged.
+   */
+  private function logRequest($prefix, $contents) {
+    if (!empty(getenv('OPENSHIFT_CLIENT_DEBUG'))) {
+      $stdout = fopen('php://stdout', 'w');
+      if (!empty($contents)) {
+        fwrite($stdout, "$prefix\n$contents\n");
+      }
+      fclose($stdout);
+    }
   }
 
   /**
