@@ -347,8 +347,9 @@ class Client implements ClientInterface {
       }
       // Do some special decoding for OpenShift
       if ($e->hasResponse()) {
-        $message = json_decode($e->getResponse()->getBody()->getContents());
-        fwrite($stdout, "\nException Response:\n" . $e->getResponse()->getBody()->getContents() . "\n\n");
+        $contents = $e->getResponse()->getBody()->getContents();
+        $message = json_decode($contents);
+        fwrite($stdout, "\nException Response:\n" . $contents . "\n\n");
       }
       throw new ClientException(
         isset($message) ? $message->message : '',
@@ -357,9 +358,10 @@ class Client implements ClientInterface {
         $e->hasResponse() ? $e->getResponse()->getBody() : ''
       );
     }
-    fwrite($stdout, "\nOK Response:\n" . $response->getBody()->getContents() . "\n\n");
+    $contents = $response->getBody()->getContents();
+    fwrite($stdout, "\nOK Response:\n" . $contents . "\n\n");
     fclose($stdout);
-    return json_decode($response->getBody()->getContents(), TRUE);
+    return json_decode($contents, TRUE);
   }
 
   /**
