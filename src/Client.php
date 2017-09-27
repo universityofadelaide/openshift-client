@@ -335,10 +335,9 @@ class Client implements ClientInterface {
       $requestOptions['headers']['Content-Type'] = 'application/json';
     }
 
+    $stdout = fopen('php://stdout', 'w');
     try {
-      $stdout = fopen('php://stdout', 'w');
-      fwrite($stdout, "\n" . $requestOptions['body'] . "\n\n");
-      fclose($stdout);
+      fwrite($stdout, "\nRequest:\n" . $requestOptions['body'] . "\n\n");
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
     }
     catch (RequestException $e) {
@@ -349,6 +348,7 @@ class Client implements ClientInterface {
       // Do some special decoding for OpenShift
       if ($e->hasResponse()) {
         $message = json_decode($e->getResponse()->getBody()->getContents());
+        fwrite($stdout, "\nException Response:\n" . $e->getResponse()->getBody()->getContents() . "\n\n");
       }
       throw new ClientException(
         isset($message) ? $message->message : '',
@@ -357,6 +357,8 @@ class Client implements ClientInterface {
         $e->hasResponse() ? $e->getResponse()->getBody() : ''
       );
     }
+    fwrite($stdout, "\nOK Response:\n" . $response->getBody()->getContents() . "\n\n");
+    fclose($stdout);
     return json_decode($response->getBody()->getContents(), TRUE);
   }
 
