@@ -984,7 +984,7 @@ class Client implements ClientInterface {
           'initialDelaySeconds' => 10,
           'timeoutSeconds' => 10,
           'exec' => [
-            'command' => $probe['parameters'],
+            'command' => explode(' ', $probe['parameters']),
           ],
         ];
         break;
