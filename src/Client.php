@@ -968,6 +968,48 @@ class Client implements ClientInterface {
     return $deploymentConfig;
   }
 
+  public function addProbeConfig(&$deployment_config, $probes) {
+    foreach (['liveness', 'readiness'] as $type) {
+      if (!empty($probes[$type])) {
+        $deployment_config['spec']['template']['spec']['containers'][0][$type . 'Probe'] =
+          $this->probeConfig($probes[$type]);
+      }
+    }
+  }
+
+  private function probeConfig($probe) {
+    switch ($probe['type']) {
+      case 'exec';
+        return [
+          'initialDelaySeconds' => 10,
+          'timeoutSeconds' => 10,
+          'exec' => [
+            'command' => $probe['parameters'],
+          ],
+        ];
+        break;
+      case 'httpGet':
+        return [
+          'initialDelaySeconds' => 10,
+          'timeoutSeconds' => 10,
+          'httpGet' => [
+            'port' => (int)$probe['port'],
+            'path' => $probe['parameters'],
+          ],
+        ];
+        break;
+      case 'tcpSocket':
+        return [
+          'initialDelaySeconds' => 10,
+          'timeoutSeconds' => 10,
+          'tcpSocket' => [
+            'port' => (int)$probe['port'],
+          ],
+        ];
+        break;
+    }
+  }
+
   /**
    * {@inheritdoc}
    */
