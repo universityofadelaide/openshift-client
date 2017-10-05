@@ -1020,8 +1020,6 @@ class Client implements ClientInterface {
           ],
         ];
         break;
-      default:
-        return [];
     }
   }
 
