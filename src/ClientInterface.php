@@ -504,8 +504,9 @@ interface ClientInterface {
   public function deletePersistentVolumeClaim(string $name);
 
   /**
-   * Create a deploymentConfig on the openshift instance
+   * Create a deployment config on the openshift instance
    *
+   * @param array $deploymentConfig
    * @return array
    *   Returns the body response if successful.
    *
@@ -532,7 +533,7 @@ interface ClientInterface {
    * Sets up a deployment config.
    *
    * @param string $name
-   *   Name of the deploymentconfig.
+   *   Name of the deployment config.
    * @param string $image_stream_tag
    *   Image stream to manage the deployment.
    * @param string $image_name
@@ -590,6 +591,16 @@ interface ClientInterface {
    *   Throws exception if there is an issue retrieving deployment configs.
    */
   public function getDeploymentConfigs(string $label);
+
+  /**
+   * Add probe configuration
+   *
+   * @param array $deployment_config
+   *   The Deployment config that you want to add probes to.
+   * @param $probes
+   *   An array of probe configuration to add to the DeploymentConfig.
+   */
+  public function addProbeConfig(&$deployment_config, $probes);
 
   /**
    * Retrieve a cron job.

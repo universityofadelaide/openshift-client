@@ -968,6 +968,9 @@ class Client implements ClientInterface {
     return $deploymentConfig;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function addProbeConfig(&$deployment_config, $probes) {
     foreach (['liveness', 'readiness'] as $type) {
       if (!empty($probes[$type])) {
@@ -977,7 +980,17 @@ class Client implements ClientInterface {
     }
   }
 
-  private function probeConfig($probe) {
+  /**
+   * Helper function that returns a correctly formatted array, depending
+   * on the type of probe that has been passed in.
+   *
+   * @param $probe
+   *   A single probe configuration array.
+   *
+   * @return array
+   *   Array ready to be inserted into the Deployment Config
+   */
+  protected function probeConfig($probe) {
     switch ($probe['type']) {
       case 'exec';
         return [
@@ -993,7 +1006,7 @@ class Client implements ClientInterface {
           'initialDelaySeconds' => 10,
           'timeoutSeconds' => 10,
           'httpGet' => [
-            'port' => (int)$probe['port'],
+            'port' => (int) $probe['port'],
             'path' => $probe['parameters'],
           ],
         ];
@@ -1003,10 +1016,12 @@ class Client implements ClientInterface {
           'initialDelaySeconds' => 10,
           'timeoutSeconds' => 10,
           'tcpSocket' => [
-            'port' => (int)$probe['port'],
+            'port' => (int) $probe['port'],
           ],
         ];
         break;
+      default:
+        return [];
     }
   }
 
