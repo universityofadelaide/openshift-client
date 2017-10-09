@@ -522,21 +522,17 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function updateService(string $name, string $deployment_name, int $port, int $target_port, string $app_name) {
+  public function updateService(string $name, string $selector) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name,
+    ]);
 
     $service = $this->getService($name);
 
-    $annotations = ['app' => $app_name];
-    $this->applyAnnotations($service, $annotations);
+    $service['spec']['selector']['deploymentconfig'] = $selector;
 
     $result = $this->request($resourceMethod['action'], $uri, $service);
-    if ($result && $app_name != $name) {
-      // @todo - there is a possibility for a race condition if the group triggers
-      // before the previous request has been completed.
-      $this->groupService($app_name, $name);
-    }
 
     return $result;
   }

@@ -144,14 +144,8 @@ interface ClientInterface {
    *
    * @param string $name
    *   Name of service.
-   * @param string $deployment_name
-   *   Name of deployment to back this service.
-   * @param int $port
-   *   The port to handle incoming traffic to this route.
-   * @param int $target_port
-   *   The port on the target pods to send traffic to.
-   * @param string $app_name
-   *   The application which this service is part of.
+   * @param string $selector
+   *   The deployment config selector to send requests to.
    *
    * @return array
    *   Returns the body response if successful.
@@ -159,7 +153,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue updating service.
    */
-  public function updateService(string $name, string $deployment_name, int $port, int $target_port, string $app_name);
+  public function updateService(string $name, string $selector);
 
   /**
    * Group services together in the UI.
