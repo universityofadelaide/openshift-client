@@ -510,6 +510,15 @@ interface ClientInterface {
   public function createDeploymentConfig(array $deploymentConfig);
 
   /**
+   * Trigger a deployment config
+   *
+   * @param string $name
+   *
+   * @return mixed
+   */
+  public function instantiateDeploymentConfig(string $name);
+
+  /**
    * Retrieve a deployment configs.
    *
    * @param string $label
@@ -532,6 +541,8 @@ interface ClientInterface {
    *   Image stream to manage the deployment.
    * @param string $image_name
    *   Image name for deployment.
+   * @param bool $update_on_image_change
+   *   Automatically re-deploy pods on image change or not.
    * @param array $volumes
    *   Volumes to attach to the deployment config.
    * @param array $data
@@ -540,7 +551,7 @@ interface ClientInterface {
    * @return array
    *   Returns the body response if successful.
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data);
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change, array $volumes, array $data);
 
   /**
    * Updates and existing deployment config.

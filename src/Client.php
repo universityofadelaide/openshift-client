@@ -122,6 +122,10 @@ class Client implements ClientInterface {
         'action' => 'PUT',
         'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
       ],
+      'instantiate' => [
+        'action' => 'POST',
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}/instantiate',
+      ],
     ],
     'deploymentconfigs' => [
       'get' => [
@@ -867,7 +871,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data) {
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change = FALSE, array $volumes, array $data) {
     $volume_config = $this->setVolumes($volumes);
 
     $securityContext = [];
@@ -941,7 +945,7 @@ class Client implements ClientInterface {
         'triggers' => [
           [
             'imageChangeParams' => [
-              'automatic' => TRUE,
+              'automatic' => $update_on_image_change,
               'containerNames' => [$name],
               'from' => [
                 'kind' => 'ImageStreamTag',
@@ -952,6 +956,9 @@ class Client implements ClientInterface {
           ],
           [
             'type' => 'ConfigChange',
+            'configChangeParams' => [
+              'automatic' => TRUE,
+            ]
           ],
         ],
       ],
@@ -1027,6 +1034,23 @@ class Client implements ClientInterface {
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
     return $this->request($resourceMethod['action'], $uri, $deploymentConfig);
+  }
+
+  public function instantiateDeploymentConfig(string $name) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name,
+    ]);
+
+    $instantiate = [
+      'apiVersion' => 'v1',
+      'kind' => 'DeploymentRequest',
+      'name' => $name,
+      'latest' => TRUE,
+      'force' => TRUE,
+    ];
+
+    return $this->request($resourceMethod['action'], $uri, $instantiate);
   }
 
   /**
