@@ -246,7 +246,7 @@ interface ClientInterface {
   public function deleteRoute(string $name);
 
   /**
-   * Retrieves all build configs binded to current working namespace.
+   * Retrieves the specified build config.
    *
    * @param string $name
    *   Name of build config.
@@ -258,6 +258,20 @@ interface ClientInterface {
    *   Throws exception if there is an issue retrieving build config.
    */
   public function getBuildConfig(string $name);
+
+  /**
+   * Retrieves the builds by label name.
+   *
+   * @param string $name
+   *   Name of build config to get builds for.
+   *
+   * @return array|bool
+   *   Returns the body response if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving build config.
+   */
+  public function getBuilds(string $name);
 
   /**
    * Create build config.

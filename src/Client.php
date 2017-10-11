@@ -105,6 +105,12 @@ class Client implements ClientInterface {
         'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
     ],
+    'builds' => [
+      'get' => [
+        'action' => 'GET',
+        'uri' => '/oapi/v1/namespaces/{namespace}/builds/{name}',
+      ],
+    ],
     'deploymentconfig' => [
       'create' => [
         'action' => 'POST',
@@ -614,6 +620,13 @@ class Client implements ClientInterface {
    */
   public function deleteRoute(string $name) {
     return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBuilds(string $name) {
+    return $this->apiCall(__METHOD__, '', 'buildconfig=' . $name);
   }
 
   /**
