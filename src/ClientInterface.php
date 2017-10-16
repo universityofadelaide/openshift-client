@@ -144,14 +144,8 @@ interface ClientInterface {
    *
    * @param string $name
    *   Name of service.
-   * @param string $deployment_name
-   *   Name of deployment to back this service.
-   * @param int $port
-   *   The port to handle incoming traffic to this route.
-   * @param int $target_port
-   *   The port on the target pods to send traffic to.
-   * @param string $app_name
-   *   The application which this service is part of.
+   * @param string $selector
+   *   The deployment config selector to send requests to.
    *
    * @return array
    *   Returns the body response if successful.
@@ -159,7 +153,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue updating service.
    */
-  public function updateService(string $name, string $deployment_name, int $port, int $target_port, string $app_name);
+  public function updateService(string $name, string $selector);
 
   /**
    * Group services together in the UI.
@@ -252,7 +246,7 @@ interface ClientInterface {
   public function deleteRoute(string $name);
 
   /**
-   * Retrieves all build configs binded to current working namespace.
+   * Retrieves the specified build config.
    *
    * @param string $name
    *   Name of build config.
@@ -264,6 +258,20 @@ interface ClientInterface {
    *   Throws exception if there is an issue retrieving build config.
    */
   public function getBuildConfig(string $name);
+
+  /**
+   * Retrieves the builds by label name.
+   *
+   * @param string $name
+   *   Name of build config to get builds for.
+   *
+   * @return array|bool
+   *   Returns the body response if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving build config.
+   */
+  public function getBuilds(string $name);
 
   /**
    * Create build config.
@@ -516,6 +524,15 @@ interface ClientInterface {
   public function createDeploymentConfig(array $deploymentConfig);
 
   /**
+   * Trigger a deployment config
+   *
+   * @param string $name
+   *
+   * @return mixed
+   */
+  public function instantiateDeploymentConfig(string $name);
+
+  /**
    * Retrieve a deployment configs.
    *
    * @param string $label
@@ -538,6 +555,8 @@ interface ClientInterface {
    *   Image stream to manage the deployment.
    * @param string $image_name
    *   Image name for deployment.
+   * @param bool $update_on_image_change
+   *   Automatically re-deploy pods on image change or not.
    * @param array $volumes
    *   Volumes to attach to the deployment config.
    * @param array $data
@@ -546,7 +565,7 @@ interface ClientInterface {
    * @return array
    *   Returns the body response if successful.
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data);
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change, array $volumes, array $data);
 
   /**
    * Updates and existing deployment config.

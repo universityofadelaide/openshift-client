@@ -105,6 +105,12 @@ class Client implements ClientInterface {
         'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
     ],
+    'builds' => [
+      'get' => [
+        'action' => 'GET',
+        'uri' => '/oapi/v1/namespaces/{namespace}/builds/{name}',
+      ],
+    ],
     'deploymentconfig' => [
       'create' => [
         'action' => 'POST',
@@ -121,6 +127,10 @@ class Client implements ClientInterface {
       'update' => [
         'action' => 'PUT',
         'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+      ],
+      'instantiate' => [
+        'action' => 'POST',
+        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}/instantiate',
       ],
     ],
     'deploymentconfigs' => [
@@ -522,21 +532,17 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function updateService(string $name, string $deployment_name, int $port, int $target_port, string $app_name) {
+  public function updateService(string $name, string $selector) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name,
+    ]);
 
     $service = $this->getService($name);
 
-    $annotations = ['app' => $app_name];
-    $this->applyAnnotations($service, $annotations);
+    $service['spec']['selector']['deploymentconfig'] = $selector;
 
     $result = $this->request($resourceMethod['action'], $uri, $service);
-    if ($result && $app_name != $name) {
-      // @todo - there is a possibility for a race condition if the group triggers
-      // before the previous request has been completed.
-      $this->groupService($app_name, $name);
-    }
 
     return $result;
   }
@@ -614,6 +620,13 @@ class Client implements ClientInterface {
    */
   public function deleteRoute(string $name) {
     return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBuilds(string $name) {
+    return $this->apiCall(__METHOD__, '', 'buildconfig=' . $name);
   }
 
   /**
@@ -871,7 +884,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, array $volumes, array $data) {
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change = FALSE, array $volumes, array $data) {
     $volume_config = $this->setVolumes($volumes);
 
     $securityContext = [];
@@ -945,7 +958,7 @@ class Client implements ClientInterface {
         'triggers' => [
           [
             'imageChangeParams' => [
-              'automatic' => TRUE,
+              'automatic' => $update_on_image_change,
               'containerNames' => [$name],
               'from' => [
                 'kind' => 'ImageStreamTag',
@@ -956,6 +969,9 @@ class Client implements ClientInterface {
           ],
           [
             'type' => 'ConfigChange',
+            'configChangeParams' => [
+              'automatic' => TRUE,
+            ]
           ],
         ],
       ],
@@ -1031,6 +1047,23 @@ class Client implements ClientInterface {
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
     return $this->request($resourceMethod['action'], $uri, $deploymentConfig);
+  }
+
+  public function instantiateDeploymentConfig(string $name) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name,
+    ]);
+
+    $instantiate = [
+      'apiVersion' => 'v1',
+      'kind' => 'DeploymentRequest',
+      'name' => $name,
+      'latest' => TRUE,
+      'force' => TRUE,
+    ];
+
+    return $this->request($resourceMethod['action'], $uri, $instantiate);
   }
 
   /**
