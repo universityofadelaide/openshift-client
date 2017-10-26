@@ -626,6 +626,8 @@ interface ClientInterface {
    *
    * @param string $name
    *   Name of cron job.
+   * @param string $label
+   *   Label name of cron jobs to retrieve.
    *
    * @return array|bool
    *   Returns the body response if successful, false if it does not exist.
@@ -633,7 +635,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue retrieving cron job.
    */
-  public function getCronJob(string $name);
+  public function getCronJob(string $name, string $label = NULL);
 
   /**
    * Creates a cron job.
@@ -688,6 +690,8 @@ interface ClientInterface {
    *
    * @param string $name
    *   Name of deployment config to delete.
+   * @param string $label
+   *   Label name of cron jobs to delete.
    *
    * @return array
    *   Returns the body response if successful.
@@ -695,7 +699,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue deleting cron job.
    */
-  public function deleteCronJob(string $name);
+  public function deleteCronJob(string $name, string $label = NULL);
 
   /**
    * Retrieve a job.
