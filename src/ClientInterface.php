@@ -264,6 +264,8 @@ interface ClientInterface {
    *
    * @param string $name
    *   Name of build config to get builds for.
+   * @param string $label
+   *   Label to get builds for.
    *
    * @return array|bool
    *   Returns the body response if successful, false if it does not exist.
@@ -271,7 +273,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue retrieving build config.
    */
-  public function getBuilds(string $name);
+  public function getBuilds(string $name, string $label);
 
   /**
    * Create build config.

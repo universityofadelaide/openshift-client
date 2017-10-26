@@ -625,8 +625,8 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function getBuilds(string $name) {
-    return $this->apiCall(__METHOD__, '', 'buildconfig=' . $name);
+  public function getBuilds(string $name, string $label) {
+    return $this->apiCall(__METHOD__, '', $name);
   }
 
   /**
@@ -1100,7 +1100,7 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function getCronJob(string $name, string $label = NULL) {
-    return $this->apiCall(__METHOD__, $name, 'app=' . $label);
+    return $this->apiCall(__METHOD__, $name, $label);
   }
 
   /**
