@@ -983,6 +983,64 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
+  public function addProbeConfig(&$deployment_config, $probes) {
+    foreach (['liveness', 'readiness'] as $type) {
+      if (!empty($probes[$type])) {
+        $deployment_config['spec']['template']['spec']['containers'][0][$type . 'Probe'] =
+          $this->probeConfig($probes[$type]);
+      }
+    }
+  }
+
+  /**
+   * Generates probe configuration based on probe type.
+   *
+   * @param array $probe
+   *   A single probe configuration array.
+   *
+   * @return array
+   *   Config array to be added to the Deployment Config.
+   */
+  protected function probeConfig(array $probe) {
+    $probeConfig = [];
+    switch ($probe['type']) {
+      case 'exec':
+        $probeConfig = [
+          'initialDelaySeconds' => 10,
+          'timeoutSeconds' => 10,
+          'exec' => [
+            'command' => explode(' ', $probe['parameters']),
+          ],
+        ];
+        break;
+
+      case 'httpGet':
+        $probeConfig = [
+          'initialDelaySeconds' => 10,
+          'timeoutSeconds' => 10,
+          'httpGet' => [
+            'port' => (int) $probe['port'],
+            'path' => $probe['parameters'],
+          ],
+        ];
+        break;
+
+      case 'tcpSocket':
+        $probeConfig = [
+          'initialDelaySeconds' => 10,
+          'timeoutSeconds' => 10,
+          'tcpSocket' => [
+            'port' => (int) $probe['port'],
+          ],
+        ];
+        break;
+    }
+    return $probeConfig;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function createDeploymentConfig(array $deploymentConfig) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
