@@ -619,16 +619,6 @@ interface ClientInterface {
   public function getDeploymentConfigs(string $label);
 
   /**
-   * Add probe configuration
-   *
-   * @param array $deployment_config
-   *   The Deployment config that you want to add probes to.
-   * @param $probes
-   *   An array of probe configuration to add to the DeploymentConfig.
-   */
-  public function addProbeConfig(&$deployment_config, $probes);
-
-  /**
    * Retrieve a cron job.
    *
    * @param string $name
