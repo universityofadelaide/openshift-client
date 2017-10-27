@@ -568,11 +568,13 @@ interface ClientInterface {
    *   Volumes to attach to the deployment config.
    * @param array $data
    *   Configuration data for deployment config.
+   * @param array $probes
+   *   Probe configuration.
    *
    * @return array
    *   Returns the body response if successful.
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change, array $volumes, array $data);
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change, array $volumes, array $data, array $probes);
 
   /**
    * Updates and existing deployment config.
@@ -617,16 +619,6 @@ interface ClientInterface {
    *   Throws exception if there is an issue retrieving deployment configs.
    */
   public function getDeploymentConfigs(string $label);
-
-  /**
-   * Add probe configuration.
-   *
-   * @param array $deployment_config
-   *   The Deployment config that you want to add probes to.
-   * @param array $probes
-   *   An array of probe configuration to add to the DeploymentConfig.
-   */
-  public function addProbeConfig(array &$deployment_config, array $probes);
 
   /**
    * Retrieve a cron job.

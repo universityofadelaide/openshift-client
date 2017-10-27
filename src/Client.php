@@ -880,7 +880,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change = FALSE, array $volumes, array $data) {
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change = FALSE, array $volumes = [], array $data = [], array $probes = []) {
     $volume_config = $this->setVolumes($volumes);
 
     $securityContext = [];
@@ -967,7 +967,7 @@ class Client implements ClientInterface {
             'type' => 'ConfigChange',
             'configChangeParams' => [
               'automatic' => TRUE,
-            ]
+            ],
           ],
         ],
       ],
@@ -977,19 +977,26 @@ class Client implements ClientInterface {
       $this->applyAnnotations($deploymentConfig, $data['annotations']);
     }
 
+    if (!empty($probes)) {
+      $deploymentConfig['spec']['template']['spec']['containers'][0] =
+        $this->generateProbeConfigs($probes);
+    }
+
     return $deploymentConfig;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addProbeConfig(&$deployment_config, $probes) {
+  protected function generateProbeConfigs($probes) {
+    $probeConfigs = [];
     foreach (['liveness', 'readiness'] as $type) {
       if (!empty($probes[$type])) {
-        $deployment_config['spec']['template']['spec']['containers'][0][$type . 'Probe'] =
-          $this->probeConfig($probes[$type]);
+        $probeConfigs[$type . 'Probe'] =
+          $this->generateprobeConfig($probes[$type]);
       }
     }
+    return $probeConfigs;
   }
 
   /**
@@ -1001,7 +1008,7 @@ class Client implements ClientInterface {
    * @return array
    *   Config array to be added to the Deployment Config.
    */
-  protected function probeConfig(array $probe) {
+  protected function generateprobeConfig(array $probe) {
     $probeConfig = [];
     switch ($probe['type']) {
       case 'exec':
