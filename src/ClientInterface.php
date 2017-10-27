@@ -156,16 +156,6 @@ interface ClientInterface {
   public function updateService(string $name, string $selector);
 
   /**
-   * Group services together in the UI.
-   *
-   * @param string $app_name
-   *   The application being deployed, that this service is part of.
-   * @param string $name
-   *   The service name being deployed.
-   */
-  public function groupService(string $app_name, string $name);
-
-  /**
    * Deletes a named service.
    *
    * @param string $name
@@ -178,6 +168,16 @@ interface ClientInterface {
    *   Throws exception if there is an issue deleting service.
    */
   public function deleteService(string $name);
+
+  /**
+   * Group services together in the UI.
+   *
+   * @param string $app_name
+   *   The application being deployed, that this service is part of.
+   * @param string $name
+   *   The service name being deployed.
+   */
+  public function groupService(string $app_name, string $name);
 
   /**
    * Gets all routes for the current working namespace.
@@ -260,20 +260,6 @@ interface ClientInterface {
   public function getBuildConfig(string $name);
 
   /**
-   * Retrieves the builds by label name.
-   *
-   * @param string $name
-   *   Name of build config to get builds for.
-   *
-   * @return array|bool
-   *   Returns the body response if successful, false if it does not exist.
-   *
-   * @throws ClientException
-   *   Throws exception if there is an issue retrieving build config.
-   */
-  public function getBuilds(string $name);
-
-  /**
    * Create build config.
    *
    * @param string $name
@@ -328,6 +314,20 @@ interface ClientInterface {
   public function deleteBuildConfig(string $name);
 
   /**
+   * Retrieves the builds by label name.
+   *
+   * @param string $name
+   *   Name of build config to get builds for.
+   *
+   * @return array|bool
+   *   Returns the body response if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving build config.
+   */
+  public function getBuilds(string $name);
+
+  /**
    * Retrieves all image streams under current namespace.
    *
    * @param string $name
@@ -342,32 +342,24 @@ interface ClientInterface {
   public function getImageStream(string $name);
 
   /**
-   * Creates an image stream, needed for buildConfig.
+   * Creates an image stream.
    *
    * @param string $name
-   *   Name of image stream to create.
+   *   Name of image stream.
    *
-   * @return array Returns the body response if successful.
+   * @return array
    *   Returns the body response if successful.
-   */
-  public function generateImageStream(string $name);
-
-  /**
-   * Creates an image stream from the passing in array specification.
    *
-   * @param array $imageStreamConfig
-   *   An image stream specification as an array.
-   *
-   * @return array Returns the body response if successful.
-   *   Returns the body response if successful.
+   * @throws ClientException
+   *   Throws exception if there is an issue updating image stream.
    */
-  public function createImageStream(array $imageStreamConfig);
+  public function createImageStream(string $name);
 
   /**
    * Updates an image stream.
    *
    * @param string $name
-   *   Name of imagestream to update.
+   *   Name of image stream to update.
    *
    * @return array
    *   Returns the body response if successful.
@@ -512,9 +504,11 @@ interface ClientInterface {
   public function deletePersistentVolumeClaim(string $name);
 
   /**
-   * Create a deployment config on the openshift instance
+   * Create a deployment config on the openshift instance.
    *
    * @param array $deploymentConfig
+   *   The deployment config array.
+   *
    * @return array
    *   Returns the body response if successful.
    *

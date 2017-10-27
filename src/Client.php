@@ -731,9 +731,15 @@ class Client implements ClientInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Formats image stream config as an array.
+   *
+   * @param string $name
+   *   The name of the image stream.
+   *
+   * @return array
+   *   Formatted array of image stream config.
    */
-  public function generateImageStream(string $name) {
+  protected function generateImageStreamConfig(string $name) {
     $imageStream = [
       'apiVersion' => 'v1',
       'kind' => 'ImageStream',
@@ -754,8 +760,10 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createImageStream(array $imageStreamConfig) {
+  public function createImageStream(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
+
+    $imageStreamConfig = $this->generateImageStreamConfig($name);
 
     return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStreamConfig);
   }
@@ -766,21 +774,9 @@ class Client implements ClientInterface {
   public function updateImageStream(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
 
-    $imageStream = [
-      'apiVersion' => 'v1',
-      'kind' => 'ImageStream',
-      'metadata' => [
-        'name' => $name,
-        'annotations' => [
-          'description' => 'Keeps track of changes in the application image',
-        ],
-      ],
-      'spec' => [
-        'dockerImageRepository' => '',
-      ],
-    ];
+    $imageStreamConfig = $this->generateImageStreamConfig($name);
 
-    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStreamConfig);
   }
 
   /**
@@ -997,19 +993,19 @@ class Client implements ClientInterface {
   }
 
   /**
-   * Helper function that returns a correctly formatted array, depending
-   * on the type of probe that has been passed in.
+   * Generates probe configuration based on probe type.
    *
-   * @param $probe
+   * @param array $probe
    *   A single probe configuration array.
    *
    * @return array
-   *   Array ready to be inserted into the Deployment Config
+   *   Config array to be added to the Deployment Config.
    */
-  protected function probeConfig($probe) {
+  protected function probeConfig(array $probe) {
+    $probeConfig = [];
     switch ($probe['type']) {
-      case 'exec';
-        return [
+      case 'exec':
+        $probeConfig = [
           'initialDelaySeconds' => 10,
           'timeoutSeconds' => 10,
           'exec' => [
@@ -1017,8 +1013,9 @@ class Client implements ClientInterface {
           ],
         ];
         break;
+
       case 'httpGet':
-        return [
+        $probeConfig = [
           'initialDelaySeconds' => 10,
           'timeoutSeconds' => 10,
           'httpGet' => [
@@ -1027,8 +1024,9 @@ class Client implements ClientInterface {
           ],
         ];
         break;
+
       case 'tcpSocket':
-        return [
+        $probeConfig = [
           'initialDelaySeconds' => 10,
           'timeoutSeconds' => 10,
           'tcpSocket' => [
@@ -1037,6 +1035,7 @@ class Client implements ClientInterface {
         ];
         break;
     }
+    return $probeConfig;
   }
 
   /**
@@ -1049,6 +1048,9 @@ class Client implements ClientInterface {
     return $this->request($resourceMethod['action'], $uri, $deploymentConfig);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function instantiateDeploymentConfig(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
