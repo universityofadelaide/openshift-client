@@ -1305,7 +1305,7 @@ class Client implements ClientInterface {
   }
 
   /**
-   * Given an array of volumes, structure it into an array for openshift.
+   * Given an array of volumes, structure it into an array for OpenShift.
    *
    * @param array $volumes
    *   The array of volumes to format.

@@ -504,7 +504,10 @@ interface ClientInterface {
   public function deletePersistentVolumeClaim(string $name);
 
   /**
-   * Create a deployment config on the openshift instance.
+   * Create a deployment config on the OpenShift instance.
+   *
+   * N.B. This is just the configuration for the deployment. Triggering a
+   * deployment relies on instantiateDeploymentConfig().
    *
    * @param array $deploymentConfig
    *   The deployment config array.
@@ -518,11 +521,21 @@ interface ClientInterface {
   public function createDeploymentConfig(array $deploymentConfig);
 
   /**
-   * Trigger a deployment config
+   * Trigger "deployment" for a given deployment config.
+   *
+   * If the image stream does not have an image available (still building) when
+   * you instantiate a deployment, an exception will be thrown. It is
+   * recommended to inspect the phase of a build to determine if an image is
+   * available.
    *
    * @param string $name
+   *   Label name of deployment configs to retrieve.
    *
    * @return mixed
+   *   Returns the body response if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue instantiating deployment config.
    */
   public function instantiateDeploymentConfig(string $name);
 
