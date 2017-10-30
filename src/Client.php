@@ -970,7 +970,7 @@ class Client implements ClientInterface {
     }
 
     if (!empty($probes)) {
-      $deploymentConfig['spec']['template']['spec']['containers'][0] =
+      $deploymentConfig['spec']['template']['spec']['containers'][0] +=
         $this->generateProbeConfigs($probes);
     }
 
