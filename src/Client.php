@@ -731,15 +731,9 @@ class Client implements ClientInterface {
   }
 
   /**
-   * Formats image stream config as an array.
-   *
-   * @param string $name
-   *   The name of the image stream.
-   *
-   * @return array
-   *   Formatted array of image stream config.
+   * {@inheritdoc}
    */
-  protected function generateImageStreamConfig(string $name) {
+  public function generateImageStreamConfig(string $name) {
     $imageStream = [
       'apiVersion' => 'v1',
       'kind' => 'ImageStream',
@@ -760,12 +754,10 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createImageStream(string $name) {
+  public function createImageStream(array $image_stream_config) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
 
-    $imageStreamConfig = $this->generateImageStreamConfig($name);
-
-    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStreamConfig);
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $image_stream_config);
   }
 
   /**

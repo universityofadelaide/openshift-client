@@ -342,10 +342,21 @@ interface ClientInterface {
   public function getImageStream(string $name);
 
   /**
-   * Creates an image stream.
+   * Formats image stream config as an array.
    *
    * @param string $name
-   *   Name of image stream.
+   *   The name of the image stream.
+   *
+   * @return array
+   *   Formatted array of image stream config.
+   */
+  public function generateImageStreamConfig(string $name);
+
+  /**
+   * Creates an image stream.
+   *
+   * @param array $image_stream_config
+   *   Image stream configuration E.g. generateImageStreamConfig().
    *
    * @return array
    *   Returns the body response if successful.
@@ -353,7 +364,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue updating image stream.
    */
-  public function createImageStream(string $name);
+  public function createImageStream(array $image_stream_config);
 
   /**
    * Updates an image stream.
