@@ -626,7 +626,7 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function getBuilds(string $name, string $label) {
-    return $this->apiCall(__METHOD__, '', $name);
+    return $this->apiCall(__METHOD__, '', $label);
   }
 
   /**
