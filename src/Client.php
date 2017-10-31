@@ -733,7 +733,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateImageStream(string $name) {
+  public function generateImageStreamConfig(string $name) {
     $imageStream = [
       'apiVersion' => 'v1',
       'kind' => 'ImageStream',
@@ -754,10 +754,10 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createImageStream(array $imageStreamConfig) {
+  public function createImageStream(array $image_stream_config) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
 
-    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStreamConfig);
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $image_stream_config);
   }
 
   /**
@@ -766,21 +766,9 @@ class Client implements ClientInterface {
   public function updateImageStream(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
 
-    $imageStream = [
-      'apiVersion' => 'v1',
-      'kind' => 'ImageStream',
-      'metadata' => [
-        'name' => $name,
-        'annotations' => [
-          'description' => 'Keeps track of changes in the application image',
-        ],
-      ],
-      'spec' => [
-        'dockerImageRepository' => '',
-      ],
-    ];
+    $imageStreamConfig = $this->generateImageStreamConfig($name);
 
-    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStream);
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $imageStreamConfig);
   }
 
   /**
@@ -884,7 +872,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change = FALSE, array $volumes, array $data) {
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change = FALSE, array $volumes = [], array $data = [], array $probes = []) {
     $volume_config = $this->setVolumes($volumes);
 
     $securityContext = [];
@@ -971,7 +959,7 @@ class Client implements ClientInterface {
             'type' => 'ConfigChange',
             'configChangeParams' => [
               'automatic' => TRUE,
-            ]
+            ],
           ],
         ],
       ],
@@ -981,35 +969,42 @@ class Client implements ClientInterface {
       $this->applyAnnotations($deploymentConfig, $data['annotations']);
     }
 
+    if (!empty($probes)) {
+      $deploymentConfig['spec']['template']['spec']['containers'][0] +=
+        $this->generateProbeConfigs($probes);
+    }
+
     return $deploymentConfig;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addProbeConfig(&$deployment_config, $probes) {
+  protected function generateProbeConfigs($probes) {
+    $probeConfigs = [];
     foreach (['liveness', 'readiness'] as $type) {
       if (!empty($probes[$type])) {
-        $deployment_config['spec']['template']['spec']['containers'][0][$type . 'Probe'] =
-          $this->probeConfig($probes[$type]);
+        $probeConfigs[$type . 'Probe'] =
+          $this->generateprobeConfig($probes[$type]);
       }
     }
+    return $probeConfigs;
   }
 
   /**
-   * Helper function that returns a correctly formatted array, depending
-   * on the type of probe that has been passed in.
+   * Generates probe configuration based on probe type.
    *
-   * @param $probe
+   * @param array $probe
    *   A single probe configuration array.
    *
    * @return array
-   *   Array ready to be inserted into the Deployment Config
+   *   Config array to be added to the Deployment Config.
    */
-  protected function probeConfig($probe) {
+  protected function generateprobeConfig(array $probe) {
+    $probeConfig = [];
     switch ($probe['type']) {
-      case 'exec';
-        return [
+      case 'exec':
+        $probeConfig = [
           'initialDelaySeconds' => 10,
           'timeoutSeconds' => 10,
           'exec' => [
@@ -1017,8 +1012,9 @@ class Client implements ClientInterface {
           ],
         ];
         break;
+
       case 'httpGet':
-        return [
+        $probeConfig = [
           'initialDelaySeconds' => 10,
           'timeoutSeconds' => 10,
           'httpGet' => [
@@ -1027,8 +1023,9 @@ class Client implements ClientInterface {
           ],
         ];
         break;
+
       case 'tcpSocket':
-        return [
+        $probeConfig = [
           'initialDelaySeconds' => 10,
           'timeoutSeconds' => 10,
           'tcpSocket' => [
@@ -1037,6 +1034,7 @@ class Client implements ClientInterface {
         ];
         break;
     }
+    return $probeConfig;
   }
 
   /**
@@ -1049,6 +1047,9 @@ class Client implements ClientInterface {
     return $this->request($resourceMethod['action'], $uri, $deploymentConfig);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function instantiateDeploymentConfig(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
@@ -1303,7 +1304,7 @@ class Client implements ClientInterface {
   }
 
   /**
-   * Given an array of volumes, structure it into an array for openshift.
+   * Given an array of volumes, structure it into an array for OpenShift.
    *
    * @param array $volumes
    *   The array of volumes to format.

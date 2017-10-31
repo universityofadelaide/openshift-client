@@ -156,16 +156,6 @@ interface ClientInterface {
   public function updateService(string $name, string $selector);
 
   /**
-   * Group services together in the UI.
-   *
-   * @param string $app_name
-   *   The application being deployed, that this service is part of.
-   * @param string $name
-   *   The service name being deployed.
-   */
-  public function groupService(string $app_name, string $name);
-
-  /**
    * Deletes a named service.
    *
    * @param string $name
@@ -178,6 +168,16 @@ interface ClientInterface {
    *   Throws exception if there is an issue deleting service.
    */
   public function deleteService(string $name);
+
+  /**
+   * Group services together in the UI.
+   *
+   * @param string $app_name
+   *   The application being deployed, that this service is part of.
+   * @param string $name
+   *   The service name being deployed.
+   */
+  public function groupService(string $app_name, string $name);
 
   /**
    * Gets all routes for the current working namespace.
@@ -260,20 +260,6 @@ interface ClientInterface {
   public function getBuildConfig(string $name);
 
   /**
-   * Retrieves the builds by label name.
-   *
-   * @param string $name
-   *   Name of build config to get builds for.
-   *
-   * @return array|bool
-   *   Returns the body response if successful, false if it does not exist.
-   *
-   * @throws ClientException
-   *   Throws exception if there is an issue retrieving build config.
-   */
-  public function getBuilds(string $name);
-
-  /**
    * Create build config.
    *
    * @param string $name
@@ -328,6 +314,20 @@ interface ClientInterface {
   public function deleteBuildConfig(string $name);
 
   /**
+   * Retrieves the builds by label name.
+   *
+   * @param string $name
+   *   Name of build config to get builds for.
+   *
+   * @return array|bool
+   *   Returns the body response if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving build config.
+   */
+  public function getBuilds(string $name);
+
+  /**
    * Retrieves all image streams under current namespace.
    *
    * @param string $name
@@ -342,32 +342,35 @@ interface ClientInterface {
   public function getImageStream(string $name);
 
   /**
-   * Creates an image stream, needed for buildConfig.
+   * Formats image stream config as an array.
    *
    * @param string $name
-   *   Name of image stream to create.
+   *   The name of the image stream.
    *
-   * @return array Returns the body response if successful.
-   *   Returns the body response if successful.
+   * @return array
+   *   Formatted array of image stream config.
    */
-  public function generateImageStream(string $name);
+  public function generateImageStreamConfig(string $name);
 
   /**
-   * Creates an image stream from the passing in array specification.
+   * Creates an image stream.
    *
-   * @param array $imageStreamConfig
-   *   An image stream specification as an array.
+   * @param array $image_stream_config
+   *   Image stream configuration E.g. generateImageStreamConfig().
    *
-   * @return array Returns the body response if successful.
+   * @return array
    *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue updating image stream.
    */
-  public function createImageStream(array $imageStreamConfig);
+  public function createImageStream(array $image_stream_config);
 
   /**
    * Updates an image stream.
    *
    * @param string $name
-   *   Name of imagestream to update.
+   *   Name of image stream to update.
    *
    * @return array
    *   Returns the body response if successful.
@@ -512,9 +515,14 @@ interface ClientInterface {
   public function deletePersistentVolumeClaim(string $name);
 
   /**
-   * Create a deployment config on the openshift instance
+   * Create a deployment config on the OpenShift instance.
+   *
+   * N.B. This is just the configuration for the deployment. Triggering a
+   * deployment relies on instantiateDeploymentConfig().
    *
    * @param array $deploymentConfig
+   *   The deployment config array.
+   *
    * @return array
    *   Returns the body response if successful.
    *
@@ -524,11 +532,21 @@ interface ClientInterface {
   public function createDeploymentConfig(array $deploymentConfig);
 
   /**
-   * Trigger a deployment config
+   * Trigger "deployment" for a given deployment config.
+   *
+   * If the image stream does not have an image available (still building) when
+   * you instantiate a deployment, an exception will be thrown. It is
+   * recommended to inspect the phase of a build to determine if an image is
+   * available.
    *
    * @param string $name
+   *   Label name of deployment configs to retrieve.
    *
    * @return mixed
+   *   Returns the body response if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue instantiating deployment config.
    */
   public function instantiateDeploymentConfig(string $name);
 
@@ -561,11 +579,13 @@ interface ClientInterface {
    *   Volumes to attach to the deployment config.
    * @param array $data
    *   Configuration data for deployment config.
+   * @param array $probes
+   *   Probe configuration.
    *
    * @return array
    *   Returns the body response if successful.
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change, array $volumes, array $data);
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change, array $volumes, array $data, array $probes);
 
   /**
    * Updates and existing deployment config.
@@ -610,16 +630,6 @@ interface ClientInterface {
    *   Throws exception if there is an issue retrieving deployment configs.
    */
   public function getDeploymentConfigs(string $label);
-
-  /**
-   * Add probe configuration
-   *
-   * @param array $deployment_config
-   *   The Deployment config that you want to add probes to.
-   * @param $probes
-   *   An array of probe configuration to add to the DeploymentConfig.
-   */
-  public function addProbeConfig(&$deployment_config, $probes);
 
   /**
    * Retrieve a cron job.
