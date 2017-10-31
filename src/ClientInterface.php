@@ -272,12 +272,23 @@ interface ClientInterface {
    *   Build config data.
    *
    * @return array
+   *   Returns a build config.
+   */
+  public function generateBuildConfig(string $name, string $secret, string $image_stream_tag, array $data);
+
+  /**
+   * Create build config.
+   *
+   * @param array $build_config
+   *   The build config.
+   *
+   * @return array
    *   Returns the body response if successful.
    *
    * @throws ClientException
    *   Throws exception if there is an issue creating build config.
    */
-  public function createBuildConfig(string $name, string $secret, string $image_stream_tag, array $data);
+  public function createBuildConfig(array $build_config);
 
   /**
    * Updates an existing build config by name.

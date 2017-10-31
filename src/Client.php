@@ -636,14 +636,8 @@ class Client implements ClientInterface {
     return $this->apiCall(__METHOD__, $name);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function createBuildConfig(string $name, string $secret, string $image_stream_tag, array $data) {
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
-
-    $buildConfig = [
+  public function generateBuildConfig(string $name, string $secret, string $image_stream_tag, array $data) {
+    $build_config = [
       'kind' => 'BuildConfig',
       'metadata' => [
         'annotations' => [
@@ -704,8 +698,17 @@ class Client implements ClientInterface {
         ],
       ],
     ];
+    return $build_config;
+  }
 
-    return $this->request($resourceMethod['action'], $uri, $buildConfig);
+  /**
+   * {@inheritdoc}
+   */
+  public function createBuildConfig(array $build_config) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+
+    return $this->request($resourceMethod['action'], $uri, $build_config);
   }
 
   /**
