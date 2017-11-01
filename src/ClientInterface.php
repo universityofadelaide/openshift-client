@@ -330,20 +330,6 @@ interface ClientInterface {
   public function deleteBuildConfig(string $name);
 
   /**
-   * Retrieves the builds by label name.
-   *
-   * @param string $name
-   *   Name of build config to get builds for.
-   *
-   * @return array|bool
-   *   Returns the body response if successful, false if it does not exist.
-   *
-   * @throws ClientException
-   *   Throws exception if there is an issue retrieving build config.
-   */
-  public function getBuilds(string $name);
-
-  /**
    * Retrieves all image streams under current namespace.
    *
    * @param string $name
