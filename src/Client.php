@@ -636,6 +636,9 @@ class Client implements ClientInterface {
     return $this->apiCall(__METHOD__, $name);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function generateBuildConfig(string $name, string $secret, string $image_stream_tag, array $data) {
     $build_config = [
       'kind' => 'BuildConfig',
@@ -672,6 +675,7 @@ class Client implements ClientInterface {
         ],
         'strategy' => [
           'sourceStrategy' => [
+            'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
             'forcePull' => TRUE,
             'incremental' => TRUE,
             'from' => [
