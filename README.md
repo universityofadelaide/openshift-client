@@ -62,7 +62,7 @@ oc login -u developer -p developer
 
 ## Actual deployment
 
-Manually create a mysql container in openshift, make note of the db name, username and password, and put those into the client_test.json envVars section.
+Manually create a mysql container in OpenShift, make note of the db name, username and password, and put those into the client_test.json envVars section.
 
 ### Test clean up scripts 
 
