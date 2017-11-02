@@ -260,6 +260,22 @@ interface ClientInterface {
   public function getBuildConfig(string $name);
 
   /**
+   * Retrieves the builds by label name.
+   *
+   * @param string $name
+   *   Name of build config to get builds for.
+   * @param string $label
+   *   Label to get builds for.
+   *
+   * @return array|bool
+   *   Returns the body response if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving build config.
+   */
+  public function getBuilds(string $name, string $label);
+
+  /**
    * Create build config.
    *
    * @param string $name
@@ -323,20 +339,6 @@ interface ClientInterface {
    *   Throws exception if there is an issue deleting build config.
    */
   public function deleteBuildConfig(string $name);
-
-  /**
-   * Retrieves the builds by label name.
-   *
-   * @param string $name
-   *   Name of build config to get builds for.
-   *
-   * @return array|bool
-   *   Returns the body response if successful, false if it does not exist.
-   *
-   * @throws ClientException
-   *   Throws exception if there is an issue retrieving build config.
-   */
-  public function getBuilds(string $name);
 
   /**
    * Retrieves all image streams under current namespace.
@@ -647,6 +649,8 @@ interface ClientInterface {
    *
    * @param string $name
    *   Name of cron job.
+   * @param string $label
+   *   Label name of cron jobs to retrieve.
    *
    * @return array|bool
    *   Returns the body response if successful, false if it does not exist.
@@ -654,7 +658,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue retrieving cron job.
    */
-  public function getCronJob(string $name);
+  public function getCronJob(string $name, string $label = NULL);
 
   /**
    * Creates a cron job.
@@ -709,6 +713,8 @@ interface ClientInterface {
    *
    * @param string $name
    *   Name of deployment config to delete.
+   * @param string $label
+   *   Label name of cron jobs to delete.
    *
    * @return array
    *   Returns the body response if successful.
@@ -716,7 +722,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue deleting cron job.
    */
-  public function deleteCronJob(string $name);
+  public function deleteCronJob(string $name, string $label = NULL);
 
   /**
    * Retrieve a job.

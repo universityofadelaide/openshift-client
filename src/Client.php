@@ -625,8 +625,8 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function getBuilds(string $name) {
-    return $this->apiCall(__METHOD__, '', 'buildconfig=' . $name);
+  public function getBuilds(string $name, string $label) {
+    return $this->apiCall(__METHOD__, '', $label);
   }
 
   /**
@@ -1107,8 +1107,8 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCronJob(string $name) {
-    return $this->apiCall(__METHOD__, $name);
+  public function getCronJob(string $name, string $label = NULL) {
+    return $this->apiCall(__METHOD__, $name, $label);
   }
 
   /**
@@ -1126,6 +1126,7 @@ class Client implements ClientInterface {
       'kind' => 'CronJob',
       'metadata' => [
         'name' => $name,
+        'labels' => array_key_exists('labels', $data) ? array_merge($data['labels'], ['name' => $name]) : [],
       ],
       'spec' => [
         'concurrencyPolicy' => 'Forbid',
@@ -1154,8 +1155,22 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function deleteCronJob(string $name) {
-    return $this->apiCall(__METHOD__, $name);
+  public function deleteCronJob(string $name, string $label = NULL) {
+    // If the name was passed in, just delete that specific one.
+    if (!empty($name)) {
+      return $this->apiCall(__METHOD__, $name);
+    }
+
+    // If there was no name, but is a label, delete all jobs that match.
+    if ($cron_jobs = $this->getCronJob($name, $label)) {
+      foreach ($cron_jobs['items'] as $job) {
+        if (!$result = $this->apiCall(__METHOD__, $job['metadata']['name'])) {
+          return $result;
+        }
+      }
+    }
+
+    return TRUE;
   }
 
   /**
