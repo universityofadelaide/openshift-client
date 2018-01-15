@@ -1398,7 +1398,7 @@ class Client implements ClientInterface {
                     'args' => $args,
                     'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
                     'image' => $image_name,
-                    'imagePullPolicy' => 'Never',
+                    'imagePullPolicy' => 'Always',
                     'name' => $name,
                     'resources' =>
                       [
