@@ -1177,8 +1177,8 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function getJob(string $name, string $label = NULL) {
-      return $this->apiCall(__METHOD__, $name, $label);
-    }
+    return $this->apiCall(__METHOD__, $name, $label);
+  }
 
   /**
    * {@inheritdoc}
