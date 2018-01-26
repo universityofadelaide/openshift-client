@@ -1114,7 +1114,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createCronJob(string $name, string $image_name, string $schedule, array $args, array $volumes, array $data) {
+  public function createCronJob(string $name, string $image_name, string $schedule, bool $cron_suspended, array $args, array $volumes, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -1131,7 +1131,7 @@ class Client implements ClientInterface {
       'spec' => [
         'concurrencyPolicy' => 'Forbid',
         'schedule' => $schedule,
-        'suspend' => FALSE,
+        'suspend' => $cron_suspended,
         'failedJobsHistoryLimit' => 5,
         'successfulJobsHistoryLimit' => 5,
         'jobTemplate' => $job_template,
@@ -1148,8 +1148,13 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function updateCronJob(string $name, string $image_name, string $schedule, array $args, array $volumes, array $data) {
+  public function updateCronJob(string $name, string $schedule, bool $cron_suspended) {
+    // @todo implement more things that can be updated.
+    $cronConfig = $this->getCronJob($name);
 
+    $cronConfig['spec']['schedule'] = $schedule;
+    $cronConfig['spec']['suspend'] = $cron_suspended;
+    return $this->request($resourceMethod['action'], $uri, $cronConfig);
   }
 
   /**
