@@ -486,6 +486,8 @@ interface ClientInterface {
    *   Access mode of the PersistentVolumeClaim.
    * @param string $storage
    *   Amount of storage to allocated to the PersistentVolumeClaim.
+   * @param string $storage_class
+   *   Storage class E.g. "gold".
    *
    * @return array
    *   Returns the body response if successful.
@@ -493,7 +495,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue creating persistent volume claim.
    */
-  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage);
+  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage, string $storage_class = '');
 
   /**
    * Update a persistent volume claim.

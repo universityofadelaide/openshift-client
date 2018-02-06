@@ -823,7 +823,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage) {
+  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage, string $storage_class = '') {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -844,6 +844,10 @@ class Client implements ClientInterface {
         ],
       ],
     ];
+
+    if (!empty($storage_class)) {
+      $pvc['spec']['storageClassName'] = $storage_class;
+    }
 
     return $this->request($resourceMethod['action'], $uri, $pvc);
   }
