@@ -1104,7 +1104,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCronJob(string $name, string $label = NULL) {
+  public function getCronJob(string $name, string $label = '') {
     return $this->apiCall(__METHOD__, $name, $label);
   }
 

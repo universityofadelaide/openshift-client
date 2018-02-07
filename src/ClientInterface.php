@@ -658,7 +658,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue retrieving cron job.
    */
-  public function getCronJob(string $name, string $label = NULL);
+  public function getCronJob(string $name, string $label = '');
 
   /**
    * Creates a cron job.
@@ -718,7 +718,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue deleting cron job.
    */
-  public function deleteCronJob(string $name, string $label = NULL);
+  public function deleteCronJob(string $name, string $label = '');
 
   /**
    * Retrieve a job.
