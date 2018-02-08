@@ -1184,7 +1184,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function getJob(string $name, string $label = NULL) {
+  public function getJob(string $name, string $label = '') {
     return $this->apiCall(__METHOD__, $name, $label);
   }
 
@@ -1230,7 +1230,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function deleteJob(string $name, string $label = NULL) {
+  public function deleteJob(string $name, string $label = '') {
     if (!empty($name)) {
       return $this->apiCall(__METHOD__, $name);
     }
