@@ -49,221 +49,218 @@ class Client implements ClientInterface {
    * @var array
    */
   protected $resourceMap = [
-    'secret' => [
-      'create' => [
-        'action' => 'POST',
-        'uri' => '/api/v1/namespaces/{namespace}/secrets',
-      ],
-      'delete' => [
-        'action' => 'DELETE',
-        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}',
-      ],
-      'get' => [
-        'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}',
-      ],
-      'update' => [
-        // PUT replaces the entire secret.
-        'action' => 'PUT',
-        'uri' => '/api/v1/namespaces/{namespace}/secrets/{name}',
-      ],
-    ],
-    'imagestream' => [
-      'create' => [
-        'action' => 'POST',
-        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams',
-      ],
-      'delete' => [
-        'action' => 'DELETE',
-        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
-      ],
-      'get' => [
-        'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
-      ],
-      'update' => [
-        // PUT replaces the imagestream.
-        'action' => 'PUT',
-        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
-      ],
-    ],
     'buildconfig' => [
       'create' => [
         'action' => 'POST',
-        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
-      'get' => [
+      'get'    => [
         'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri' => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
     ],
-    'builds' => [
+    'builds'                 => [
       'get' => [
         'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/builds/{name}',
-      ],
-    ],
-    'deploymentconfig' => [
-      'create' => [
-        'action' => 'POST',
-        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
-      ],
-      'delete' => [
-        'action' => 'DELETE',
-        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
-      ],
-      'get' => [
-        'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
-      ],
-      'update' => [
-        'action' => 'PUT',
-        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
-      ],
-      'instantiate' => [
-        'action' => 'POST',
-        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}/instantiate',
-      ],
-    ],
-    'deploymentconfigs' => [
-      'get' => [
-        'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
-      ],
-    ],
-    'service' => [
-      'create' => [
-        'action' => 'POST',
-        'uri' => '/api/v1/namespaces/{namespace}/services',
-      ],
-      'delete' => [
-        'action' => 'DELETE',
-        'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
-      ],
-      'get' => [
-        'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
-      ],
-      'group' => [
-        'action' => 'PATCH',
-        'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
-      ],
-      'update' => [
-        'action' => 'PUT',
-        'uri' => '/api/v1/namespaces/{namespace}/services/{name}',
-      ],
-    ],
-    'route' => [
-      'create' => [
-        'action' => 'POST',
-        'uri' => '/oapi/v1/namespaces/{namespace}/routes',
-      ],
-      'delete' => [
-        'action' => 'DELETE',
-        'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}',
-      ],
-      'get' => [
-        'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}',
-      ],
-      'update' => [
-        'action' => 'PUT',
-        'uri' => '/oapi/v1/namespaces/{namespace}/routes/{name}',
-      ],
-    ],
-    'persistentvolumeclaim' => [
-      'create' => [
-        'action' => 'POST',
-        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims',
-      ],
-      'delete' => [
-        'action' => 'DELETE',
-        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
-      ],
-      'get' => [
-        'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
-      ],
-      'update' => [
-        'action' => 'PUT',
-        'uri' => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
-      ],
-    ],
-    'imagestreamtag' => [
-      'get' => [
-        'action' => 'GET',
-        'uri' => '/oapi/v1/namespaces/{namespace}/imagestreamtags/{name}',
-      ],
-    ],
-    'pod' => [
-      'get' => [
-        'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/pods/{name}',
-      ],
-      'delete' => [
-        'action' => 'DELETE',
-        'uri' => '/api/v1/namespaces/{namespace}/pods/{name}',
-      ],
-    ],
-    'replicationcontrollers' => [
-      'get' => [
-        'action' => 'GET',
-        'uri' => '/api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
-      ],
-      'delete' => [
-        'action' => 'DELETE',
-        'uri' => '/api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
-      ],
-      'update' => [
-        'action' => 'PUT',
-        'uri' => '/api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/builds/{name}',
       ],
     ],
     'cronjob' => [
       'create' => [
         'action' => 'POST',
-        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs',
+        'uri'    => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
+        'uri'    => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
       ],
       'get' => [
         'action' => 'GET',
-        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
+        'uri'    => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri' => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
+        'uri'    => '/apis/batch/v2alpha1/namespaces/{namespace}/cronjobs/{name}',
+      ],
+    ],
+    'deploymentconfig' => [
+      'create'      => [
+        'action' => 'POST',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
+      ],
+      'delete'      => [
+        'action' => 'DELETE',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+      ],
+      'get'         => [
+        'action' => 'GET',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+      ],
+      'update'      => [
+        'action' => 'PUT',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+      ],
+      'instantiate' => [
+        'action' => 'POST',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}/instantiate',
+      ],
+    ],
+    'deploymentconfigs' => [
+      'get' => [
+        'action' => 'GET',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
+      ],
+    ],
+    'imagestream' => [
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
+      ],
+    ],
+    'imagestreamtag' => [
+      'get' => [
+        'action' => 'GET',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreamtags/{name}',
       ],
     ],
     'job' => [
       'create' => [
         'action' => 'POST',
-        'uri' => '/apis/batch/v1/namespaces/{namespace}/jobs',
+        'uri'    => '/apis/batch/v1/namespaces/{namespace}/jobs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri' => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
+        'uri'    => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
       ],
-      'get' => [
+      'get'    => [
         'action' => 'GET',
-        'uri' => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
+        'uri'    => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri' => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
+        'uri'    => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
       ],
     ],
-
+    'persistentvolumeclaim' => [
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/api/v1/namespaces/{namespace}/persistentvolumeclaims',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri'    => '/api/v1/namespaces/{namespace}/persistentvolumeclaims/{name}',
+      ],
+    ],
+    'pod' => [
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/api/v1/namespaces/{namespace}/pods/{name}',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/api/v1/namespaces/{namespace}/pods/{name}',
+      ],
+    ],
+    'replicationcontrollers' => [
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri'    => '/api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
+      ],
+    ],
+    'route' => [
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/routes',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+      ],
+    ],
+    'secret' => [
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/api/v1/namespaces/{namespace}/secrets',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/api/v1/namespaces/{namespace}/secrets/{name}',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/api/v1/namespaces/{namespace}/secrets/{name}',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri'    => '/api/v1/namespaces/{namespace}/secrets/{name}',
+      ],
+    ],
+    'service' => [
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/api/v1/namespaces/{namespace}/services',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/api/v1/namespaces/{namespace}/services/{name}',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/api/v1/namespaces/{namespace}/services/{name}',
+      ],
+      'group'  => [
+        'action' => 'PATCH',
+        'uri'    => '/api/v1/namespaces/{namespace}/services/{name}',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri'    => '/api/v1/namespaces/{namespace}/services/{name}',
+      ],
+    ],
   ];
 
   /**
@@ -353,12 +350,12 @@ class Client implements ClientInterface {
       if ($method === 'GET' && $e->getCode() === 404) {
         return FALSE;
       }
-      // Do some special decoding for OpenShift
+      // Do some special decoding for OpenShift.
       if ($e->hasResponse()) {
         $message = json_decode($e->getResponse()->getBody()->getContents());
       }
       throw new ClientException(
-        isset($message) ? $message->message : '',
+        isset($message) ? $message->message : $e->getMessage(),
         $e->getCode(),
         $e->getPrevious(),
         $e->hasResponse() ? $e->getResponse()->getBody() : ''
@@ -823,7 +820,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage) {
+  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage, string $storage_class = '') {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -844,6 +841,10 @@ class Client implements ClientInterface {
         ],
       ],
     ];
+
+    if (!empty($storage_class)) {
+      $pvc['spec']['storageClassName'] = $storage_class;
+    }
 
     return $this->request($resourceMethod['action'], $uri, $pvc);
   }
@@ -1107,14 +1108,14 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCronJob(string $name, string $label = NULL) {
+  public function getCronJob(string $name, string $label = '') {
     return $this->apiCall(__METHOD__, $name, $label);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createCronJob(string $name, string $image_name, string $schedule, array $args, array $volumes, array $data) {
+  public function createCronJob(string $name, string $image_name, string $schedule, bool $cron_suspended, array $args, array $volumes, array $data) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -1131,7 +1132,7 @@ class Client implements ClientInterface {
       'spec' => [
         'concurrencyPolicy' => 'Forbid',
         'schedule' => $schedule,
-        'suspend' => FALSE,
+        'suspend' => $cron_suspended,
         'failedJobsHistoryLimit' => 5,
         'successfulJobsHistoryLimit' => 5,
         'jobTemplate' => $job_template,
@@ -1148,17 +1149,24 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function updateCronJob(string $name, string $image_name, string $schedule, array $args, array $volumes, array $data) {
+  public function updateCronJob(string $name, string $schedule, bool $cron_suspended) {
+    // @todo implement more things that can be updated.
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+    $cronConfig = $this->getCronJob($name);
 
+    $cronConfig['spec']['schedule'] = $schedule;
+    $cronConfig['spec']['suspend'] = $cron_suspended;
+    return $this->request($resourceMethod['action'], $uri, $cronConfig);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function deleteCronJob(string $name, string $label = NULL) {
+  public function deleteCronJob(string $name, string $label = '') {
     // If the name was passed in, just delete that specific one.
     if (!empty($name)) {
-      return $this->apiCall(__METHOD__, $name);
+      return $this->apiCall(__METHOD__, $name, $label);
     }
 
     // If there was no name, but is a label, delete all jobs that match.
@@ -1238,8 +1246,6 @@ class Client implements ClientInterface {
 
     return TRUE;
   }
-
-
 
   /**
    * {@inheritdoc}
@@ -1386,6 +1392,8 @@ class Client implements ClientInterface {
   }
 
   /**
+   * Generates a job template.
+   *
    * @param string $name
    *   Name of job.
    * @param string $image_name
@@ -1398,8 +1406,9 @@ class Client implements ClientInterface {
    *   Configuration data for deployment config.
    *
    * @return array
+   *   A job template array.
    */
-  private function jobTemplate($name, $image_name, $args, $volume_config, $data) {
+  private function jobTemplate(string $name, string $image_name, array $args, array $volume_config, array $data) {
     $job_template = [
       'spec' => [
         'template' => [
@@ -1452,6 +1461,8 @@ class Client implements ClientInterface {
    *
    * @return array|bool
    *   Return the item, or false if the retrieve failed.
+   *
+   * @throws \UniversityOfAdelaide\OpenShift\ClientException
    */
   private function apiCall(string $method, $name = '', $label = NULL) {
     $resourceMethod = $this->getResourceMethod($method);

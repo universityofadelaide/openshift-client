@@ -486,6 +486,8 @@ interface ClientInterface {
    *   Access mode of the PersistentVolumeClaim.
    * @param string $storage
    *   Amount of storage to allocated to the PersistentVolumeClaim.
+   * @param string $storage_class
+   *   Storage class E.g. "gold".
    *
    * @return array
    *   Returns the body response if successful.
@@ -493,7 +495,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue creating persistent volume claim.
    */
-  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage);
+  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage, string $storage_class = '');
 
   /**
    * Update a persistent volume claim.
@@ -658,7 +660,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue retrieving cron job.
    */
-  public function getCronJob(string $name, string $label = NULL);
+  public function getCronJob(string $name, string $label = '');
 
   /**
    * Creates a cron job.
@@ -669,6 +671,8 @@ interface ClientInterface {
    *   Image name for deployment.
    * @param string $schedule
    *   The cron style schedule to run the job.
+   * @param bool $cron_suspended
+   *   Is this cronjob enabled.
    * @param array $args
    *   The commands to run, each entry in the array is a command.
    * @param array $volumes
@@ -682,23 +686,17 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue creating cron job.
    */
-  public function createCronJob(string $name, string $image_name, string $schedule, array $args, array $volumes, array $data);
+  public function createCronJob(string $name, string $image_name, string $schedule, bool $cron_suspended, array $args, array $volumes, array $data);
 
   /**
    * Updates an existing cron job.
    *
    * @param string $name
    *   Name of cron job..
-   * @param string $image_name
-   *   Image name for deployment.
    * @param string $schedule
    *   The cron style schedule to run the job.
-   * @param array $args
-   *   The commands to run, each entry in the array is a command.
-   * @param array $volumes
-   *   Volumes to attach to the deployment config.
-   * @param array $data
-   *   Configuration data for deployment config.
+   * @param bool $cron_suspended
+   *   Is this cronjob enabled.
    *
    * @return array
    *   Returns the body response if successful.
@@ -706,7 +704,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue updating cron job.
    */
-  public function updateCronJob(string $name, string $image_name, string $schedule, array $args, array $volumes, array $data);
+  public function updateCronJob(string $name, string $schedule, bool $cron_suspended);
 
   /**
    * Deletes a cron job by name.
@@ -722,7 +720,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue deleting cron job.
    */
-  public function deleteCronJob(string $name, string $label = NULL);
+  public function deleteCronJob(string $name, string $label = '');
 
   /**
    * Retrieve a job.
