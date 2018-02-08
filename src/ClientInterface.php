@@ -727,6 +727,8 @@ interface ClientInterface {
    *
    * @param string $name
    *   Name of job.
+   * @param string $label
+   *   Label of jobs.
    *
    * @return array|bool
    *   Returns the body response if successful, false if it does not exist.
@@ -734,7 +736,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue retrieving job.
    */
-  public function getJob(string $name);
+  public function getJob(string $name, string $label = '');
 
   /**
    * Creates a job.
@@ -785,6 +787,8 @@ interface ClientInterface {
    *
    * @param string $name
    *   Name of deployment config to delete.
+   * @param string $label
+   *   Label of jobs to delete.
    *
    * @return array
    *   Returns the body response if successful.
@@ -792,7 +796,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue deleting job.
    */
-  public function deleteJob(string $name);
+  public function deleteJob(string $name, string $label = '');
 
   /**
    * Retrieve a pod.

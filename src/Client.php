@@ -1184,8 +1184,8 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function getJob(string $name) {
-    return $this->apiCall(__METHOD__, $name);
+  public function getJob(string $name, string $label = '') {
+    return $this->apiCall(__METHOD__, $name, $label);
   }
 
   /**
@@ -1230,8 +1230,21 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function deleteJob(string $name) {
-    return $this->apiCall(__METHOD__, $name);
+  public function deleteJob(string $name, string $label = '') {
+    if (!empty($name)) {
+      return $this->apiCall(__METHOD__, $name);
+    }
+
+    // If there was no name, but is a label, delete all jobs that match.
+    if ($jobs = $this->getJob($name, $label)) {
+      foreach ($jobs['items'] as $job) {
+        if (!$result = $this->apiCall(__METHOD__, $job['metadata']['name'])) {
+          return $result;
+        }
+      }
+    }
+
+    return TRUE;
   }
 
   /**
@@ -1399,6 +1412,10 @@ class Client implements ClientInterface {
     $job_template = [
       'spec' => [
         'template' => [
+          'metadata' => [
+            'name' => $name,
+            'labels' => array_key_exists('labels', $data) ? array_merge($data['labels'], ['name' => $name]) : [],
+          ],
           'spec' =>
             [
               'containers' =>
