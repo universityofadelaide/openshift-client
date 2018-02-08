@@ -1166,7 +1166,7 @@ class Client implements ClientInterface {
     }
 
     // If there was no name, but is a label, delete all jobs that match.
-    if ($cron_jobs = $this->getCronJob($name)) {
+    if ($cron_jobs = $this->getCronJob($name, $label)) {
       foreach ($cron_jobs['items'] as $job) {
         if (!$result = $this->apiCall(__METHOD__, $job['metadata']['name'])) {
           return $result;
