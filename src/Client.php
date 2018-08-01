@@ -937,13 +937,13 @@ class Client implements ClientInterface {
                       [
                         'limits' =>
                           [
-                            'cpu' => $data['cpu_limit'] ?? '',
-                            'memory' => $data['memory_limit'] ?? '0',
+                            'cpu' => $data['cpu_limit'] ?? '0m',
+                            'memory' => $data['memory_limit'] ?? '0Mi',
                           ],
                         'requests' =>
                           [
-                            'cpu' => $data['cpu_request'] ?? '',
-                            'memory' => $data['memory_request'] ?? '0',
+                            'cpu' => $data['cpu_request'] ?? '0m',
+                            'memory' => $data['memory_request'] ?? '0Mi',
                           ],
                       ],
                     'volumeMounts' => $volume_config['mounts'],
