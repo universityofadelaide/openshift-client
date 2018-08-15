@@ -579,7 +579,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createRoute(string $name, string $service_name, string $domain, string $path = NULL) {
+  public function createRoute(string $name, string $service_name, string $domain, string $path = NULL, array $annotations = []) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -596,11 +596,11 @@ class Client implements ClientInterface {
           'name' => (string) $service_name,
         ],
       ],
-      // Unsure if required. @see : https://docs.openshift.org/latest/rest_api/openshift_v1.html#v1-routestatus
-      'status' => [
-        'ingress' => [],
-      ],
     ];
+
+    if (count($annotations)) {
+      $route['metadata']['annotations'] = $annotations;
+    }
 
     return $this->request($resourceMethod['action'], $uri, $route);
   }

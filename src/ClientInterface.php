@@ -204,6 +204,8 @@ interface ClientInterface {
    *   The domain to associate with the route.
    * @param string $path
    *   The path to associate with the route. Optional.
+   * @param array $annotations
+   *   An optional array of metadata annotations to add to the route.
    *
    * @return array
    *   Returns the body response if successful.
@@ -211,7 +213,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue creating route.
    */
-  public function createRoute(string $name, string $service_name, string $domain, string $path = NULL);
+  public function createRoute(string $name, string $service_name, string $domain, string $path = NULL, array $annotations = []);
 
   /**
    * Updates an existing named route.
