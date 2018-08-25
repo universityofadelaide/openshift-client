@@ -609,8 +609,10 @@ interface ClientInterface {
    *
    * @param string $name
    *   Name of the deploymentconfig.
-   * @param int $replica_count
-   *   The number of replicas to keep running.
+   * @param array $deploymentConfig
+   *   The deployment config you wish to update.
+   * @param array $config
+   *   The config updates you want to apply to deploymentConfig.
    *
    * @return array
    *   Returns the body response if successful.
@@ -618,7 +620,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue updating deployment config.
    */
-  public function updateDeploymentConfig(string $name, int $replica_count);
+  public function updateDeploymentConfig(string $name, array $deploymentConfig, array $config);
 
   /**
    * Deletes a deployment config by name.
@@ -635,7 +637,7 @@ interface ClientInterface {
   public function deleteDeploymentConfig(string $name);
 
   /**
-   * Retrieve multiple deployment configs by label.
+   * Retrieve multiple deployment configs by optional label.
    *
    * @param string $label
    *   Label name of deployment configs to retrieve.
