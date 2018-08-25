@@ -1282,6 +1282,7 @@ class Client implements ClientInterface {
 
     $repControllers = $this->getReplicationControllers($name, $label);
     if ($replica_count === NULL) {
+      // @todo - err what ?
       return $repControllers;
     }
 
