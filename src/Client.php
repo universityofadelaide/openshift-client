@@ -1086,7 +1086,7 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function updateDeploymentConfig(string $name, array $deploymentConfig, array $config) {
-    $deploymentConfig = array_merge($deploymentConfig, $config);
+    $deploymentConfig = array_replace_recursive($deploymentConfig, $config);
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name,
@@ -1480,5 +1480,4 @@ class Client implements ClientInterface {
 
     return $this->request($resourceMethod['action'], $uri, [], $query);
   }
-
 }
