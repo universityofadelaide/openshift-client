@@ -874,7 +874,7 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function getDeploymentConfigs(string $label = NULL) {
-    // If there is no labelSelector retrive all in the namespace.
+    // If there is no labelSelector retrieve all in the namespace.
     return $this->apiCall(__METHOD__, '', $label);
   }
 
@@ -1085,14 +1085,14 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function updateDeploymentConfig(string $name, array $deploymentConfig, array $config) {
-    $deploymentConfig = array_replace_recursive($deploymentConfig, $config);
+  public function updateDeploymentConfig(string $name, array $deployment_config, array $config) {
+    $deployment_config = array_replace_recursive($deployment_config, $config);
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name,
     ]);
 
-    return $this->request($resourceMethod['action'], $uri, $deploymentConfig);
+    return $this->request($resourceMethod['action'], $uri, $deployment_config);
   }
 
   /**

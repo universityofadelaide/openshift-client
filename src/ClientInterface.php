@@ -609,7 +609,7 @@ interface ClientInterface {
    *
    * @param string $name
    *   Name of the deploymentconfig.
-   * @param array $deploymentConfig
+   * @param array $deployment_config
    *   The deployment config you wish to update.
    * @param array $config
    *   The config updates you want to apply to deploymentConfig.
@@ -620,7 +620,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue updating deployment config.
    */
-  public function updateDeploymentConfig(string $name, array $deploymentConfig, array $config);
+  public function updateDeploymentConfig(string $name, array $deployment_config, array $config);
 
   /**
    * Deletes a deployment config by name.
