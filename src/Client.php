@@ -309,7 +309,7 @@ class Client implements ClientInterface {
    *   Api version number.
    */
   public function setApiVersion(string $apiVersion) {
-    $this->apiVersion = (string) $apiVersion;
+    $this->apiVersion = $apiVersion;
   }
 
   /**
@@ -328,14 +328,14 @@ class Client implements ClientInterface {
   public function request(string $method, string $uri, array $body = [], array $query = []) {
     $requestOptions = [];
 
-    if ($method != 'DELETE') {
+    if ($method !== 'DELETE') {
       $requestOptions = [
         'query' => $query,
         'body' => json_encode($body),
       ];
     }
 
-    if ($method == 'PATCH') {
+    if ($method === 'PATCH') {
       $requestOptions['headers']['Content-Type'] = 'application/merge-patch+json';
     }
     else {
@@ -517,7 +517,7 @@ class Client implements ClientInterface {
     $this->applyAnnotations($service, $annotations);
 
     $result = $this->request($resourceMethod['action'], $uri, $service);
-    if ($result && $app_name != $name) {
+    if ($result && $app_name !== $name) {
       // @todo - there is a possibility for a race condition if the group triggers
       // before the previous request has been completed.
       $this->groupService($app_name, $name);
@@ -539,9 +539,7 @@ class Client implements ClientInterface {
 
     $service['spec']['selector']['deploymentconfig'] = $selector;
 
-    $result = $this->request($resourceMethod['action'], $uri, $service);
-
-    return $result;
+    return $this->request($resourceMethod['action'], $uri, $service);
   }
 
   /**
@@ -586,14 +584,14 @@ class Client implements ClientInterface {
     $route = [
       'kind' => 'Route',
       'metadata' => [
-        'name' => (string) $name,
+        'name' => $name,
       ],
       'spec' => [
-        'host' => (string) $domain,
-        'path' => (string) $path,
+        'host' => $domain,
+        'path' => $path,
         'to' => [
           'kind' => 'Service',
-          'name' => (string) $service_name,
+          'name' => $service_name,
         ],
       ],
     ];
@@ -672,7 +670,7 @@ class Client implements ClientInterface {
         ],
         'strategy' => [
           'sourceStrategy' => [
-            'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
+            'env' => $data['env_vars'] ?? [],
             'forcePull' => TRUE,
             'incremental' => TRUE,
             'from' => [
@@ -925,13 +923,13 @@ class Client implements ClientInterface {
               'containers' =>
                 [
                   [
-                    'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
+                    'env' => $data['env_vars'] ?? [],
                     'image' => ' ',
                     'name' => $name,
                     'ports' =>
                       [
                         [
-                          'containerPort' => isset($data['containerPort']) ? $data['containerPort'] : NULL,
+                          'containerPort' => $data['containerPort'] ?? NULL,
                         ],
                       ],
                     'resources' =>
@@ -1089,7 +1087,7 @@ class Client implements ClientInterface {
     $deployment_config = array_replace_recursive($deployment_config, $config);
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => (string) $name,
+      'name' => $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri, $deployment_config);
@@ -1101,7 +1099,7 @@ class Client implements ClientInterface {
   public function deleteDeploymentConfig(string $name) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
-      'name' => (string) $name,
+      'name' => $name,
     ]);
 
     return $this->request($resourceMethod['action'], $uri);
@@ -1425,7 +1423,7 @@ class Client implements ClientInterface {
                 [
                   [
                     'args' => $args,
-                    'env' => isset($data['env_vars']) ? $data['env_vars'] : [],
+                    'env' => $data['env_vars'] ?? [],
                     'image' => $image_name,
                     'imagePullPolicy' => 'Always',
                     'name' => $name,
@@ -1433,7 +1431,7 @@ class Client implements ClientInterface {
                       [
                         'limits' =>
                           [
-                            'memory' => isset($data['memory_limit']) ? $data['memory_limit'] : '',
+                            'memory' => $data['memory_limit'] ?? '',
                           ],
                       ],
                     'volumeMounts' => $volume_config['mounts'],
