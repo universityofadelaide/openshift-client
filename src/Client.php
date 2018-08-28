@@ -873,7 +873,8 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function getDeploymentConfigs(string $label) {
+  public function getDeploymentConfigs(string $label = NULL) {
+    // If there is no labelSelector retrieve all in the namespace.
     return $this->apiCall(__METHOD__, '', $label);
   }
 
@@ -1084,19 +1085,14 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function updateDeploymentConfig(string $name, int $replica_count) {
-    $deploymentConfig = $this->getDeploymentConfig($name);
-    if ($replica_count === NULL) {
-      return $deploymentConfig;
-    }
-
-    $deploymentConfig['spec']['replicas'] = $replica_count;
+  public function updateDeploymentConfig(string $name, array $deployment_config, array $config) {
+    $deployment_config = array_replace_recursive($deployment_config, $config);
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name,
     ]);
 
-    return $this->request($resourceMethod['action'], $uri, $deploymentConfig);
+    return $this->request($resourceMethod['action'], $uri, $deployment_config);
   }
 
   /**
@@ -1282,6 +1278,7 @@ class Client implements ClientInterface {
 
     $repControllers = $this->getReplicationControllers($name, $label);
     if ($replica_count === NULL) {
+      // @todo - err what ?
       return $repControllers;
     }
 
@@ -1483,5 +1480,4 @@ class Client implements ClientInterface {
 
     return $this->request($resourceMethod['action'], $uri, [], $query);
   }
-
 }
