@@ -819,6 +819,17 @@ interface ClientInterface {
   public function getPod($name, $label);
 
   /**
+   * Retrieve all pods.
+   *
+   * @return array|bool
+   *   Returns the body response if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving pod.
+   */
+  public function getPods();
+
+  /**
    * Deletes a pod by name.
    *
    * @param string $name
