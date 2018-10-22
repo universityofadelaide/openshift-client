@@ -825,7 +825,7 @@ interface ClientInterface {
    *   Returns the body response if successful, false if it does not exist.
    *
    * @throws ClientException
-   *   Throws exception if there is an issue retrieving pod.
+   *   Throws exception if there is an issue retrieving the pods.
    */
   public function getPods();
 
