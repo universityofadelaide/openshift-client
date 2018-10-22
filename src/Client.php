@@ -189,6 +189,12 @@ class Client implements ClientInterface {
         'uri'    => '/api/v1/namespaces/{namespace}/pods/{name}',
       ],
     ],
+    'pods' => [
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/api/v1/namespaces/{namespace}/pods',
+      ],
+    ],
     'replicationcontrollers' => [
       'get'    => [
         'action' => 'GET',
@@ -1186,6 +1192,13 @@ class Client implements ClientInterface {
    */
   public function getJob(string $name, string $label = '') {
     return $this->apiCall(__METHOD__, $name, $label);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPods() {
+    return $this->apiCall(__METHOD__);
   }
 
   /**
