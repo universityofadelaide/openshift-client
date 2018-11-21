@@ -67,7 +67,7 @@ class Client implements ClientInterface {
         'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
     ],
-    'builds'                 => [
+    'builds' => [
       'get' => [
         'action' => 'GET',
         'uri'    => '/oapi/v1/namespaces/{namespace}/builds/{name}',
@@ -826,7 +826,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage, string $storage_class = '') {
+  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage, string $deployment_name, string $storage_class = '') {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
 
@@ -835,6 +835,7 @@ class Client implements ClientInterface {
       'kind' => 'PersistentVolumeClaim',
       'metadata' => [
         'name' => $name,
+        'labels' => ['app' => $deployment_name],
       ],
       'spec' => [
         'accessModes' => [
