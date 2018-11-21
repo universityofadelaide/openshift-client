@@ -488,6 +488,8 @@ interface ClientInterface {
    *   Access mode of the PersistentVolumeClaim.
    * @param string $storage
    *   Amount of storage to allocated to the PersistentVolumeClaim.
+   * @param string $deployment_name
+   *   The name of the deployment being created.
    * @param string $storage_class
    *   Storage class E.g. "gold".
    *
@@ -497,7 +499,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue creating persistent volume claim.
    */
-  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage, string $storage_class = '');
+  public function createPersistentVolumeClaim(string $name, string $access_mode, string $storage, string $deployment_name, string $storage_class = '');
 
   /**
    * Update a persistent volume claim.
