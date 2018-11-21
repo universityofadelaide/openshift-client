@@ -502,6 +502,7 @@ class Client implements ClientInterface {
       'kind' => 'Service',
       'metadata' => [
         'name' => $name,
+        'labels' => ['app' => $app_name],
       ],
       'spec' => [
         'ports' => [
@@ -591,6 +592,7 @@ class Client implements ClientInterface {
       'kind' => 'Route',
       'metadata' => [
         'name' => $name,
+        'labels' => ['app' => $name],
       ],
       'spec' => [
         'host' => $domain,
