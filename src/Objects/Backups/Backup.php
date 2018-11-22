@@ -117,6 +117,8 @@ class Backup {
   }
 
   /**
+   * Sets the array of labels.
+   *
    * @param array $labels
    *   An array of labels.
    *
@@ -125,6 +127,22 @@ class Backup {
    */
   public function setLabels(array $labels): Backup {
     $this->labels = $labels;
+    return $this;
+  }
+
+  /**
+   * Set a single label.
+   *
+   * @param string $labelName
+   *   The name of the label.
+   * @param string $labelValue
+   *   The value of the label.
+   *
+   * @return $this
+   *   The calling class.
+   */
+  public function setLabel(string $labelName, string $labelValue): Backup {
+    $this->labels[$labelName] = $labelValue;
     return $this;
   }
 

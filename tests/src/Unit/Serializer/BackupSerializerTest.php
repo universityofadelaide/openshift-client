@@ -16,7 +16,7 @@ class BackupSerializerTest extends TestCase {
   /**
    * The serializer.
    *
-   * @var \UniversityOfAdelaide\OpenShift\Objects\Serializer\OpenShiftSerializerFactory
+   * @var \Symfony\Component\Serializer\Serializer
    */
   protected $serializer;
 
@@ -45,6 +45,20 @@ class BackupSerializerTest extends TestCase {
     $this->assertEquals('2018-11-21T00:16:23Z', $backup->getStartTimestamp());
     $this->assertEquals('2018-11-21T00:16:43Z', $backup->getCompletionTimestamp());
     $this->assertEquals('2018-12-21T00:16:23Z', $backup->getExpires());
+  }
+
+  /**
+   * @covers ::normalize
+   */
+  public function testNormalizer() {
+    $backup = Backup::create();
+    $backup->setName('test-123-backup')
+      ->setTtl('100h20m0s')
+      ->setMatchLabels(['app' => 'test-123'])
+      ->setLabel('test-label', 'test label value');
+
+    $expected = file_get_contents(__DIR__ . '/../../../fixtures/backup.json');
+    $this->assertEquals(json_decode($expected), json_decode($this->serializer->serialize($backup, 'json')));
   }
 
 }

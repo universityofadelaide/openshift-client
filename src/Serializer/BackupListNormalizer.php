@@ -26,7 +26,6 @@ class BackupListNormalizer extends BaseNormalizer {
     }
 
     return $backups;
-
   }
 
 }
