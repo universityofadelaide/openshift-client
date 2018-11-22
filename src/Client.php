@@ -1419,8 +1419,8 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function deleteBackup(Backup $backup) {
-    return $this->apiCall(__METHOD__, $backup->getName());
+  public function deleteBackup(string $name) {
+    return $this->apiCall(__METHOD__, $name);
   }
 
   /**

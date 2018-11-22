@@ -940,8 +940,8 @@ interface ClientInterface {
   /**
    * Deletes a named backup.
    *
-   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup
-   *   The backup to delete.
+   * @param string $name
+   *   The name backup to delete.
    *
    * @return array
    *   Returns the body response if successful.
