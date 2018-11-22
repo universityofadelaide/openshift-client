@@ -4,6 +4,9 @@ namespace UniversityOfAdelaide\OpenShift;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
+use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
 /**
  * Class Client.
@@ -44,11 +47,36 @@ class Client implements ClientInterface {
   protected $guzzleClient;
 
   /**
+   * The serializer.
+   *
+   * @var \Symfony\Component\Serializer\Serializer
+   */
+  protected $serializer;
+
+  /**
    * Resource map.
    *
    * @var array
    */
   protected $resourceMap = [
+    'backup' => [
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups/{name}',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups/{name}',
+      ],
+      'list' => [
+        'action' => 'GET',
+        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups',
+      ],
+    ],
     'buildconfig' => [
       'create' => [
         'action' => 'POST',
@@ -296,6 +324,7 @@ class Client implements ClientInterface {
         'Accept' => 'application/json',
       ],
     ]);
+    $this->serializer = OpenShiftSerializerFactory::create();
   }
 
   /**
@@ -1343,6 +1372,55 @@ class Client implements ClientInterface {
     }
 
     return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBackup(string $name) {
+    $result = $this->apiCall(__METHOD__, $name);
+    if (!$result) {
+      return FALSE;
+    }
+    // @todo fix this, $this->request decodes by default but we want the
+    // serializer to do it for us.
+    $data = json_encode($result);
+    return $this->serializer->deserialize($data, Backup::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function listBackup(array $label_selectors = []) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+    if ($label_selectors) {
+      $query = ['labelSelector' => $label_selectors];
+    }
+
+    $result = $this->request($resourceMethod['action'], $uri, [], $query);
+    if (!$result) {
+      return FALSE;
+    }
+    $data = json_encode($result);
+    return $this->serializer->deserialize($data, BackupList::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createBackup(Backup $backup) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+    $backupConfig = $this->serializer->serialize($backup, 'json');
+    return $this->request($resourceMethod['action'], $uri, $backupConfig);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteBackup(Backup $backup) {
+    return $this->apiCall(__METHOD__, $backup->getName());
   }
 
   /**

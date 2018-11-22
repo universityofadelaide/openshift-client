@@ -2,6 +2,8 @@
 
 namespace UniversityOfAdelaide\OpenShift;
 
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
+
 /**
  * Interface OpenShiftClientInterface.
  *
@@ -892,5 +894,61 @@ interface ClientInterface {
    *   Throws exception if there is an issue deleting replication controllers.
    */
   public function deleteReplicationControllers($name, $label);
+
+  /**
+   * Retrieves a backup that matches the name.
+   *
+   * @param string $name
+   *   Name of the backup to retrieved.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup|bool
+   *   Returns a Backup if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving backup.
+   */
+  public function getBackup(string $name);
+
+  /**
+   * Retrieves a list of backups optionally filtered by selectors.
+   *
+   * @param array $label_selectors
+   *   An optional array of label selectors to filter the list by.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList|bool
+   *   Returns a BackupList if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the list of backups.
+   */
+  public function listBackup(array $label_selectors = []);
+
+  /**
+   * Creates a new backup.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup
+   *   The backup to create.
+   *
+   * @return array
+   *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the backup.
+   */
+  public function createBackup(Backup $backup);
+
+  /**
+   * Deletes a named backup.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup
+   *   The backup to delete.
+   *
+   * @return array
+   *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue deleting backup.
+   */
+  public function deleteBackup(string $name);
 
 }
