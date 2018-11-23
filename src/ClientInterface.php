@@ -3,6 +3,7 @@
 namespace UniversityOfAdelaide\OpenShift;
 
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
+use UniversityOfAdelaide\OpenShift\Objects\Label;
 
 /**
  * Interface OpenShiftClientInterface.
@@ -914,8 +915,8 @@ interface ClientInterface {
   /**
    * Retrieves a list of backups optionally filtered by selectors.
    *
-   * @param array $label_selectors
-   *   An optional array of label selectors to filter the list by.
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Label $label_selector
+   *   An optional label selector to apply to the query.
    *
    * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList|bool
    *   Returns a BackupList if successful, false if it does not exist.
@@ -923,7 +924,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue retrieving the list of backups.
    */
-  public function listBackup(array $label_selectors = []);
+  public function listBackup(Label $label_selector = NULL);
 
   /**
    * Creates a new backup.

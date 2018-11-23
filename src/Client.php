@@ -6,6 +6,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
+use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
 /**
@@ -1379,7 +1380,7 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function getBackup(string $name) {
-    $result = $this->apiCall(__METHOD__, $name, FALSE);
+    $result = $this->apiCall(__METHOD__, $name, NULL, FALSE);
     if (!$result) {
       return FALSE;
     }
@@ -1389,14 +1390,13 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function listBackup(array $label_selectors = []) {
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
-    if ($label_selectors) {
-      $query = ['labelSelector' => $label_selectors];
+  public function listBackup(Label $label_selector = NULL) {
+    $label = NULL;
+    if ($label_selector) {
+      $label = (string) $label_selector;
     }
 
-    $result = $this->request($resourceMethod['action'], $uri, [], $query, FALSE);
+    $result = $this->apiCall(__METHOD__, '', $label, FALSE);
     if (!$result) {
       return FALSE;
     }
