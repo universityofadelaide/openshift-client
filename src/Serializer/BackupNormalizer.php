@@ -24,12 +24,18 @@ class BackupNormalizer extends BaseNormalizer {
     // @todo implement hooks.
     ->setHooks([])
     ->setTtl($data['spec']['ttl'])
-    ->setMatchLabels($data['spec']['labelSelector']['matchLabels'])
-    ->setStartTimestamp($data['status']['startTimestamp'])
-    ->setCompletionTimestamp($data['status']['completionTimestamp'])
-    ->setExpires($data['status']['expiration']);
-    if ($data['status']['phase']) {
+    ->setMatchLabels($data['spec']['labelSelector']['matchLabels']);
+    if (isset($data['status']['phase'])) {
       $backup->setPhase($data['status']['phase']);
+    }
+    if (isset($data['status']['startTimestamp'])) {
+      $backup->setStartTimestamp($data['status']['startTimestamp']);
+    }
+    if (isset($data['status']['completionTimestamp'])) {
+      $backup->setStartTimestamp($data['status']['completionTimestamp']);
+    }
+    if (isset($data['status']['expiration'])) {
+      $backup->setStartTimestamp($data['status']['expiration']);
     }
     return $backup;
   }
