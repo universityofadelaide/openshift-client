@@ -32,10 +32,12 @@ interface ClientInterface {
    *   HTTP VERB.
    * @param string $uri
    *   Path the endpoint.
-   * @param array $body
-   *   Request body to be converted to JSON.
+   * @param mixed $body
+   *   Request body to be converted to JSON. Can be passed in as JSON.
    * @param array $query
    *   Query params.
+   * @param bool $decode_response
+   *   Whether to decode the response or not.
    *
    * @return array|bool
    *   Returns json_decoded body contents or FALSE.
@@ -43,7 +45,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue performing request.
    */
-  public function request(string $method, string $uri, array $body = [], array $query = []);
+  public function request(string $method, string $uri, $body = NULL, array $query = [], $decode_response = TRUE);
 
   /**
    * Retrieves a secret that matches the name/tag.

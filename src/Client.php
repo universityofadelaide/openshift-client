@@ -360,13 +360,13 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function request(string $method, string $uri, array $body = [], array $query = []) {
+  public function request(string $method, string $uri, $body = NULL, array $query = [], $decode_response = TRUE) {
     $requestOptions = [];
 
     if ($method !== 'DELETE') {
       $requestOptions = [
         'query' => $query,
-        'body' => json_encode($body),
+        'body' => is_array($body) ? json_encode($body) : $body,
       ];
     }
 
@@ -396,7 +396,8 @@ class Client implements ClientInterface {
         $e->hasResponse() ? $e->getResponse()->getBody() : ''
       );
     }
-    return json_decode($response->getBody()->getContents(), TRUE);
+    $contents = $response->getBody()->getContents();
+    return $decode_response ? json_decode($contents, TRUE) : $contents;
   }
 
   /**
@@ -1378,14 +1379,11 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function getBackup(string $name) {
-    $result = $this->apiCall(__METHOD__, $name);
+    $result = $this->apiCall(__METHOD__, $name, FALSE);
     if (!$result) {
       return FALSE;
     }
-    // @todo fix this, $this->request decodes by default but we want the
-    // serializer to do it for us.
-    $data = json_encode($result);
-    return $this->serializer->deserialize($data, Backup::class, 'json');
+    return $this->serializer->deserialize($result, Backup::class, 'json');
   }
 
   /**
@@ -1398,14 +1396,11 @@ class Client implements ClientInterface {
       $query = ['labelSelector' => $label_selectors];
     }
 
-    $result = $this->request($resourceMethod['action'], $uri, [], $query);
+    $result = $this->request($resourceMethod['action'], $uri, [], $query, FALSE);
     if (!$result) {
       return FALSE;
     }
-    // @todo fix this, $this->request decodes by default but we want the
-    // serializer to do it for us.
-    $data = json_encode($result);
-    return $this->serializer->deserialize($data, BackupList::class, 'json');
+    return $this->serializer->deserialize($result, BackupList::class, 'json');
   }
 
   /**
@@ -1415,14 +1410,11 @@ class Client implements ClientInterface {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
     $backupConfig = $this->serializer->serialize($backup, 'json');
-    $result = $this->request($resourceMethod['action'], $uri, $backupConfig);
+    $result = $this->request($resourceMethod['action'], $uri, $backupConfig, [], FALSE);
     if (!$result) {
       return FALSE;
     }
-    // @todo fix this, $this->request decodes by default but we want the
-    // serializer to do it for us.
-    $data = json_encode($result);
-    return $this->serializer->deserialize($data, Backup::class, 'json');
+    return $this->serializer->deserialize($result, Backup::class, 'json');
   }
 
   /**
@@ -1568,13 +1560,15 @@ class Client implements ClientInterface {
    *   Name of the item to retrieve.
    * @param string $label
    *   Label of items to retrieve.
+   * @param bool $decode_response
+   *   Whether to decode the response or not.
    *
    * @return array|bool
    *   Return the item, or false if the retrieve failed.
    *
    * @throws \UniversityOfAdelaide\OpenShift\ClientException
    */
-  private function apiCall(string $method, $name = '', $label = NULL) {
+  private function apiCall(string $method, $name = '', $label = NULL, $decode_response = TRUE) {
     $resourceMethod = $this->getResourceMethod($method);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name,
@@ -1585,6 +1579,6 @@ class Client implements ClientInterface {
       $query = ['labelSelector' => $label];
     }
 
-    return $this->request($resourceMethod['action'], $uri, [], $query);
+    return $this->request($resourceMethod['action'], $uri, [], $query, $decode_response);
   }
 }
