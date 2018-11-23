@@ -5,14 +5,7 @@ namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
 /**
  * Defines a value object representing a Backup.
  */
-class Backup {
-
-  /**
-   * The name of the backup.
-   *
-   * @var string
-   */
-  protected $name;
+class Backup extends BackupObjectBase {
 
   /**
    * The array of labels to apply to this backup.
@@ -45,13 +38,6 @@ class Backup {
   protected $matchLabels = [];
 
   /**
-   * The phase the backup is in.
-   *
-   * @var string
-   */
-  protected $phase;
-
-  /**
    * The time the backup was started.
    *
    * @var string
@@ -80,83 +66,6 @@ class Backup {
    */
   public static function create() {
     return new static();
-  }
-
-  /**
-   * Gets the value of name.
-   *
-   * @return string
-   *   Value of name.
-   */
-  public function getName(): string {
-    return $this->name;
-  }
-
-  /**
-   * Sets the name.
-   *
-   * @param string $name
-   *   The name of the backup.
-   *
-   *  @return $this
-   *   The calling class.
-   */
-  public function setName(string $name): Backup {
-    $this->name = $name;
-    return $this;
-  }
-
-  /**
-   * Gets the value of labels.
-   *
-   * @return array
-   *  Value of labels.
-   */
-  public function getLabels(): array {
-    return $this->labels;
-  }
-
-  /**
-   * Sets the array of labels.
-   *
-   * @param array $labels
-   *   An array of labels.
-   *
-   * @return $this
-   *   The calling class.
-   */
-  public function setLabels(array $labels): Backup {
-    $this->labels = $labels;
-    return $this;
-  }
-
-  /**
-   * Set a single label.
-   *
-   * @param string $key
-   *   The key of the label.
-   * @param string $value
-   *   The value of the label.
-   *
-   * @return $this
-   *   The calling class.
-   */
-  public function setLabel(string $key, string $value): Backup {
-    $this->labels[$key] = $value;
-    return $this;
-  }
-
-  /**
-   * Get a single label.
-   *
-   * @param string $key
-   *   The key of the label.
-   *
-   * @return string|bool
-   *   The label value, or FALSE if it doesn't exist.
-   */
-  public function getLabel(string $key): string {
-    return isset($this->getLabels()[$key]) ? $this->getLabels()[$key] : FALSE;
   }
 
   /**
@@ -232,30 +141,6 @@ class Backup {
   }
 
   /**
-   * Gets the value of phase.
-   *
-   * @return string
-   *  Value of phase.
-   */
-  public function getPhase(): string {
-    return $this->phase;
-  }
-
-  /**
-   * Sets the value of phase.
-   *
-   * @param string $phase
-   *  The value for phase.
-   *
-   * @return $this
-   *  The calling class.
-   */
-  public function setPhase(string $phase): Backup {
-    $this->phase = $phase;
-    return $this;
-  }
-
-  /**
    * Gets the value of startTimestamp.
    *
    * @return string
@@ -287,16 +172,6 @@ class Backup {
    */
   public function getCompletionTimestamp(): string {
     return $this->completionTimestamp;
-  }
-
-  /**
-   * Check if the backup is completed.
-   *
-   * @return bool
-   *   Whether the backup has completed.
-   */
-  public function isCompleted(): bool {
-    return $this->getPhase() === Phase::COMPLETED;
   }
 
   /**
