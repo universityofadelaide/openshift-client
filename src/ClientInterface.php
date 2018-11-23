@@ -929,8 +929,8 @@ interface ClientInterface {
    * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup
    *   The backup to create.
    *
-   * @return array
-   *   Returns the body response if successful.
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup|bool
+   *   Returns a Backup if successful, false if it does not exist.
    *
    * @throws ClientException
    *   Throws exception if there is an issue creating the backup.

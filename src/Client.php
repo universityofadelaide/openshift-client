@@ -1402,6 +1402,8 @@ class Client implements ClientInterface {
     if (!$result) {
       return FALSE;
     }
+    // @todo fix this, $this->request decodes by default but we want the
+    // serializer to do it for us.
     $data = json_encode($result);
     return $this->serializer->deserialize($data, BackupList::class, 'json');
   }
@@ -1413,7 +1415,14 @@ class Client implements ClientInterface {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
     $backupConfig = $this->serializer->serialize($backup, 'json');
-    return $this->request($resourceMethod['action'], $uri, $backupConfig);
+    $result = $this->request($resourceMethod['action'], $uri, $backupConfig);
+    if (!$result) {
+      return FALSE;
+    }
+    // @todo fix this, $this->request decodes by default but we want the
+    // serializer to do it for us.
+    $data = json_encode($result);
+    return $this->serializer->deserialize($data, Backup::class, 'json');
   }
 
   /**
