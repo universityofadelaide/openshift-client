@@ -5,7 +5,7 @@ namespace UniversityOfAdelaide\OpenShift\Serializer;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 
 /**
- * Serializer for Result objects.
+ * Serializer for Backup objects.
  */
 class BackupNormalizer extends BaseNormalizer {
 

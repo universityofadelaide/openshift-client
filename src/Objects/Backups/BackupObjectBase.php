@@ -8,7 +8,7 @@ namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
 abstract class BackupObjectBase {
 
   /**
-   * The name of the restore.
+   * The name of the object.
    *
    * @var string
    */
@@ -22,7 +22,7 @@ abstract class BackupObjectBase {
   protected $labels = [];
 
   /**
-   * The phase the backup is in.
+   * The phase the object is in.
    *
    * @var string
    */
@@ -42,7 +42,7 @@ abstract class BackupObjectBase {
    * Sets the name.
    *
    * @param string $name
-   *   The name of the backup.
+   *   The name of the object.
    *
    *  @return $this
    *   The calling class.
@@ -130,10 +130,10 @@ abstract class BackupObjectBase {
   }
 
   /**
-   * Check if the backup is completed.
+   * Check if the object phase is completed.
    *
    * @return bool
-   *   Whether the backup has completed.
+   *   Whether the object phase is completed.
    */
   public function isCompleted(): bool {
     return $this->getPhase() === Phase::COMPLETED;

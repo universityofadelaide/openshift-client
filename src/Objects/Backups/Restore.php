@@ -15,6 +15,15 @@ class Restore extends BackupObjectBase {
   protected $backupName;
 
   /**
+   * The name of the restore.
+   *
+   * We set this to an empty string by default so ark generates this for us.
+   *
+   * @var string
+   */
+  protected $name = '';
+
+  /**
    * Factory method for creating a new Backup.
    *
    * @return self

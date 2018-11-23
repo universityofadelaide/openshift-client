@@ -6,7 +6,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 
 /**
- * Serializer for BackupSet objects.
+ * Serializer for BackupList objects.
  */
 class BackupListNormalizer extends BaseNormalizer {
 

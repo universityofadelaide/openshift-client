@@ -3,6 +3,7 @@
 namespace UniversityOfAdelaide\OpenShift;
 
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 
 /**
@@ -953,5 +954,19 @@ interface ClientInterface {
    *   Throws exception if there is an issue deleting backup.
    */
   public function deleteBackup(string $name);
+
+  /**
+   * Creates a new restore.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore $restore
+   *   The restore to create.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore|bool
+   *   Returns a Restore if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the restore.
+   */
+  public function createRestore(Restore $restore);
 
 }

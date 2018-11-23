@@ -6,6 +6,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
@@ -1422,6 +1423,20 @@ class Client implements ClientInterface {
    */
   public function deleteBackup(string $name) {
     return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createRestore(Restore $restore) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+    $restoreConfig = $this->serializer->serialize($restore, 'json');
+    $result = $this->request($resourceMethod['action'], $uri, $restoreConfig, [], FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, Restore::class, 'json');
   }
 
   /**

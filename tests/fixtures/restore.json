@@ -1,0 +1,17 @@
+{
+  "apiVersion": "ark.heptio.com/v1",
+  "kind": "Restore",
+  "metadata": {
+    "labels": {
+      "site_id": "123"
+    },
+    "name": "test-restore",
+    "namespace": "heptio-ark"
+  },
+  "spec": {
+    "backupName": "test-backup"
+  },
+  "status": {
+    "phase": "Completed"
+  }
+}
