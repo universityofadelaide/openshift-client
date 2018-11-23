@@ -32,10 +32,10 @@ class BackupNormalizer extends BaseNormalizer {
       $backup->setStartTimestamp($data['status']['startTimestamp']);
     }
     if (isset($data['status']['completionTimestamp'])) {
-      $backup->setStartTimestamp($data['status']['completionTimestamp']);
+      $backup->setCompletionTimestamp($data['status']['completionTimestamp']);
     }
     if (isset($data['status']['expiration'])) {
-      $backup->setStartTimestamp($data['status']['expiration']);
+      $backup->setExpires($data['status']['expiration']);
     }
     return $backup;
   }

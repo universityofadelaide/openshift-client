@@ -63,7 +63,7 @@ class Backup {
    *
    * @var string
    */
-  protected $completionTimestamp;
+  protected $completionTimestamp = '';
 
   /**
    * The time the backup expires.
@@ -133,17 +133,30 @@ class Backup {
   /**
    * Set a single label.
    *
-   * @param string $labelName
-   *   The name of the label.
-   * @param string $labelValue
+   * @param string $key
+   *   The key of the label.
+   * @param string $value
    *   The value of the label.
    *
    * @return $this
    *   The calling class.
    */
-  public function setLabel(string $labelName, string $labelValue): Backup {
-    $this->labels[$labelName] = $labelValue;
+  public function setLabel(string $key, string $value): Backup {
+    $this->labels[$key] = $value;
     return $this;
+  }
+
+  /**
+   * Get a single label.
+   *
+   * @param string $key
+   *   The key of the label.
+   *
+   * @return string|bool
+   *   The label value, or FALSE if it doesn't exist.
+   */
+  public function getLabel(string $key): string {
+    return isset($this->getLabels()[$key]) ? $this->getLabels()[$key] : FALSE;
   }
 
   /**
@@ -274,6 +287,16 @@ class Backup {
    */
   public function getCompletionTimestamp(): string {
     return $this->completionTimestamp;
+  }
+
+  /**
+   * Check if the backup is completed.
+   *
+   * @return bool
+   *   Whether the backup has completed.
+   */
+  public function isCompleted(): bool {
+    return $this->getPhase() === Phase::COMPLETED;
   }
 
   /**
