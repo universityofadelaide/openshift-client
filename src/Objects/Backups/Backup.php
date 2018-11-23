@@ -56,7 +56,7 @@ class Backup {
    *
    * @var string
    */
-  protected $startTimestamp;
+  protected $startTimestamp = '';
 
   /**
    * The time the backup completed.

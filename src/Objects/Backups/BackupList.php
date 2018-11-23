@@ -12,7 +12,7 @@ class BackupList {
    *
    * @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup[]
    */
-  protected $backups;
+  protected $backups = [];
 
   /**
    * Factory method for creating a new BackupList.
