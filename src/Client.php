@@ -239,6 +239,24 @@ class Client implements ClientInterface {
         'uri'    => '/api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
       ],
     ],
+    'restore' => [
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/restores',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/restores/{name}',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/restores/{name}',
+      ],
+      'list' => [
+        'action' => 'GET',
+        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/restores',
+      ],
+    ],
     'route' => [
       'create' => [
         'action' => 'POST',

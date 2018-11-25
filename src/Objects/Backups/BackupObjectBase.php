@@ -2,6 +2,8 @@
 
 namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
 
+use UniversityOfAdelaide\OpenShift\Objects\Label;
+
 /**
  * A base class for backup and restore objects.
  */
@@ -79,16 +81,14 @@ abstract class BackupObjectBase {
   /**
    * Set a single label.
    *
-   * @param string $key
-   *   The key of the label.
-   * @param string $value
-   *   The value of the label.
+   * @param Label $label
+   *   The label object.
    *
    * @return $this
    *   The calling class.
    */
-  public function setLabel(string $key, string $value) {
-    $this->labels[$key] = $value;
+  public function setLabel(Label $label) {
+    $this->labels[$label->getKey()] = $label->getValue();
     return $this;
   }
 

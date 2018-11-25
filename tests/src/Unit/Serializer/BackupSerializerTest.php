@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Phase;
+use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
 /**
@@ -55,7 +56,7 @@ class BackupSerializerTest extends TestCase {
     $backup->setName('test-123-backup')
       ->setTtl('100h20m0s')
       ->setMatchLabels(['app' => 'test-123'])
-      ->setLabel('test-label', 'test label value');
+      ->setLabel(Label::create('test-label', 'test label value'));
 
     $expected = file_get_contents(__DIR__ . '/../../../fixtures/backup.json');
     $this->assertEquals(json_decode($expected), json_decode($this->serializer->serialize($backup, 'json')));

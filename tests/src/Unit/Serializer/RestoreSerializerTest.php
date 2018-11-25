@@ -5,6 +5,7 @@ namespace UniversityOfAdelaide\OpenShift\Tests\Unit\Serializer;
 use PHPUnit\Framework\TestCase;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Phase;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
+use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
 /**
@@ -47,7 +48,7 @@ class RestoreSerializerTest extends TestCase {
     $restore = Restore::create();
     $restore->setName('test-restore')
       ->setBackupName('test-backup')
-      ->setLabel('site_id', '123');
+      ->setLabel(Label::create('site_id', '123'));
 
     $expected = file_get_contents(__DIR__ . '/../../../fixtures/restore.json');
     $expected = json_decode($expected, TRUE);
