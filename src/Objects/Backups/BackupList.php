@@ -35,6 +35,18 @@ class BackupList {
   }
 
   /**
+   * Gets the backup list.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup[]
+   *  The list of backups.
+   */
+  public function getCompletedBackups(): array {
+    return array_filter($this->backups, function (Backup $backup) {
+      return $backup->getPhase() === Phase::COMPLETED;
+    });
+  }
+
+  /**
    * Adds a backup to the list.
    *
    * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup $backup
