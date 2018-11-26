@@ -24,6 +24,7 @@ class OpenShiftSerializerFactory {
       new BackupNormalizer(),
       new BackupListNormalizer(),
       new RestoreNormalizer(),
+      new RestoreListNormalizer(),
     ];
     return new Serializer($normalizers, $encoders);
   }
