@@ -20,6 +20,7 @@ class RestoreNormalizer extends BaseNormalizer {
   public function denormalize($data, $class, $format = NULL, array $context = []) {
     $backup = Restore::create();
     $backup->setName($data['metadata']['name'])
+      ->setCreationTimestamp($data['metadata']['creationTimestamp'])
       ->setBackupName($data['spec']['backupName'])
       ->setLabels($data['metadata']['labels']);
     if (isset($data['status']['phase'])) {

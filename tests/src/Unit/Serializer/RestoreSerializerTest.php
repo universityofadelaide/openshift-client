@@ -39,14 +39,15 @@ class RestoreSerializerTest extends TestCase {
     $this->assertEquals('test-backup', $restore->getBackupName());
     $this->assertEquals(['site_id' => '123'], $restore->getLabels());
     $this->assertEquals(Phase::COMPLETED, $restore->getPhase());
+    $this->assertEquals('2018-11-26T01:42:57Z', $restore->getCreationTimestamp());
   }
 
   /**
    * @covers ::normalize
    */
   public function testNormalizer() {
-    $restore = Restore::create();
-    $restore->setName('test-restore')
+    $restore = Restore::create()
+      ->setName('test-restore')
       ->setBackupName('test-backup')
       ->setLabel(Label::create('site_id', '123'));
 
@@ -54,6 +55,7 @@ class RestoreSerializerTest extends TestCase {
     $expected = json_decode($expected, TRUE);
     // We don't set status on normalization.
     unset($expected['status']);
+    unset($expected['metadata']['creationTimestamp']);
     $this->assertEquals($expected, json_decode($this->serializer->serialize($restore, 'json'), TRUE));
   }
 

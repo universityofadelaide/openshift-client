@@ -2,6 +2,7 @@
   "apiVersion": "ark.heptio.com/v1",
   "kind": "Restore",
   "metadata": {
+    "creationTimestamp": "2018-11-26T01:42:57Z",
     "labels": {
       "site_id": "123"
     },
