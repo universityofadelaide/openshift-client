@@ -969,4 +969,18 @@ interface ClientInterface {
    */
   public function createRestore(Restore $restore);
 
+  /**
+   * Retrieves a list of restores optionally filtered by selectors.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Label $label_selector
+   *   An optional label selector to apply to the query.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList|bool
+   *   Returns a RestoreList if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the list of backups.
+   */
+  public function listRestore(Label $label_selector = NULL);
+
 }

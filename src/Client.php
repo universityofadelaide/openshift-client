@@ -7,6 +7,7 @@ use GuzzleHttp\Exception\RequestException;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
@@ -1455,6 +1456,22 @@ class Client implements ClientInterface {
       return FALSE;
     }
     return $this->serializer->deserialize($result, Restore::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function listRestore(Label $label_selector = NULL) {
+    $label = NULL;
+    if ($label_selector) {
+      $label = (string) $label_selector;
+    }
+
+    $result = $this->apiCall(__METHOD__, '', $label, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, RestoreList::class, 'json');
   }
 
   /**
