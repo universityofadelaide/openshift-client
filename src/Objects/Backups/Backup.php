@@ -8,6 +8,11 @@ namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
 class Backup extends BackupObjectBase {
 
   /**
+   * The name of the annotation on pods to signal ark to backup its volumes.
+   */
+  const VolumesToBackupAnnotation = 'backup.ark.heptio.com/backup-volumes';
+
+  /**
    * The array of labels to apply to this backup.
    *
    * @var array
