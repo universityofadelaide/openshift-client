@@ -11,6 +11,7 @@ class Phase {
   const FAILED_VALIDATION = 'FailedValidation';
   const IN_PROGRESS = 'InProgress';
   const COMPLETED = 'Completed';
+  const ENABLED = 'Enabled';
   const FAILED = 'Failed';
 
 }
