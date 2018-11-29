@@ -12,7 +12,7 @@
           "environment_id": "9",
           "site_id": "8"
         },
-        "name": "node-9-backup-20181126082338-20181126085223",
+        "name": "restore-1",
         "namespace": "heptio-ark",
         "resourceVersion": "289434",
         "selfLink": "/apis/ark.heptio.com/v1/namespaces/heptio-ark/restores/node-9-backup-20181126082338-20181126085223",
@@ -44,7 +44,7 @@
           "environment_id": "9",
           "site_id": "8"
         },
-        "name": "node-9-backup-20181126082338-20181126085525",
+        "name": "restore-3",
         "namespace": "heptio-ark",
         "resourceVersion": "289782",
         "selfLink": "/apis/ark.heptio.com/v1/namespaces/heptio-ark/restores/node-9-backup-20181126082338-20181126085525",
@@ -76,7 +76,7 @@
           "environment_id": "9",
           "site_id": "8"
         },
-        "name": "node-9-backup-20181126123820-20181126124258",
+        "name": "restore-2",
         "namespace": "heptio-ark",
         "resourceVersion": "315589",
         "selfLink": "/apis/ark.heptio.com/v1/namespaces/heptio-ark/restores/node-9-backup-20181126123820-20181126124258",

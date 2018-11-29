@@ -37,8 +37,26 @@ class RestoreListSerializerTest extends TestCase {
     $this->assertTrue($restoreList->hasRestores());
     $this->assertEquals(3, $restoreList->getRestoreCount());
     $this->assertCount(3, $restoreList->getRestores());
-    $restoreList->addRestore(Restore::create());
-    $this->assertEquals(4, $restoreList->getRestoreCount());
+    $expected = [
+      'restore-2',
+      'restore-3',
+      'restore-1',
+    ];
+    $this->assertRestoreOrder($expected, $restoreList->getRestoresByCreatedTime());
+  }
+
+  /**
+   * Test the order of restores by name.
+   *
+   * @param array $expected
+   *   The expected order.
+   * @param array $restores
+   *   The restores.
+   */
+  protected function assertRestoreOrder(array $expected, array $restores) {
+    $this->assertEquals($expected, array_map(function (Restore $restore) {
+      return $restore->getName();
+    }, $restores));
   }
 
 }
