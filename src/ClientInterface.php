@@ -4,6 +4,7 @@ namespace UniversityOfAdelaide\OpenShift;
 
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 
 /**
@@ -984,5 +985,47 @@ interface ClientInterface {
    *   Throws exception if there is an issue retrieving the list of backups.
    */
   public function listRestore(Label $label_selector = NULL);
+
+  /**
+   * Retrieves a schedule that matches the name.
+   *
+   * @param string $name
+   *   Name of the schedule to retrieved.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup|bool
+   *   Returns a ScheduledBackup if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving schedule.
+   */
+  public function getSchedule(string $name);
+
+  /**
+   * Creates a new schedule.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup $schedule
+   *   The schedule to create.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup|bool
+   *   Returns a ScheduledBackup if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the ScheduledBackup.
+   */
+  public function createSchedule(ScheduledBackup $schedule);
+
+  /**
+   * Deletes a named schedule.
+   *
+   * @param string $name
+   *   The name schedule to delete.
+   *
+   * @return array
+   *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue deleting schedule.
+   */
+  public function deleteSchedule(string $name);
 
 }

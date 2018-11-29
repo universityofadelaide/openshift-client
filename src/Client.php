@@ -8,6 +8,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
@@ -274,6 +275,20 @@ class Client implements ClientInterface {
       'update' => [
         'action' => 'PUT',
         'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+      ],
+    ],
+    'schedule' => [
+      'get' => [
+        'action' => 'GET',
+        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/schedules/{name}',
+      ],
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/schedules',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/schedules/{name}',
       ],
     ],
     'secret' => [
@@ -1476,6 +1491,38 @@ class Client implements ClientInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getSchedule(string $name) {
+    $result = $this->apiCall(__METHOD__, $name, NULL, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, ScheduledBackup::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createSchedule(ScheduledBackup $schedule) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+    $schedule = $this->serializer->serialize($schedule, 'json');
+    $result = $this->request($resourceMethod['action'], $uri, $schedule, [], FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, ScheduledBackup::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteSchedule(string $name) {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
    * Merge annotations into the config, if there are any.
    *
    * Applying a blank annotation causes failures, is why this function exists.
@@ -1632,4 +1679,5 @@ class Client implements ClientInterface {
 
     return $this->request($resourceMethod['action'], $uri, [], $query, $decode_response);
   }
+
 }
