@@ -20,11 +20,12 @@ class BackupNormalizer extends BaseNormalizer {
   public function denormalize($data, $class, $format = NULL, array $context = []) {
     $backup = Backup::create();
     $backup->setName($data['metadata']['name'])
-    ->setLabels($data['metadata']['labels'])
-    // @todo implement hooks.
-    ->setHooks([])
-    ->setTtl($data['spec']['ttl'])
-    ->setMatchLabels($data['spec']['labelSelector']['matchLabels']);
+      ->setLabels($data['metadata']['labels'])
+      ->setTtl($data['spec']['ttl'])
+      ->setMatchLabels($data['spec']['labelSelector']['matchLabels']);
+    if (isset($data['metadata']['annotations'])) {
+      $backup->setAnnotations($data['metadata']['annotations']);
+    }
     if (isset($data['status']['phase'])) {
       $backup->setPhase($data['status']['phase']);
     }
@@ -50,22 +51,21 @@ class BackupNormalizer extends BaseNormalizer {
       'kind' => 'Backup',
       'metadata' => [
         'labels' => $object->getLabels(),
-        'name' =>  $object->getName(),
+        'name' => $object->getName(),
         'namespace' => 'heptio-ark',
       ],
       'spec' => [
-        // @todo implement hooks.
-        'hooks'=> [
-          'resources'=> NULL,
+        'labelSelector' => [
+          'matchLabels' => $object->getMatchLabels(),
         ],
-        'labelSelector'=> [
-          'matchLabels'=> $object->getMatchLabels(),
-        ],
-        'storageLocation'=> 'default',
-        'ttl'=>  $object->getTtl(),
-        'volumeSnapshotLocations'=> null
+        'storageLocation' => 'default',
+        'ttl' => $object->getTtl(),
+        'volumeSnapshotLocations' => NULL
       ],
     ];
+    if ($object->hasAnnotations()) {
+      $data['metadata']['annotations'] = $object->getAnnotations();
+    }
 
     return $data;
   }

@@ -2,6 +2,9 @@
   "apiVersion": "ark.heptio.com/v1",
   "kind": "Backup",
   "metadata": {
+    "annotations": {
+      "some.annotation": "test 123"
+    },
     "labels": {
       "ark.heptio.com/storage-location": "default",
       "test-label": "test label value"
@@ -10,9 +13,6 @@
     "namespace": "heptio-ark"
   },
   "spec": {
-    "hooks": {
-      "resources": null
-    },
     "labelSelector": {
       "matchLabels": {
         "app": "test-123"

@@ -13,9 +13,14 @@ class Backup extends BackupObjectBase {
   const VolumesToBackupAnnotation = 'backup.ark.heptio.com/backup-volumes';
 
   /**
-   * The array of labels to apply to this backup.
+   * An array of annotations to apply to this backup.
    *
    * @var array
+   */
+  protected $annotations = [];
+
+  /**
+   * {@inheritdoc}
    */
   protected $labels = [
     'ark.heptio.com/storage-location' => 'default',
@@ -74,26 +79,66 @@ class Backup extends BackupObjectBase {
   }
 
   /**
-   * Gets the value of hooks.
+   * Get a single annotation.
    *
-   * @return \Drupal\shp_backup\Backups\Hook[]
-   *  Value of hooks.
+   * @param string $key
+   *   The key for the annotation.
+   *
+   * @return string|bool
+   *   The annotation value or FALSE.
    */
-  public function getHooks(): array {
-    return $this->hooks;
+  public function getAnnotation(string $key): string {
+    return isset($this->getAnnotations()[$key]) ? $this->getAnnotations()[$key] : FALSE;
+
   }
 
   /**
-   * Sets the value for hooks.
+   * Gets the value of annotations.
    *
-   * @param \Drupal\shp_backup\Backups\Hook[] $hooks
-   *   An array of hook objects.
-   *
-   * @return $this
-   *  The calling class.
+   * @return array
+   *   Value of annotations.
    */
-  public function setHooks(array $hooks): Backup {
-    $this->hooks = $hooks;
+  public function getAnnotations(): array {
+    return $this->annotations;
+  }
+
+  /**
+   * Check if this backup has any annotations.
+   *
+   * @return bool
+   *   Whether this backup has annotations.
+   */
+  public function hasAnnotations(): bool {
+    return !empty($this->getAnnotations());
+  }
+
+  /**
+   * Set a single annotation.
+   *
+   * @param string $key
+   *   The key for the annotation.
+   * @param string $value
+   *   The value for the annotation.
+   *
+   * @return Backup
+   *   The calling class.
+   */
+  public function setAnnotation(string $key, string $value): Backup {
+    $this->annotations[$key] = $value;
+    return $this;
+  }
+
+  /**
+   * Sets the value of annotations.
+   *
+   * @param array $annotations
+   *   The value for annotations.
+   *
+   * @return Backup
+   *   The calling class.
+   */
+  public function setAnnotations(array $annotations): Backup {
+    $this->annotations = $annotations;
     return $this;
   }
 
@@ -101,7 +146,7 @@ class Backup extends BackupObjectBase {
    * Gets the value of ttl.
    *
    * @return string
-   *  Value of ttl.
+   *   Value of ttl.
    */
   public function getTtl(): string {
     return $this->ttl;
@@ -114,7 +159,7 @@ class Backup extends BackupObjectBase {
    *   The ttl.
    *
    * @return $this
-   *  The calling class.
+   *   The calling class.
    */
   public function setTtl(string $ttl): Backup {
     $this->ttl = $ttl;
@@ -125,7 +170,7 @@ class Backup extends BackupObjectBase {
    * Gets the value of matchLabels.
    *
    * @return array
-   *  Value of matchLabels.
+   *   Value of matchLabels.
    */
   public function getMatchLabels(): array {
     return $this->matchLabels;
@@ -138,7 +183,7 @@ class Backup extends BackupObjectBase {
    *   An array of labels.
    *
    * @return $this
-   *  The calling class.
+   *   The calling class.
    */
   public function setMatchLabels(array $matchLabels): Backup {
     $this->matchLabels = $matchLabels;
@@ -149,7 +194,7 @@ class Backup extends BackupObjectBase {
    * Gets the value of startTimestamp.
    *
    * @return string
-   *  Value of startTimestamp.
+   *   Value of startTimestamp.
    */
   public function getStartTimestamp(): string {
     return $this->startTimestamp;
@@ -159,10 +204,10 @@ class Backup extends BackupObjectBase {
    * Sets the value of startTimestamp.
    *
    * @param string $startTimestamp
-   *  The value for startTimestamp.
+   *   The value for startTimestamp.
    *
    * @return $this
-   *  The calling class.
+   *   The calling class.
    */
   public function setStartTimestamp(string $startTimestamp): Backup {
     $this->startTimestamp = $startTimestamp;
@@ -173,7 +218,7 @@ class Backup extends BackupObjectBase {
    * Gets the value of completionTimestamp.
    *
    * @return string
-   *  Value of completionTimestamp.
+   *   Value of completionTimestamp.
    */
   public function getCompletionTimestamp(): string {
     return $this->completionTimestamp;
@@ -183,10 +228,10 @@ class Backup extends BackupObjectBase {
    * Sets the value of completionTimestamp.
    *
    * @param string $completionTimestamp
-   *  The value for completionTimestamp.
+   *   The value for completionTimestamp.
    *
    * @return $this
-   *  The calling class.
+   *   The calling class.
    */
   public function setCompletionTimestamp(string $completionTimestamp): Backup {
     $this->completionTimestamp = $completionTimestamp;
@@ -197,7 +242,7 @@ class Backup extends BackupObjectBase {
    * Gets the value of expires.
    *
    * @return string
-   *  Value of expires.
+   *   Value of expires.
    */
   public function getExpires(): string {
     return $this->expires;
@@ -207,10 +252,10 @@ class Backup extends BackupObjectBase {
    * Sets the value of expires.
    *
    * @param string $expires
-   *  The value for expires.
+   *   The value for expires.
    *
    * @return $this
-   *  The calling class.
+   *   The calling class.
    */
   public function setExpires(string $expires): Backup {
     $this->expires = $expires;
