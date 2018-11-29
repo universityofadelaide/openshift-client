@@ -28,22 +28,66 @@ class BackupList {
    * Gets the backup list.
    *
    * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup[]
-   *  The list of backups.
+   *   The list of backups.
    */
   public function getBackups(): array {
     return $this->backups;
   }
 
   /**
+   * Sorts an array of backups by start time.
+   *
+   * @param array $backups
+   *   The array of backups.
+   * @param string $operator
+   *   The sort operator.
+   *
+   * @return array
+   *   The sorted array.
+   */
+  protected function sortBackupsByStartTime(array $backups, string $operator) {
+    usort($backups, function (Backup $a, Backup $b) use ($operator) {
+      return $operator === 'DESC' ? $a->getStartTimestamp() < $b->getStartTimestamp() : $a->getStartTimestamp() > $b->getStartTimestamp();
+    });
+    return $backups;
+  }
+
+  /**
+   * Gets a list of backups ordered by start time.
+   *
+   * @param string $operator
+   *   Which way to order the list.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup[]
+   *   The list of backups.
+   */
+  public function getBackupsByStartTime($operator = 'DESC'): array {
+    return $this->sortBackupsByStartTime($this->getBackups(), $operator);
+  }
+
+  /**
    * Gets the backup list.
    *
    * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup[]
-   *  The list of backups.
+   *   The list of backups.
    */
   public function getCompletedBackups(): array {
-    return array_filter($this->backups, function (Backup $backup) {
-      return $backup->getPhase() === Phase::COMPLETED;
+    return array_filter($this->getBackups(), function (Backup $backup) {
+      return $backup->isCompleted();
     });
+  }
+
+  /**
+   * Gets a list of completed backups ordered by start time.
+   *
+   * @param string $operator
+   *   Which way to order the list.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup[]
+   *   The list of backups.
+   */
+  public function getCompletedBackupsByStartTime($operator = 'DESC'): array {
+    return $this->sortBackupsByStartTime($this->getCompletedBackups(), $operator);
   }
 
   /**

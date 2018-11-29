@@ -37,8 +37,32 @@ class BackupListSerializerTest extends TestCase {
     $this->assertTrue($backupList->hasBackups());
     $this->assertEquals(5, $backupList->getBackupCount());
     $this->assertCount(5, $backupList->getBackups());
-    $backupList->addBackup(Backup::create());
-    $this->assertEquals(6, $backupList->getBackupCount());
+    $this->assertCount(4, $backupList->getCompletedBackups());
+    $expected = [
+      'node-9-backup',
+      'node-7-backup',
+      'node-7-backup3',
+      'node-7-backup2',
+      'node-5-backup',
+    ];
+    $this->assertBackupOrder($expected, $backupList->getBackupsByStartTime());
+    $this->assertBackupOrder(array_reverse($expected), $backupList->getBackupsByStartTime('ASC'));
+    unset($expected[0]);
+    $this->assertBackupOrder(array_values($expected), $backupList->getCompletedBackupsByStartTime());
+  }
+
+  /**
+   * Test the order of backups by name.
+   *
+   * @param array $expected
+   *   The expected order.
+   * @param array $backups
+   *   The backups.
+   */
+  protected function assertBackupOrder(array $expected, array $backups) {
+    $this->assertEquals($expected, array_map(function (Backup $backup) {
+      return $backup->getName();
+    }, $backups));
   }
 
 }

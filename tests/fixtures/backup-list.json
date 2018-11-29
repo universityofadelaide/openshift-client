@@ -219,7 +219,7 @@
       "status": {
         "completionTimestamp": "2018-11-22T04:39:28Z",
         "expiration": "2018-12-22T04:39:08Z",
-        "phase": "Completed",
+        "phase": "Failed",
         "startTimestamp": "2018-11-22T04:39:08Z",
         "validationErrors": null,
         "version": 1,
