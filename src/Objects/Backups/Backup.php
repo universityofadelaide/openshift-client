@@ -66,7 +66,7 @@ class Backup extends BackupObjectBase {
    *
    * @var string
    */
-  protected $expires;
+  protected $expires = '';
 
   /**
    * Factory method for creating a new Backup.

@@ -28,7 +28,7 @@ abstract class BackupObjectBase {
    *
    * @var string
    */
-  protected $phase;
+  protected $phase = '';
 
   /**
    * Gets the value of name.
@@ -46,7 +46,7 @@ abstract class BackupObjectBase {
    * @param string $name
    *   The name of the object.
    *
-   *  @return $this
+   * @return $this
    *   The calling class.
    */
   public function setName(string $name) {
@@ -58,7 +58,7 @@ abstract class BackupObjectBase {
    * Gets the value of labels.
    *
    * @return array
-   *  Value of labels.
+   *   Value of labels.
    */
   public function getLabels(): array {
     return $this->labels;
@@ -81,7 +81,7 @@ abstract class BackupObjectBase {
   /**
    * Set a single label.
    *
-   * @param Label $label
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Label $label
    *   The label object.
    *
    * @return $this
@@ -109,7 +109,7 @@ abstract class BackupObjectBase {
    * Gets the value of phase.
    *
    * @return string
-   *  Value of phase.
+   *   Value of phase.
    */
   public function getPhase(): string {
     return $this->phase;
@@ -119,10 +119,10 @@ abstract class BackupObjectBase {
    * Sets the value of phase.
    *
    * @param string $phase
-   *  The value for phase.
+   *   The value for phase.
    *
    * @return $this
-   *  The calling class.
+   *   The calling class.
    */
   public function setPhase(string $phase) {
     $this->phase = $phase;
