@@ -69,16 +69,6 @@ class Backup extends BackupObjectBase {
   protected $expires = '';
 
   /**
-   * Factory method for creating a new Backup.
-   *
-   * @return self
-   *   Returns static object.
-   */
-  public static function create() {
-    return new static();
-  }
-
-  /**
    * Get a single annotation.
    *
    * @param string $key

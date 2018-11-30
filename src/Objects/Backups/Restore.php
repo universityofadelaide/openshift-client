@@ -22,16 +22,6 @@ class Restore extends BackupObjectBase {
   protected $creationTimestamp;
 
   /**
-   * Factory method for creating a new Backup.
-   *
-   * @return self
-   *   Returns static object.
-   */
-  public static function create() {
-    return new static();
-  }
-
-  /**
    * Gets the value of backupName.
    *
    * @return string

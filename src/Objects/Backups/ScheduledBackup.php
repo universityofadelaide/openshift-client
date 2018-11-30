@@ -36,16 +36,6 @@ class ScheduledBackup extends BackupObjectBase {
   protected $lastBackup;
 
   /**
-   * Factory method for creating a new ScheduledBackup.
-   *
-   * @return self
-   *   Returns static object.
-   */
-  public static function create() {
-    return new static();
-  }
-
-  /**
    * Gets the value of ttl.
    *
    * @return string
