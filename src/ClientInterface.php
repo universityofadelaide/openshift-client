@@ -5,6 +5,7 @@ namespace UniversityOfAdelaide\OpenShift;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 
 /**
@@ -1027,5 +1028,19 @@ interface ClientInterface {
    *   Throws exception if there is an issue deleting schedule.
    */
   public function deleteSchedule(string $name);
+
+  /**
+   * Creates a new sync.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Sync $sync
+   *   The sync to create.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Sync|bool
+   *   Returns a Sync if successful, false if it failed.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the sync.
+   */
+  public function createSync(Sync $sync);
 
 }

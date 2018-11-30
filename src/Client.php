@@ -9,6 +9,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
@@ -329,6 +330,20 @@ class Client implements ClientInterface {
       'update' => [
         'action' => 'PUT',
         'uri'    => '/api/v1/namespaces/{namespace}/services/{name}',
+      ],
+    ],
+    'sync' => [
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/environment.backups.shepherd/v1beta1/namespaces/{namespace}/syncs',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/apis/environment.backups.shepherd/v1beta1/namespaces/{namespace}/syncs/{name}',
+      ],
+      'list' => [
+        'action' => 'GET',
+        'uri'    => '/apis/environment.backups.shepherd/v1beta1/namespaces/{namespace}/syncs',
       ],
     ],
   ];
@@ -1443,14 +1458,7 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function createBackup(Backup $backup) {
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
-    $backupConfig = $this->serializer->serialize($backup, 'json');
-    $result = $this->request($resourceMethod['action'], $uri, $backupConfig, [], FALSE);
-    if (!$result) {
-      return FALSE;
-    }
-    return $this->serializer->deserialize($result, Backup::class, 'json');
+    return $this->createSerializableObject(__METHOD__, $backup);
   }
 
   /**
@@ -1464,14 +1472,7 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function createRestore(Restore $restore) {
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
-    $restoreConfig = $this->serializer->serialize($restore, 'json');
-    $result = $this->request($resourceMethod['action'], $uri, $restoreConfig, [], FALSE);
-    if (!$result) {
-      return FALSE;
-    }
-    return $this->serializer->deserialize($result, Restore::class, 'json');
+    return $this->createSerializableObject(__METHOD__, $restore);
   }
 
   /**
@@ -1505,14 +1506,7 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function createSchedule(ScheduledBackup $schedule) {
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
-    $schedule = $this->serializer->serialize($schedule, 'json');
-    $result = $this->request($resourceMethod['action'], $uri, $schedule, [], FALSE);
-    if (!$result) {
-      return FALSE;
-    }
-    return $this->serializer->deserialize($result, ScheduledBackup::class, 'json');
+    return $this->createSerializableObject(__METHOD__, $schedule);
   }
 
   /**
@@ -1520,6 +1514,37 @@ class Client implements ClientInterface {
    */
   public function deleteSchedule(string $name) {
     return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createSync(Sync $sync) {
+    return $this->createSerializableObject(__METHOD__, $sync);
+  }
+
+  /**
+   * Create an object in openshift that supports serialization.
+   *
+   * @param string $method
+   *   The method this has been called from.
+   * @param object $object
+   *   The object to create.
+   *
+   * @throws \UniversityOfAdelaide\OpenShift\ClientException
+   *   A client exception if the creation failed.
+   *
+   * @return mixed|bool
+   *   Either the object that was created, or false if it failed.
+   */
+  private function createSerializableObject($method, $object) {
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri']);
+    $schedule = $this->serializer->serialize($object, 'json');
+    if (!$result = $this->request($resourceMethod['action'], $uri, $schedule, [], FALSE)) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, get_class($object), 'json');
   }
 
   /**
