@@ -1,0 +1,18 @@
+{
+  "apiVersion": "environment.backups.shepherd/v1beta1",
+  "kind": "Sync",
+  "metadata": {
+    "name": "sync-sample",
+    "labels": {}
+  },
+  "spec": {
+    "source": {
+      "persistentVolumeClaim": "node-9-shared",
+      "secret": "node-9"
+    },
+    "target": {
+      "persistentVolumeClaim": "node-10-shared",
+      "secret": "node-10"
+    }
+  }
+}

@@ -3,11 +3,8 @@
 namespace UniversityOfAdelaide\OpenShift\Tests\Unit\Serializer;
 
 use PHPUnit\Framework\TestCase;
-use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
-use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Phase;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
-use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
 /**
