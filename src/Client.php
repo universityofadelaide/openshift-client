@@ -288,7 +288,8 @@ class Client implements ClientInterface {
         'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/schedules',
       ],
       'update' => [
-        'action' => 'PUT',
+        // We use PATCH here since we're using nicely serialized data.
+        'action' => 'PATCH',
         'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/schedules/{name}',
       ],
       'delete' => [
