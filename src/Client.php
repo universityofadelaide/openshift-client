@@ -287,6 +287,10 @@ class Client implements ClientInterface {
         'action' => 'POST',
         'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/schedules',
       ],
+      'update' => [
+        'action' => 'PUT',
+        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/schedules/{name}',
+      ],
       'delete' => [
         'action' => 'DELETE',
         'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/schedules/{name}',
@@ -1516,6 +1520,13 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
+  public function updateSchedule(ScheduledBackup $schedule) {
+    return $this->createSerializableObject(__METHOD__, $schedule, ['name' => $schedule->getName()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function deleteSchedule(string $name) {
     return $this->apiCall(__METHOD__, $name);
   }
@@ -1534,6 +1545,8 @@ class Client implements ClientInterface {
    *   The method this has been called from.
    * @param object $object
    *   The object to create.
+   * @param array $params
+   *   Optional params to pass to createRequestUri.
    *
    * @throws \UniversityOfAdelaide\OpenShift\ClientException
    *   A client exception if the creation failed.
@@ -1541,11 +1554,11 @@ class Client implements ClientInterface {
    * @return mixed|bool
    *   Either the object that was created, or false if it failed.
    */
-  private function createSerializableObject($method, $object) {
+  private function createSerializableObject($method, $object, array $params = []) {
     $resourceMethod = $this->getResourceMethod($method);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
-    $schedule = $this->serializer->serialize($object, 'json');
-    if (!$result = $this->request($resourceMethod['action'], $uri, $schedule, [], FALSE)) {
+    $uri = $this->createRequestUri($resourceMethod['uri'], $params);
+    $serialized = $this->serializer->serialize($object, 'json');
+    if (!$result = $this->request($resourceMethod['action'], $uri, $serialized, [], FALSE)) {
       return FALSE;
     }
     return $this->serializer->deserialize($result, get_class($object), 'json');

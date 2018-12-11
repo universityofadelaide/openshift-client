@@ -1016,6 +1016,20 @@ interface ClientInterface {
   public function createSchedule(ScheduledBackup $schedule);
 
   /**
+   * Updates an existing schedule.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup $schedule
+   *   The schedule to update.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup|bool
+   *   Returns a ScheduledBackup if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the ScheduledBackup.
+   */
+  public function updateSchedule(ScheduledBackup $schedule);
+
+  /**
    * Deletes a named schedule.
    *
    * @param string $name
