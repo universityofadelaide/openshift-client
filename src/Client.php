@@ -511,10 +511,12 @@ class Client implements ClientInterface {
 
     // @todo - this should use model.
     $secret = [
-      'api_version' => 'v1',
       'kind' => 'Secret',
       'metadata' => [
         'name' => $name,
+        'labels' => [
+          'app' => $name,
+        ],
       ],
       'type' => 'Opaque',
       'data' => $data,
@@ -545,10 +547,12 @@ class Client implements ClientInterface {
     }
 
     $secret = [
-      'api_version' => 'v1',
       'kind' => 'Secret',
       'metadata' => [
         'name' => $name,
+        'labels' => [
+          'app' => $name,
+        ],
       ],
       'type' => 'Opaque',
       'data' => $data,
