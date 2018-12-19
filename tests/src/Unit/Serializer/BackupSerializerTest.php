@@ -46,6 +46,7 @@ class BackupSerializerTest extends TestCase {
     $this->assertEquals('2018-11-21T00:16:43Z', $backup->getCompletionTimestamp());
     $this->assertEquals('2018-12-21T00:16:23Z', $backup->getExpires());
     $this->assertEquals('test 123', $backup->getAnnotation('some.annotation'));
+    $this->assertEquals('2018-11-22T00:05:22Z', $backup->getCreationTimestamp());
   }
 
   /**

@@ -5,7 +5,7 @@ namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
 /**
  * Defines a value object representing a BackupList.
  */
-class BackupList {
+class BackupList extends ObjectListBase {
 
   /**
    * The list of backups.
@@ -32,6 +32,19 @@ class BackupList {
    */
   public function getBackups(): array {
     return $this->backups;
+  }
+
+  /**
+   * Gets a list of backups ordered by created time.
+   *
+   * @param string $operator
+   *   Which way to order the list.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup[]
+   *   The list of sorted backups.
+   */
+  public function getBackupsByCreatedTime($operator = 'DESC'): array {
+    return $this->sortObjectsByCreationTime($this->getBackups(), $operator);
   }
 
   /**

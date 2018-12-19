@@ -22,6 +22,7 @@ class BackupNormalizer extends BaseNormalizer {
     $backup->setName($data['metadata']['name'])
       ->setLabels($data['metadata']['labels'])
       ->setTtl($data['spec']['ttl'])
+      ->setCreationTimestamp($data['metadata']['creationTimestamp'])
       ->setMatchLabels($data['spec']['labelSelector']['matchLabels']);
     if (isset($data['metadata']['annotations'])) {
       $backup->setAnnotations($data['metadata']['annotations']);
