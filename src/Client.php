@@ -340,15 +340,15 @@ class Client implements ClientInterface {
     'sync' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/environment.backups.shepherd/v1beta1/namespaces/{namespace}/syncs',
+        'uri'    => '/apis/workflow.shepherd/v1beta1/namespaces/{namespace}/syncs',
       ],
       'get'    => [
         'action' => 'GET',
-        'uri'    => '/apis/environment.backups.shepherd/v1beta1/namespaces/{namespace}/syncs/{name}',
+        'uri'    => '/apis/workflow.shepherd/v1beta1/namespaces/{namespace}/syncs/{name}',
       ],
       'list' => [
         'action' => 'GET',
-        'uri'    => '/apis/environment.backups.shepherd/v1beta1/namespaces/{namespace}/syncs',
+        'uri'    => '/apis/workflow.shepherd/v1beta1/namespaces/{namespace}/syncs',
       ],
     ],
   ];

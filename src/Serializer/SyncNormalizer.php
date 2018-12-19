@@ -35,7 +35,7 @@ class SyncNormalizer extends BaseNormalizer {
   public function normalize($object, $format = NULL, array $context = []) {
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Sync $object */
     $data = [
-      'apiVersion' => 'environment.backups.shepherd/v1beta1',
+      'apiVersion' => 'workflow.shepherd/v1beta1',
       'kind' => 'Sync',
       'metadata' => [
         'labels' => $object->getLabels(),
