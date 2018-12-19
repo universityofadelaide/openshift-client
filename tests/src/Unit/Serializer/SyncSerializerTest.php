@@ -41,6 +41,8 @@ class SyncSerializerTest extends TestCase {
     $this->assertEquals('node-9', $sync->getSource()->getSecret());
     $this->assertEquals('node-10-shared', $sync->getTarget()->getPersistentVolumeClaim());
     $this->assertEquals('node-10', $sync->getTarget()->getSecret());
+    $this->assertEquals('2018-11-26T01:42:57Z', $sync->getCreationTimestamp());
+    $this->assertEquals('Completed', $sync->getPhase());
   }
 
   /**
@@ -50,9 +52,11 @@ class SyncSerializerTest extends TestCase {
     $sync = Sync::createFromSourceAndTarget(
       SyncEnvironment::createFromPvcAndSecret('node-9-shared', 'node-9'),
       SyncEnvironment::createFromPvcAndSecret('node-10-shared', 'node-10')
-    )->setName('sync-sample');
+    )->setCreationTimestamp('2018-11-26T01:42:57Z')->setName('sync-sample');
 
     $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/sync.json'), TRUE);
+    unset($expected['status']);
+    unset($expected['metadata']['creationTimestamp']);
     $this->assertEquals($expected, $this->serializer->normalize($sync));
   }
 

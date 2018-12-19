@@ -1,7 +1,8 @@
 {
-  "apiVersion": "environment.backups.shepherd/v1beta1",
+  "apiVersion": "workflow.shepherd/v1beta1",
   "kind": "Sync",
   "metadata": {
+    "creationTimestamp": "2018-11-26T01:42:57Z",
     "name": "sync-sample",
     "labels": {}
   },
@@ -14,5 +15,8 @@
       "persistentVolumeClaim": "node-10-shared",
       "secret": "node-10"
     }
+  },
+  "status": {
+    "phase": "Completed"
   }
 }

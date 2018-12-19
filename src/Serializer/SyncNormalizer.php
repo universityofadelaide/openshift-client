@@ -22,9 +22,14 @@ class SyncNormalizer extends BaseNormalizer {
     $sync = Sync::createFromSourceAndTarget(
       SyncEnvironment::createFromPvcAndSecret($data['spec']['source']['persistentVolumeClaim'], $data['spec']['source']['secret']),
       SyncEnvironment::createFromPvcAndSecret($data['spec']['target']['persistentVolumeClaim'], $data['spec']['target']['secret'])
-    )->setName($data['metadata']['name']);
+    )
+      ->setCreationTimestamp($data['metadata']['creationTimestamp'])
+      ->setName($data['metadata']['name']);
     if (isset($data['metadata']['labels'])) {
       $sync->setLabels($data['metadata']['labels']);
+    }
+    if (isset($data['status']['phase'])) {
+      $sync->setPhase($data['status']['phase']);
     }
     return $sync;
   }
