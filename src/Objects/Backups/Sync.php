@@ -22,13 +22,6 @@ class Sync extends BackupObjectBase {
   protected $target;
 
   /**
-   * The time the sync was created.
-   *
-   * @var string
-   */
-  protected $creationTimestamp;
-
-  /**
    * Create a sync object from a source and target env.
    *
    * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\SyncEnvironment $source
@@ -88,30 +81,6 @@ class Sync extends BackupObjectBase {
    */
   public function setTarget(SyncEnvironment $target): Sync {
     $this->target = $target;
-    return $this;
-  }
-
-  /**
-   * Gets the value of creationTimestamp.
-   *
-   * @return string
-   *   Value of creationTimestamp.
-   */
-  public function getCreationTimestamp(): string {
-    return $this->creationTimestamp;
-  }
-
-  /**
-   * Sets the value of creationTimestamp.
-   *
-   * @param string $creationTimestamp
-   *   The value for creationTimestamp.
-   *
-   * @return Sync
-   *   The calling class.
-   */
-  public function setCreationTimestamp(string $creationTimestamp): Sync {
-    $this->creationTimestamp = $creationTimestamp;
     return $this;
   }
 

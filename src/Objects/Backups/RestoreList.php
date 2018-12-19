@@ -5,7 +5,7 @@ namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
 /**
  * Defines a value object representing a RestoreList.
  */
-class RestoreList {
+class RestoreList extends ObjectListBase {
 
   /**
    * The list of backups.
@@ -40,11 +40,11 @@ class RestoreList {
    * @param string $operator
    *   Which way to order the list.
    *
-   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup[]
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore[]
    *   The list of restores.
    */
   public function getRestoresByCreatedTime($operator = 'DESC'): array {
-    return $this->sortRestoresByStartTime($this->getRestores(), $operator);
+    return $this->sortObjectsByCreationTime($this->getRestores(), $operator);
   }
 
   /**
@@ -79,24 +79,6 @@ class RestoreList {
    */
   public function hasRestores():bool {
     return (bool) $this->getRestoreCount();
-  }
-
-  /**
-   * Sorts an array of restores by created time.
-   *
-   * @param array $restores
-   *   The array of restores.
-   * @param string $operator
-   *   The sort operator.
-   *
-   * @return array
-   *   The sorted array.
-   */
-  protected function sortRestoresByStartTime(array $restores, string $operator) {
-    usort($restores, function (Restore $a, Restore $b) use ($operator) {
-      return $operator === 'DESC' ? $a->getCreationTimestamp() < $b->getCreationTimestamp() : $a->getCreationTimestamp() > $b->getCreationTimestamp();
-    });
-    return $restores;
   }
 
 }

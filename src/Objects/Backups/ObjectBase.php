@@ -24,6 +24,13 @@ abstract class ObjectBase {
   protected $labels = [];
 
   /**
+   * The time the object was created.
+   *
+   * @var string
+   */
+  protected $creationTimestamp;
+
+  /**
    * Factory method for creating a new object.
    *
    * @return self
@@ -106,6 +113,30 @@ abstract class ObjectBase {
    */
   public function getLabel(string $key): string {
     return isset($this->getLabels()[$key]) ? $this->getLabels()[$key] : FALSE;
+  }
+
+  /**
+   * Gets the value of creationTimestamp.
+   *
+   * @return string
+   *   Value of creationTimestamp.
+   */
+  public function getCreationTimestamp(): string {
+    return $this->creationTimestamp;
+  }
+
+  /**
+   * Sets the value of creationTimestamp.
+   *
+   * @param string $creationTimestamp
+   *   The value for creationTimestamp.
+   *
+   * @return $this
+   *   The calling class.
+   */
+  public function setCreationTimestamp(string $creationTimestamp) {
+    $this->creationTimestamp = $creationTimestamp;
+    return $this;
   }
 
 }

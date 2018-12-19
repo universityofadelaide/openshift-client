@@ -1057,4 +1057,18 @@ interface ClientInterface {
    */
   public function createSync(Sync $sync);
 
+  /**
+   * Retrieves a list of syncs optionally filtered by selectors.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Label $label_selector
+   *   An optional label selector to apply to the query.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\SyncList|bool
+   *   Returns a SyncList if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the list of backups.
+   */
+  public function listSync(Label $label_selector = NULL);
+
 }

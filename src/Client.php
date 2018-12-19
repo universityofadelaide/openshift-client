@@ -10,6 +10,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\SyncList;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
@@ -1537,6 +1538,22 @@ class Client implements ClientInterface {
    */
   public function createSync(Sync $sync) {
     return $this->createSerializableObject(__METHOD__, $sync);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function listSync(Label $label_selector = NULL) {
+    $label = NULL;
+    if ($label_selector) {
+      $label = (string) $label_selector;
+    }
+
+    $result = $this->apiCall(__METHOD__, '', $label, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, SyncList::class, 'json');
   }
 
   /**
