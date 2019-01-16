@@ -1142,8 +1142,8 @@ class Client implements ClientInterface {
         'concurrencyPolicy' => 'Forbid',
         'schedule' => $schedule,
         'suspend' => $cron_suspended,
-        'failedJobsHistoryLimit' => 5,
-        'successfulJobsHistoryLimit' => 5,
+        'failedJobsHistoryLimit' => 1,
+        'successfulJobsHistoryLimit' => 1,
         'jobTemplate' => $job_template,
       ],
     ];
@@ -1223,8 +1223,8 @@ class Client implements ClientInterface {
       'spec' => [
         'concurrencyPolicy' => 'Forbid',
         'suspend' => FALSE,
-        'failedJobsHistoryLimit' => 5,
-        'successfulJobsHistoryLimit' => 5,
+        'failedJobsHistoryLimit' => 1,
+        'successfulJobsHistoryLimit' => 1,
         'template' => $job_template['spec']['template'],
       ],
     ];
