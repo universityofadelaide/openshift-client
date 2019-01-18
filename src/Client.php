@@ -658,6 +658,12 @@ class Client implements ClientInterface {
             'name' => $image_stream_tag,
           ],
         ],
+        'resources' => [
+          'limits' => [
+            'cpu' => '0m',
+            'memory' => '1Gi',
+          ],
+        ],
         'source' => [
           'type' => 'Git',
           'git' => [
