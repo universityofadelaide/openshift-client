@@ -655,7 +655,7 @@ class Client implements ClientInterface {
         'resources' => [
           'limits' => [
             'cpu' => $data['cpu_limit'] ?? '0m',
-            'memory' => $data['memory_limit'] ?? '0Mi',
+            'memory' => $data['memory_limit'] ?? '1Gi',
           ],
           'requests' => [
             'cpu' => $data['cpu_request'] ?? '0m',
@@ -666,12 +666,6 @@ class Client implements ClientInterface {
           'to' => [
             'kind' => 'ImageStreamTag',
             'name' => $image_stream_tag,
-          ],
-        ],
-        'resources' => [
-          'limits' => [
-            'cpu' => '0m',
-            'memory' => '1Gi',
           ],
         ],
         'source' => [
