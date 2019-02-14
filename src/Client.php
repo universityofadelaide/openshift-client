@@ -655,7 +655,7 @@ class Client implements ClientInterface {
         'resources' => [
           'limits' => [
             'cpu' => $data['cpu_limit'] ?? '0m',
-            'memory' => $data['memory_limit'] ?? '0Mi',
+            'memory' => $data['memory_limit'] ?? '1Gi',
           ],
           'requests' => [
             'cpu' => $data['cpu_request'] ?? '0m',
