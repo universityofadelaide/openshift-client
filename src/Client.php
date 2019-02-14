@@ -352,8 +352,8 @@ class Client implements ClientInterface {
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
     }
     catch (RequestException $e) {
-      // If the exception is a 'not found' response to a GET, just return false.
-      if ($method === 'GET' && $e->getCode() === 404) {
+      // If the exception is a 'not found' response to a GET or DELETE, just return false.
+      if (($method === 'GET' || $method === 'DELETE') && $e->getCode() === 404) {
         return FALSE;
       }
       // Do some special decoding for OpenShift.
