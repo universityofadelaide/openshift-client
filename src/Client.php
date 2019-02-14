@@ -652,6 +652,16 @@ class Client implements ClientInterface {
         'name' => $name,
       ],
       'spec' => [
+        'resources' => [
+          'limits' => [
+            'cpu' => $data['cpu_limit'] ?? '0m',
+            'memory' => $data['memory_limit'] ?? '0Mi',
+          ],
+          'requests' => [
+            'cpu' => $data['cpu_request'] ?? '0m',
+            'memory' => $data['memory_request'] ?? '0Mi',
+          ],
+        ],
         'output' => [
           'to' => [
             'kind' => 'ImageStreamTag',
