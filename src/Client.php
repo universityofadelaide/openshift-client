@@ -1492,13 +1492,18 @@ class Client implements ClientInterface {
                 ],
               'dnsPolicy' => 'ClusterFirst',
               'restartPolicy' => 'Never',
-              'securityContext' => [],
               'terminationGracePeriodSeconds' => 30,
               'volumes' => $volume_config['config'],
             ],
         ],
       ],
     ];
+
+    // v3.11 complains if the securityContext is blank, only create if needed.
+    if (array_key_exists('uid', $data)) {
+      $job_template['spec']['template']['spec'] +=
+        $this->generateSecurityContext($data);
+    }
 
     return $job_template;
   }
