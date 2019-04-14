@@ -901,14 +901,6 @@ class Client implements ClientInterface {
   public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change = FALSE, array $volumes = [], array $data = [], array $probes = []) {
     $volume_config = $this->setVolumes($volumes);
 
-    $securityContext = [];
-    if (array_key_exists('uid', $data)) {
-      $securityContext = [
-        'runAsUser' => $data['uid'],
-        'supplementalGroups' => array_key_exists('gid', $data) ? [$data['gid']] : [],
-      ];
-    }
-
     $deploymentConfig = [
       'apiVersion' => 'v1',
       'kind' => 'DeploymentConfig',
@@ -920,7 +912,6 @@ class Client implements ClientInterface {
         'replicas' => 1,
         'selector' => array_key_exists('labels', $data) ? array_merge($data['labels'], ['name' => $name]) : [],
         'strategy' => [
-          'resources' => [],
           'rollingParams' => [
             'intervalSeconds' => 1,
             'maxSurge' => '25%',
@@ -969,7 +960,6 @@ class Client implements ClientInterface {
                 ],
               'dnsPolicy' => 'ClusterFirst',
               'restartPolicy' => 'Always',
-              'securityContext' => $securityContext,
               'terminationGracePeriodSeconds' => 30,
               'volumes' => $volume_config['config'],
             ],
@@ -1001,6 +991,12 @@ class Client implements ClientInterface {
       $this->applyAnnotations($deploymentConfig, $data['annotations']);
     }
 
+    // v3.11 complains if the securityContext is blank, only create if needed.
+    if (array_key_exists('uid', $data)) {
+      $deploymentConfig['spec']['template']['spec'] +=
+        $this->generateSecurityContext($data);
+    }
+
     if (!empty($probes)) {
       $deploymentConfig['spec']['template']['spec']['containers'][0] +=
         $this->generateProbeConfigs($probes);
@@ -1010,7 +1006,32 @@ class Client implements ClientInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Return a formatted securityContext for openshift.
+   *
+   * TODO: Move uid/gid into a sub array and only pass that?
+   *
+   * @param $data
+   *   The complete data array
+   *
+   * @return array
+   *   Security array ready for API.
+   */
+  protected function generateSecurityContext($data) {
+    return [
+      'securityContext' => [
+        'runAsUser' => $data['uid'],
+        'supplementalGroups' => array_key_exists('gid', $data) ? [$data['gid']] : [],
+      ]
+    ];
+  }
+
+  /**
+   * Return an array of probes.
+   *
+   * @param $probes
+   *
+   * @return array
+   *   Probes array ready for API.
    */
   protected function generateProbeConfigs($probes) {
     $probeConfigs = [];
