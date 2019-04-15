@@ -1029,6 +1029,7 @@ class Client implements ClientInterface {
    * Return an array of probes.
    *
    * @param $probes
+   *  Array of probe configuration constructed from a project entity.
    *
    * @return array
    *   Probes array ready for API.
