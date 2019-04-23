@@ -328,11 +328,28 @@ class Client implements ClientInterface {
     return $this->guzzleClient;
   }
 
+  public function filterEmptyArrays($array) {
+    foreach ($array as $key => $value) {
+      if (is_array($value)) {
+        if (empty($value)) {
+          unset($array[$key]);
+        }
+        else {
+          $array[$key] = $this->filterEmptyArrays($value);
+        }
+      }
+    }
+    return $array;
+  }
+
   /**
    * {@inheritdoc}
    */
   public function request(string $method, string $uri, array $body = [], array $query = []) {
     $requestOptions = [];
+
+    // Openshift API borks on empty array parameters, remove them.
+    $body = $this->filterEmptyArrays($body);
 
     if ($method !== 'DELETE') {
       $requestOptions = [
