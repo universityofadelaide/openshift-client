@@ -328,7 +328,16 @@ class Client implements ClientInterface {
     return $this->guzzleClient;
   }
 
-  public function filterEmptyArrays($array) {
+  /**
+   * Recurse into the array and remove any keys with empty values.
+   *
+   * @param array $array
+   *   The array to process.
+   *
+   * @return array
+   *   The processed array with empty data removed.
+   */
+  private function filterEmptyArrays(array $array) {
     foreach ($array as $key => $value) {
       if (is_array($value)) {
         if (empty($value)) {
