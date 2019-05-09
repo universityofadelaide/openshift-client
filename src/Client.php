@@ -329,10 +329,36 @@ class Client implements ClientInterface {
   }
 
   /**
+   * Recurse into the array and remove any keys with empty values.
+   *
+   * @param array $array
+   *   The array to process.
+   *
+   * @return array
+   *   The processed array with empty data removed.
+   */
+  private function filterEmptyArrays(array $array) {
+    foreach ($array as $key => $value) {
+      if (is_array($value)) {
+        if (empty($value)) {
+          unset($array[$key]);
+        }
+        else {
+          $array[$key] = $this->filterEmptyArrays($value);
+        }
+      }
+    }
+    return $array;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function request(string $method, string $uri, array $body = [], array $query = []) {
     $requestOptions = [];
+
+    // Openshift API borks on empty array parameters, remove them.
+    $body = $this->filterEmptyArrays($body);
 
     if ($method !== 'DELETE') {
       $requestOptions = [
