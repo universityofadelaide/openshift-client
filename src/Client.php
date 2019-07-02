@@ -9,8 +9,6 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
-use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
-use UniversityOfAdelaide\OpenShift\Objects\Backups\SyncList;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
@@ -336,20 +334,6 @@ class Client implements ClientInterface {
       'update' => [
         'action' => 'PUT',
         'uri'    => '/api/v1/namespaces/{namespace}/services/{name}',
-      ],
-    ],
-    'sync' => [
-      'create' => [
-        'action' => 'POST',
-        'uri'    => '/apis/workflow.shepherd/v1beta1/namespaces/{namespace}/syncs',
-      ],
-      'get'    => [
-        'action' => 'GET',
-        'uri'    => '/apis/workflow.shepherd/v1beta1/namespaces/{namespace}/syncs/{name}',
-      ],
-      'list' => [
-        'action' => 'GET',
-        'uri'    => '/apis/workflow.shepherd/v1beta1/namespaces/{namespace}/syncs',
       ],
     ],
   ];
@@ -1531,29 +1515,6 @@ class Client implements ClientInterface {
    */
   public function deleteSchedule(string $name) {
     return $this->apiCall(__METHOD__, $name);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function createSync(Sync $sync) {
-    return $this->createSerializableObject(__METHOD__, $sync);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function listSync(Label $label_selector = NULL) {
-    $label = NULL;
-    if ($label_selector) {
-      $label = (string) $label_selector;
-    }
-
-    $result = $this->apiCall(__METHOD__, '', $label, FALSE);
-    if (!$result) {
-      return FALSE;
-    }
-    return $this->serializer->deserialize($result, SyncList::class, 'json');
   }
 
   /**

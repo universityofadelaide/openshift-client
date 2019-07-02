@@ -1,25 +1,34 @@
 {
-  "apiVersion": "ark.heptio.com/v1",
+  "apiVersion": "extensions.shepherd.io/v1beta1",
   "kind": "Backup",
   "metadata": {
-    "annotations": {
-      "some.annotation": "test 123"
-    },
+    "name": "test-123-backup",
     "labels": {
-      "ark.heptio.com/storage-location": "default",
       "test-label": "test label value"
     },
-    "name": "test-123-backup",
-    "namespace": "heptio-ark"
+    "annotations": {
+      "some.annotation": "test 123"
+    }
   },
   "spec": {
-    "labelSelector": {
-      "matchLabels": {
-        "app": "test-123"
+    "volumes": {
+      "shared": {
+        "claimName": "node-123-shared"
       }
     },
-    "storageLocation": "default",
-    "ttl": "100h20m0s",
-    "volumeSnapshotLocations": null
+    "mysql": {
+      "default": {
+        "secret": {
+          "name": "node-123",
+          "keys": {
+            "username": "DATABASE_USER",
+            "password": "DATABASE_PASSWORD",
+            "database": "DATABASE_NAME",
+            "hostname": "DATABASE_HOST",
+            "port": "DATABASE_PORT"
+          }
+        }
+      }
+    }
   }
 }

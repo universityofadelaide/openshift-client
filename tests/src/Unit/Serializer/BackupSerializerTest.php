@@ -5,6 +5,7 @@ namespace UniversityOfAdelaide\OpenShift\Tests\Unit\Serializer;
 use PHPUnit\Framework\TestCase;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Database;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Phase;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
@@ -44,7 +45,6 @@ class BackupSerializerTest extends TestCase {
     $this->assertEquals(Phase::COMPLETED, $backup->getPhase());
     $this->assertEquals('2018-11-21T00:16:23Z', $backup->getStartTimestamp());
     $this->assertEquals('2018-11-21T00:16:43Z', $backup->getCompletionTimestamp());
-    $this->assertEquals('2018-12-21T00:16:23Z', $backup->getExpires());
     $this->assertEquals('test 123', $backup->getAnnotation('some.annotation'));
     $this->assertEquals('2018-11-22T00:05:22Z', $backup->getCreationTimestamp());
   }
@@ -53,11 +53,23 @@ class BackupSerializerTest extends TestCase {
    * @covers ::normalize
    */
   public function testNormalizer() {
+    $db = (new Database())->setId('default')
+      ->setSecretName('node-123')
+      ->setSecretKeys([
+        'username' => 'DATABASE_USER',
+        'password' => 'DATABASE_PASSWORD',
+        'database' => 'DATABASE_NAME',
+        'hostname' => 'DATABASE_HOST',
+        'port' => 'DATABASE_PORT',
+      ]);
+    /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup $backup */
     $backup = Backup::create();
     $backup->setName('test-123-backup')
       ->setAnnotation('some.annotation', 'test 123')
-      ->setTtl('100h20m0s')
-      ->setMatchLabels(['app' => 'test-123'])
+      ->setVolumes([
+        'shared' => 'node-123-shared',
+      ])
+      ->setDatabases([$db])
       ->setLabel(Label::create('test-label', 'test label value'));
 
     $expected = file_get_contents(__DIR__ . '/../../../fixtures/backup.json');

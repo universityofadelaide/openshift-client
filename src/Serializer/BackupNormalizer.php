@@ -3,6 +3,7 @@
 namespace UniversityOfAdelaide\OpenShift\Serializer;
 
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Database;
 
 /**
  * Serializer for Backup objects.
@@ -18,15 +19,15 @@ class BackupNormalizer extends BaseNormalizer {
    * {@inheritdoc}
    */
   public function denormalize($data, $class, $format = NULL, array $context = []) {
+    /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup $backup */
     $backup = Backup::create();
     $backup->setName($data['metadata']['name'])
       ->setLabels($data['metadata']['labels'])
-      ->setTtl($data['spec']['ttl'])
-      ->setCreationTimestamp($data['metadata']['creationTimestamp'])
-      ->setMatchLabels($data['spec']['labelSelector']['matchLabels']);
+      ->setCreationTimestamp($data['metadata']['creationTimestamp']);
     if (isset($data['metadata']['annotations'])) {
       $backup->setAnnotations($data['metadata']['annotations']);
     }
+
     if (isset($data['status']['phase'])) {
       $backup->setPhase($data['status']['phase']);
     }
@@ -36,8 +37,8 @@ class BackupNormalizer extends BaseNormalizer {
     if (isset($data['status']['completionTimestamp'])) {
       $backup->setCompletionTimestamp($data['status']['completionTimestamp']);
     }
-    if (isset($data['status']['expiration'])) {
-      $backup->setExpires($data['status']['expiration']);
+    if (isset($data['status']['resticId'])) {
+      $backup->setResticId($data['status']['resticId']);
     }
     return $backup;
   }
@@ -46,22 +47,29 @@ class BackupNormalizer extends BaseNormalizer {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
+    $volumes = [];
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup $object */
+    foreach ($object->getVolumes() as $volumeId => $claimName) {
+      $volumes[$volumeId] = ['claimName' => $claimName];
+    }
     $data = [
-      'apiVersion' => 'ark.heptio.com/v1',
+      'apiVersion' => 'extensions.shepherd.io/v1beta1',
       'kind' => 'Backup',
       'metadata' => [
         'labels' => $object->getLabels(),
         'name' => $object->getName(),
-        'namespace' => 'heptio-ark',
       ],
       'spec' => [
-        'labelSelector' => [
-          'matchLabels' => $object->getMatchLabels(),
-        ],
-        'storageLocation' => 'default',
-        'ttl' => $object->getTtl(),
-        'volumeSnapshotLocations' => NULL
+        'volumes' => $volumes,
+        'mysql' => array_reduce($object->getDatabases(), function ($carry, Database $db) {
+          $carry[$db->getId()] = [
+            'secret' => [
+              'name' => $db->getSecretName(),
+              'keys' => $db->getSecretKeys(),
+            ],
+          ];
+          return $carry;
+        }, []),
       ],
     ];
     if ($object->hasAnnotations()) {

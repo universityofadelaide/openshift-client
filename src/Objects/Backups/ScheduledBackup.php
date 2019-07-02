@@ -8,20 +8,6 @@ namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
 class ScheduledBackup extends BackupObjectBase {
 
   /**
-   * The TTL for backups running on this schedule.
-   *
-   * @var string
-   */
-  protected $ttl = '720h0m0s';
-
-  /**
-   * An array of labels that must be matched to be included in the backups.
-   *
-   * @var array
-   */
-  protected $matchLabels = [];
-
-  /**
    * Schedule as a Cron expression defining when to run the backups.
    *
    * @var string
@@ -34,54 +20,6 @@ class ScheduledBackup extends BackupObjectBase {
    * @var string
    */
   protected $lastBackup;
-
-  /**
-   * Gets the value of ttl.
-   *
-   * @return string
-   *   Value of ttl.
-   */
-  public function getTtl(): string {
-    return $this->ttl;
-  }
-
-  /**
-   * Sets the TTL.
-   *
-   * @param string $ttl
-   *   The ttl.
-   *
-   * @return $this
-   *   The calling class.
-   */
-  public function setTtl(string $ttl): ScheduledBackup {
-    $this->ttl = $ttl;
-    return $this;
-  }
-
-  /**
-   * Gets the value of matchLabels.
-   *
-   * @return array
-   *   Value of matchLabels.
-   */
-  public function getMatchLabels(): array {
-    return $this->matchLabels;
-  }
-
-  /**
-   * Sets the match labels.
-   *
-   * @param array $matchLabels
-   *   An array of labels.
-   *
-   * @return $this
-   *   The calling class.
-   */
-  public function setMatchLabels(array $matchLabels): ScheduledBackup {
-    $this->matchLabels = $matchLabels;
-    return $this;
-  }
 
   /**
    * Gets the value of schedule.
