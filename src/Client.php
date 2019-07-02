@@ -66,19 +66,19 @@ class Client implements ClientInterface {
     'backup' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups',
+        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/backups',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups/{name}',
+        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/backups/{name}',
       ],
       'get'    => [
         'action' => 'GET',
-        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups/{name}',
+        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/backups/{name}',
       ],
       'list' => [
         'action' => 'GET',
-        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups',
+        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/backups',
       ],
     ],
     'buildconfig' => [
@@ -244,19 +244,19 @@ class Client implements ClientInterface {
     'restore' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/restores',
+        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/restores',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/restores/{name}',
+        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/restores/{name}',
       ],
       'get'    => [
         'action' => 'GET',
-        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/restores/{name}',
+        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/restores/{name}',
       ],
       'list' => [
         'action' => 'GET',
-        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/restores',
+        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/restores',
       ],
     ],
     'route' => [
@@ -280,20 +280,20 @@ class Client implements ClientInterface {
     'schedule' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/schedules/{name}',
+        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/schedules/{name}',
       ],
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/schedules',
+        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/schedules',
       ],
       'update' => [
         // We use PATCH here since we're using nicely serialized data.
         'action' => 'PATCH',
-        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/schedules/{name}',
+        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/schedules/{name}',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/ark.heptio.com/v1/namespaces/heptio-ark/schedules/{name}',
+        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/schedules/{name}',
       ],
     ],
     'secret' => [
