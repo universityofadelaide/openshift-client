@@ -46,13 +46,13 @@ class RestoreSerializerTest extends TestCase {
    * @covers ::normalize
    */
   public function testNormalizer() {
+    /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore $restore */
     $restore = Restore::create()
       ->setName('test-restore')
       ->setBackupName('test-backup')
       ->setLabel(Label::create('site_id', '123'));
 
-    $expected = file_get_contents(__DIR__ . '/../../../fixtures/restore.json');
-    $expected = json_decode($expected, TRUE);
+    $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/restore.json'), TRUE);
     // We don't set status on normalization.
     unset($expected['status']);
     unset($expected['metadata']['creationTimestamp']);

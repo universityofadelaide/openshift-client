@@ -18,15 +18,16 @@ class RestoreNormalizer extends BaseNormalizer {
    * {@inheritdoc}
    */
   public function denormalize($data, $class, $format = NULL, array $context = []) {
-    $backup = Restore::create();
-    $backup->setName($data['metadata']['name'])
+    /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore $restore */
+    $restore = Restore::create();
+    $restore->setName($data['metadata']['name'])
       ->setCreationTimestamp($data['metadata']['creationTimestamp'])
       ->setBackupName($data['spec']['backupName'])
       ->setLabels($data['metadata']['labels']);
     if (isset($data['status']['phase'])) {
-      $backup->setPhase($data['status']['phase']);
+      $restore->setPhase($data['status']['phase']);
     }
-    return $backup;
+    return $restore;
   }
 
   /**
@@ -35,12 +36,11 @@ class RestoreNormalizer extends BaseNormalizer {
   public function normalize($object, $format = NULL, array $context = []) {
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore $object */
     $data = [
-      'apiVersion' => 'ark.heptio.com/v1',
+      'apiVersion' => 'extensions.shepherd.io/v1beta1',
       'kind' => 'Restore',
       'metadata' => [
         'labels' => $object->getLabels(),
-        'name' =>  $object->getName(),
-        'namespace' => 'heptio-ark',
+        'name' => $object->getName(),
       ],
       'spec' => [
         'backupName' => $object->getBackupName(),

@@ -1,13 +1,12 @@
 {
-  "apiVersion": "ark.heptio.com/v1",
+  "apiVersion": "extensions.shepherd.io/v1beta1",
   "kind": "Restore",
   "metadata": {
     "creationTimestamp": "2018-11-26T01:42:57Z",
     "labels": {
       "site_id": "123"
     },
-    "name": "test-restore",
-    "namespace": "heptio-ark"
+    "name": "test-restore"
   },
   "spec": {
     "backupName": "test-backup"

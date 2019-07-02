@@ -29,6 +29,29 @@ class Backup extends BackupObjectBase {
   protected $completionTimestamp = '';
 
   /**
+   * The array of volumes to backup.
+   *
+   * Keyed by an identifier, with the value being the PVC name.
+   *
+   * @var array
+   */
+  protected $volumes = [];
+
+  /**
+   * The array of databases to backup.
+   *
+   * @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Database[]
+   */
+  protected $databases = [];
+
+  /**
+   * The restic ID.
+   *
+   * @var string
+   */
+  protected $resticId;
+
+  /**
    * Get a single annotation.
    *
    * @param string $key
@@ -136,6 +159,78 @@ class Backup extends BackupObjectBase {
    */
   public function setCompletionTimestamp(string $completionTimestamp): Backup {
     $this->completionTimestamp = $completionTimestamp;
+    return $this;
+  }
+
+  /**
+   * Gets the value of Volumes.
+   *
+   * @return array
+   *   Value of Volumes.
+   */
+  public function getVolumes(): array {
+    return $this->volumes;
+  }
+
+  /**
+   * Sets the value of Volumes.
+   *
+   * @param array $volumes
+   *   The value for Volumes.
+   *
+   * @return BackupObjectBase
+   *   The calling class.
+   */
+  public function setVolumes(array $volumes): BackupObjectBase {
+    $this->volumes = $volumes;
+    return $this;
+  }
+
+  /**
+   * Gets the value of Databases.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Database[]
+   *   Value of Databases.
+   */
+  public function getDatabases(): array {
+    return $this->databases;
+  }
+
+  /**
+   * Sets the value of Databases.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Database[] $databases
+   *   The value for Databases.
+   *
+   * @return BackupObjectBase
+   *   The calling class.
+   */
+  public function setDatabases(array $databases): BackupObjectBase {
+    $this->databases = $databases;
+    return $this;
+  }
+
+  /**
+   * Gets the value of ResticId.
+   *
+   * @return string
+   *   Value of ResticId.
+   */
+  public function getResticId(): string {
+    return $this->resticId;
+  }
+
+  /**
+   * Sets the value of ResticId.
+   *
+   * @param string $resticId
+   *   The value for ResticId.
+   *
+   * @return BackupObjectBase
+   *   The calling class.
+   */
+  public function setResticId(string $resticId): BackupObjectBase {
+    $this->resticId = $resticId;
     return $this;
   }
 
