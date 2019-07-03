@@ -2,6 +2,7 @@
   "apiVersion": "extensions.shepherd.io/v1beta1",
   "kind": "Backup",
   "metadata": {
+    "creationTimestamp": "2019-07-03T02:12:48Z",
     "name": "test-123-backup",
     "labels": {
       "test-label": "test label value"
@@ -30,5 +31,10 @@
         }
       }
     }
+  },
+  "status": {
+    "phase": "Completed",
+    "startTimestamp": "2018-11-21T00:16:23Z",
+    "completionTimestamp": "2018-11-21T00:16:43Z"
   }
 }

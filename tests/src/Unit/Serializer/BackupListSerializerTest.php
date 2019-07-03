@@ -35,19 +35,16 @@ class BackupListSerializerTest extends TestCase {
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList $backupList */
     $backupList = $this->serializer->deserialize($jsonData, BackupList::class, 'json');
     $this->assertTrue($backupList->hasBackups());
-    $this->assertEquals(5, $backupList->getBackupCount());
-    $this->assertCount(5, $backupList->getBackups());
-    $this->assertCount(4, $backupList->getCompletedBackups());
+    $this->assertEquals(2, $backupList->getBackupCount());
+    $this->assertCount(2, $backupList->getBackups());
+    $this->assertCount(1, $backupList->getCompletedBackups());
     $expected = [
-      'node-9-backup',
-      'node-7-backup',
-      'node-7-backup3',
-      'node-7-backup2',
-      'node-5-backup',
+      'node-3-backup',
+      'node-4-backup',
     ];
     $this->assertBackupOrder($expected, $backupList->getBackupsByStartTime());
     $this->assertBackupOrder(array_reverse($expected), $backupList->getBackupsByStartTime('ASC'));
-    unset($expected[0]);
+    unset($expected[1]);
     $this->assertBackupOrder(array_values($expected), $backupList->getCompletedBackupsByStartTime());
   }
 

@@ -1,237 +1,63 @@
 {
-  "apiVersion": "ark.heptio.com/v1",
+  "apiVersion": "extensions.shepherd.io/v1beta1",
   "items": [
     {
-      "apiVersion": "ark.heptio.com/v1",
+      "apiVersion": "extensions.shepherd.io/v1beta1",
       "kind": "Backup",
       "metadata": {
-        "clusterName": "",
-        "creationTimestamp": "2018-11-22T00:05:22Z",
-        "generation": 1,
         "annotations": {
-          "some.annotation": "test 123"
+          "backups.shepherd/friendly-name": "Wed, 03/07/2019 - 11:42 - Development"
         },
+        "clusterName": "",
+        "creationTimestamp": "2019-07-03T02:12:48Z",
+        "generation": 1,
         "labels": {
-          "ark.heptio.com/storage-location": "default"
+          "environment_id": "3",
+          "site_id": "2"
         },
-        "name": "node-5-backup",
-        "namespace": "heptio-ark",
-        "resourceVersion": "178206",
-        "selfLink": "/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups/node-5-backup",
-        "uid": "4e19fcbc-edea-11e8-9746-0800273cb3d2"
+        "name": "node-3-backup",
+        "namespace": "myproject"
       },
       "spec": {
-        "excludedNamespaces": null,
-        "excludedResources": null,
-        "hooks": {
-          "resources": null
-        },
-        "includeClusterResources": null,
-        "includedNamespaces": [
-          "*"
-        ],
-        "includedResources": null,
-        "labelSelector": {
-          "matchLabels": {
-            "app": "node-5"
-          }
-        },
-        "storageLocation": "default",
-        "ttl": "360h0m0s",
-        "volumeSnapshotLocations": null
+        "mysql": [],
+        "volumes": []
       },
       "status": {
-        "completionTimestamp": "2018-11-21T00:16:43Z",
-        "expiration": "2018-12-21T00:16:23Z",
         "phase": "Completed",
-        "startTimestamp": "2018-11-21T00:16:23Z",
-        "validationErrors": null,
-        "version": 1,
-        "volumeSnapshotsAttempted": 0,
-        "volumeSnapshotsCompleted": 0
+        "startTimestamp": "2018-11-24T00:16:23Z"
       }
     },
     {
-      "apiVersion": "ark.heptio.com/v1",
+      "apiVersion": "extensions.shepherd.io/v1beta1",
       "kind": "Backup",
       "metadata": {
+        "annotations": {
+          "backups.shepherd/friendly-name": "Wed, 04/07/2019 - 11:42 - Development"
+        },
         "clusterName": "",
-        "creationTimestamp": "2018-11-22T00:03:50Z",
+        "creationTimestamp": "2019-07-04T02:12:48Z",
         "generation": 1,
         "labels": {
-          "ark.heptio.com/storage-location": "default"
+          "environment_id": "4",
+          "site_id": "5"
         },
-        "name": "node-7-backup",
-        "namespace": "heptio-ark",
-        "resourceVersion": "178100",
-        "selfLink": "/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups/node-7-backup",
-        "uid": "175f47fa-edea-11e8-9746-0800273cb3d2"
+        "name": "node-4-backup",
+        "namespace": "myproject"
       },
       "spec": {
-        "hooks": {
-          "resources": null
-        },
-        "labelSelector": {
-          "matchLabels": {
-            "app": "node-7"
-          }
-        },
-        "storageLocation": "default",
-        "ttl": "720h0m0s",
-        "volumeSnapshotLocations": null
+        "mysql": [],
+        "volumes": []
       },
       "status": {
-        "completionTimestamp": "2018-11-22T00:04:26Z",
-        "expiration": "2018-12-22T00:03:50Z",
-        "phase": "Completed",
-        "startTimestamp": "2018-11-22T00:03:50Z",
-        "version": 1
-      }
-    },
-    {
-      "apiVersion": "ark.heptio.com/v1",
-      "kind": "Backup",
-      "metadata": {
-        "clusterName": "",
-        "creationTimestamp": "2018-11-22T00:05:22Z",
-        "generation": 1,
-        "labels": {
-          "ark.heptio.com/storage-location": "default"
-        },
-        "name": "node-7-backup2",
-        "namespace": "heptio-ark",
-        "resourceVersion": "178204",
-        "selfLink": "/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups/node-7-backup2",
-        "uid": "4e17b728-edea-11e8-9746-0800273cb3d2"
-      },
-      "spec": {
-        "excludedNamespaces": null,
-        "excludedResources": null,
-        "hooks": {
-          "resources": null
-        },
-        "includeClusterResources": null,
-        "includedNamespaces": [
-          "*"
-        ],
-        "includedResources": null,
-        "labelSelector": {
-          "matchLabels": {
-            "app": "node-7"
-          }
-        },
-        "storageLocation": "default",
-        "ttl": "720h0m0s",
-        "volumeSnapshotLocations": null
-      },
-      "status": {
-        "completionTimestamp": "2018-11-21T22:40:27Z",
-        "expiration": "2018-12-21T22:40:00Z",
-        "phase": "Completed",
-        "startTimestamp": "2018-11-21T22:40:00Z",
-        "validationErrors": null,
-        "version": 1,
-        "volumeSnapshotsAttempted": 0,
-        "volumeSnapshotsCompleted": 0
-      }
-    },
-    {
-      "apiVersion": "ark.heptio.com/v1",
-      "kind": "Backup",
-      "metadata": {
-        "clusterName": "",
-        "creationTimestamp": "2018-11-22T00:05:22Z",
-        "generation": 1,
-        "labels": {
-          "ark.heptio.com/storage-location": "default"
-        },
-        "name": "node-7-backup3",
-        "namespace": "heptio-ark",
-        "resourceVersion": "178205",
-        "selfLink": "/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups/node-7-backup3",
-        "uid": "4e18d93d-edea-11e8-9746-0800273cb3d2"
-      },
-      "spec": {
-        "excludedNamespaces": null,
-        "excludedResources": null,
-        "hooks": {
-          "resources": null
-        },
-        "includeClusterResources": null,
-        "includedNamespaces": null,
-        "includedResources": null,
-        "labelSelector": {
-          "matchLabels": {
-            "app": "node-7"
-          }
-        },
-        "storageLocation": "default",
-        "ttl": "720h0m0s",
-        "volumeSnapshotLocations": null
-      },
-      "status": {
-        "completionTimestamp": "2018-11-21T23:55:34Z",
-        "expiration": "2018-12-21T23:54:58Z",
-        "phase": "Completed",
-        "startTimestamp": "2018-11-21T23:54:58Z",
-        "validationErrors": null,
-        "version": 1,
-        "volumeSnapshotsAttempted": 0,
-        "volumeSnapshotsCompleted": 0
-      }
-    },
-    {
-      "apiVersion": "ark.heptio.com/v1",
-      "kind": "Backup",
-      "metadata": {
-        "clusterName": "",
-        "creationTimestamp": "2018-11-22T04:39:08Z",
-        "generation": 1,
-        "labels": {
-          "ark.heptio.com/storage-location": "default"
-        },
-        "name": "node-9-backup",
-        "namespace": "heptio-ark",
-        "resourceVersion": "210528",
-        "selfLink": "/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups/node-9-backup",
-        "uid": "8d025876-ee10-11e8-9746-0800273cb3d2"
-      },
-      "spec": {
-        "excludedNamespaces": null,
-        "excludedResources": null,
-        "hooks": {
-          "resources": null
-        },
-        "includeClusterResources": null,
-        "includedNamespaces": [
-          "*"
-        ],
-        "includedResources": null,
-        "labelSelector": {
-          "matchLabels": {
-            "app": "node-9"
-          }
-        },
-        "storageLocation": "default",
-        "ttl": "720h0m0s",
-        "volumeSnapshotLocations": null
-      },
-      "status": {
-        "completionTimestamp": "2018-11-22T04:39:28Z",
-        "expiration": "2018-12-22T04:39:08Z",
-        "phase": "Failed",
-        "startTimestamp": "2018-11-22T04:39:08Z",
-        "validationErrors": null,
-        "version": 1,
-        "volumeSnapshotsAttempted": 0,
-        "volumeSnapshotsCompleted": 0
+        "phase": "InProgress",
+        "startTimestamp": "2018-11-21T00:16:23Z"
       }
     }
   ],
   "kind": "BackupList",
   "metadata": {
     "continue": "",
-    "resourceVersion": "226203",
-    "selfLink": "/apis/ark.heptio.com/v1/namespaces/heptio-ark/backups"
+    "resourceVersion": "216101",
+    "selfLink": "/apis/extensions.shepherd.io/v1beta1/namespaces/myproject/backups"
   }
 }

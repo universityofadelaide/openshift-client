@@ -34,19 +34,16 @@ class BackupSerializerTest extends TestCase {
    * @covers ::denormalize
    */
   public function testDenormalize() {
-    $jsonData = file_get_contents(__DIR__ . '/../../../fixtures/backup-list.json');
-    /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList $backupList */
-    $backupList = $this->serializer->deserialize($jsonData, BackupList::class, 'json');
-    $backup = $backupList->getBackups()[0];
-    $this->assertEquals('node-5-backup', $backup->getName());
-    $this->assertEquals(['ark.heptio.com/storage-location' => 'default'], $backup->getLabels());
-    $this->assertEquals('360h0m0s', $backup->getTtl());
-    $this->assertEquals(['app' => 'node-5'], $backup->getMatchLabels());
+    $jsonData = file_get_contents(__DIR__ . '/../../../fixtures/backup.json');
+    /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup $backup */
+    $backup = $this->serializer->deserialize($jsonData, Backup::class, 'json');
+    $this->assertEquals('test-123-backup', $backup->getName());
+    $this->assertEquals(['test-label' => 'test label value'], $backup->getLabels());
     $this->assertEquals(Phase::COMPLETED, $backup->getPhase());
     $this->assertEquals('2018-11-21T00:16:23Z', $backup->getStartTimestamp());
     $this->assertEquals('2018-11-21T00:16:43Z', $backup->getCompletionTimestamp());
     $this->assertEquals('test 123', $backup->getAnnotation('some.annotation'));
-    $this->assertEquals('2018-11-22T00:05:22Z', $backup->getCreationTimestamp());
+    $this->assertEquals('2019-07-03T02:12:48Z', $backup->getCreationTimestamp());
   }
 
   /**
@@ -63,8 +60,8 @@ class BackupSerializerTest extends TestCase {
         'port' => 'DATABASE_PORT',
       ]);
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup $backup */
-    $backup = Backup::create();
-    $backup->setName('test-123-backup')
+    $backup = Backup::create()
+      ->setName('test-123-backup')
       ->setAnnotation('some.annotation', 'test 123')
       ->setVolumes([
         'shared' => 'node-123-shared',
@@ -72,8 +69,10 @@ class BackupSerializerTest extends TestCase {
       ->setDatabases([$db])
       ->setLabel(Label::create('test-label', 'test label value'));
 
-    $expected = file_get_contents(__DIR__ . '/../../../fixtures/backup.json');
-    $this->assertEquals(json_decode($expected), json_decode($this->serializer->serialize($backup, 'json')));
+    $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/backup.json'), TRUE);
+    unset($expected['status']);
+    unset($expected['metadata']['creationTimestamp']);
+    $this->assertEquals($expected, json_decode($this->serializer->serialize($backup, 'json'), TRUE));
     // Ensure annotations aren't set when empty.
     $backup = Backup::create()->setName('test 123');
     $normalized = $this->serializer->normalize($backup);
