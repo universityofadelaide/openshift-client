@@ -34,7 +34,7 @@
   },
   "status": {
     "phase": "Completed",
-    "startTimestamp": "2018-11-21T00:16:23Z",
-    "completionTimestamp": "2018-11-21T00:16:43Z"
+    "startTime": "2018-11-21T00:16:23Z",
+    "completionTime": "2018-11-21T00:16:43Z"
   }
 }

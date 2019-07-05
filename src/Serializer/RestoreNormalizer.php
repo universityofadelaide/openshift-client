@@ -29,11 +29,11 @@ class RestoreNormalizer extends BaseNormalizer {
     if (isset($data['status']['phase'])) {
       $restore->setPhase($data['status']['phase']);
     }
-    if (isset($data['status']['startTimestamp'])) {
-      $restore->setStartTimestamp($data['status']['startTimestamp']);
+    if (isset($data['status']['startTime'])) {
+      $restore->setStartTimestamp($data['status']['startTime']);
     }
-    if (isset($data['status']['completionTimestamp'])) {
-      $restore->setCompletionTimestamp($data['status']['completionTimestamp']);
+    if (isset($data['status']['completionTime'])) {
+      $restore->setCompletionTimestamp($data['status']['completionTime']);
     }
     return $restore;
   }

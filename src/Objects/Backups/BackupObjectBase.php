@@ -174,4 +174,18 @@ abstract class BackupObjectBase extends ObjectBase {
     return $this;
   }
 
+  /**
+   * Adds a database.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Database $db
+   *   The db to add.
+   *
+   * @return BackupObjectBase
+   *   The calling class.
+   */
+  public function addDatabase(Database $db): BackupObjectBase {
+    $this->databases[] = $db;
+    return $this;
+  }
+
 }

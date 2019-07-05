@@ -24,7 +24,7 @@
       },
       "status": {
         "phase": "Completed",
-        "startTimestamp": "2018-11-24T00:16:23Z"
+        "startTime": "2018-11-24T00:16:23Z"
       }
     },
     {
@@ -50,7 +50,7 @@
       },
       "status": {
         "phase": "InProgress",
-        "startTimestamp": "2018-11-21T00:16:23Z"
+        "startTime": "2018-11-21T00:16:23Z"
       }
     }
   ],

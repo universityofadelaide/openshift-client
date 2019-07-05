@@ -7,12 +7,6 @@ namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
  */
 class Database {
 
-  const USERNAME_KEY = 'username';
-  const PASSWORD_KEY = 'password';
-  const DB_NAME_KEY = 'database';
-  const HOST_KEY = 'hostname';
-  const PORT_KEY = 'port';
-
   /**
    * The db identifier.
    *

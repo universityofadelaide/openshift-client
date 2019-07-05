@@ -65,7 +65,7 @@ class BackupSerializerTest extends TestCase {
       ->setVolumes([
         'shared' => 'node-123-shared',
       ])
-      ->setDatabases([$db])
+      ->addDatabase($db)
       ->setLabel(Label::create('test-label', 'test label value'));
 
     $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/backup.json'), TRUE);

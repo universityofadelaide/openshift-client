@@ -33,11 +33,11 @@ class BackupNormalizer extends BaseNormalizer {
     if (isset($data['status']['phase'])) {
       $backup->setPhase($data['status']['phase']);
     }
-    if (isset($data['status']['startTimestamp'])) {
-      $backup->setStartTimestamp($data['status']['startTimestamp']);
+    if (isset($data['status']['startTime'])) {
+      $backup->setstartTimeStamp($data['status']['startTime']);
     }
-    if (isset($data['status']['completionTimestamp'])) {
-      $backup->setCompletionTimestamp($data['status']['completionTimestamp']);
+    if (isset($data['status']['completionTime'])) {
+      $backup->setcompletionTimeStamp($data['status']['completionTime']);
     }
     if (isset($data['status']['resticId'])) {
       $backup->setResticId($data['status']['resticId']);
