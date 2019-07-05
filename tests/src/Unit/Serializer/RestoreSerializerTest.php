@@ -3,6 +3,7 @@
 namespace UniversityOfAdelaide\OpenShift\Tests\Unit\Serializer;
 
 use PHPUnit\Framework\TestCase;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Database;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Phase;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
@@ -46,10 +47,23 @@ class RestoreSerializerTest extends TestCase {
    * @covers ::normalize
    */
   public function testNormalizer() {
+    $db = (new Database())->setId('default')
+      ->setSecretName('node-123')
+      ->setSecretKeys([
+        'username' => 'DATABASE_USER',
+        'password' => 'DATABASE_PASSWORD',
+        'database' => 'DATABASE_NAME',
+        'hostname' => 'DATABASE_HOST',
+        'port' => 'DATABASE_PORT',
+      ]);
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore $restore */
     $restore = Restore::create()
       ->setName('test-restore')
       ->setBackupName('test-backup')
+      ->setVolumes([
+        'shared' => 'node-123-shared',
+      ])
+      ->setDatabases([$db])
       ->setLabel(Label::create('site_id', '123'));
 
     $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/restore.json'), TRUE);

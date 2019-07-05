@@ -1,8 +1,8 @@
 {
-  "apiVersion": "extensions.shepherd.io/v1beta1",
+  "apiVersion": "extension.shepherd/v1",
   "items": [
     {
-      "apiVersion": "extensions.shepherd.io/v1beta1",
+      "apiVersion": "extension.shepherd/v1",
       "kind": "Restore",
       "metadata": {
         "creationTimestamp": "2018-11-25T21:52:22Z",
@@ -21,7 +21,7 @@
       }
     },
     {
-      "apiVersion": "extensions.shepherd.io/v1beta1",
+      "apiVersion": "extension.shepherd/v1",
       "kind": "Restore",
       "metadata": {
         "creationTimestamp": "2018-11-25T21:55:24Z",
@@ -40,7 +40,7 @@
       }
     },
     {
-      "apiVersion": "extensions.shepherd.io/v1beta1",
+      "apiVersion": "extension.shepherd/v1",
       "kind": "Restore",
       "metadata": {
         "creationTimestamp": "2018-11-26T01:42:57Z",
@@ -63,6 +63,6 @@
   "metadata": {
     "continue": "",
     "resourceVersion": "323173",
-    "selfLink": "/apis/extensions.shepherd.io/v1beta1/namespaces/myproject/restores"
+    "selfLink": "/apis/extension.shepherd/v1/namespaces/myproject/restores"
   }
 }

@@ -66,19 +66,19 @@ class Client implements ClientInterface {
     'backup' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/backups',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backups',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/backups/{name}',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backups/{name}',
       ],
       'get'    => [
         'action' => 'GET',
-        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/backups/{name}',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backups/{name}',
       ],
       'list' => [
         'action' => 'GET',
-        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/backups',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backups',
       ],
     ],
     'buildconfig' => [
@@ -244,19 +244,19 @@ class Client implements ClientInterface {
     'restore' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/restores',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/restores',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/restores/{name}',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/restores/{name}',
       ],
       'get'    => [
         'action' => 'GET',
-        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/restores/{name}',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/restores/{name}',
       ],
       'list' => [
         'action' => 'GET',
-        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/restores',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/restores',
       ],
     ],
     'route' => [
@@ -280,20 +280,20 @@ class Client implements ClientInterface {
     'schedule' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/schedules/{name}',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/schedules/{name}',
       ],
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/schedules',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/schedules',
       ],
       'update' => [
         // We use PATCH here since we're using nicely serialized data.
         'action' => 'PATCH',
-        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/schedules/{name}',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/schedules/{name}',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/extensions.shepherd.io/v1beta1/namespaces/{namespace}/schedules/{name}',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/schedules/{name}',
       ],
     ],
     'secret' => [

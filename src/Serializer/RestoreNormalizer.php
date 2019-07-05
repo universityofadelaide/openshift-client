@@ -9,6 +9,8 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
  */
 class RestoreNormalizer extends BaseNormalizer {
 
+  use BackupRestoreNormalizerTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -27,6 +29,12 @@ class RestoreNormalizer extends BaseNormalizer {
     if (isset($data['status']['phase'])) {
       $restore->setPhase($data['status']['phase']);
     }
+    if (isset($data['status']['startTimestamp'])) {
+      $restore->setStartTimestamp($data['status']['startTimestamp']);
+    }
+    if (isset($data['status']['completionTimestamp'])) {
+      $restore->setCompletionTimestamp($data['status']['completionTimestamp']);
+    }
     return $restore;
   }
 
@@ -34,15 +42,22 @@ class RestoreNormalizer extends BaseNormalizer {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
+    $volumes = [];
+    /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore $object */
+    foreach ($object->getVolumes() as $volumeId => $claimName) {
+      $volumes[$volumeId] = ['claimName' => $claimName];
+    }
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore $object */
     $data = [
-      'apiVersion' => 'extensions.shepherd.io/v1beta1',
+      'apiVersion' => 'extension.shepherd/v1',
       'kind' => 'Restore',
       'metadata' => [
         'labels' => $object->getLabels(),
         'name' => $object->getName(),
       ],
       'spec' => [
+        'volumes' => $this->normalizeVolumes($object),
+        'mysql' => $this->normalizeMysqls($object),
         'backupName' => $object->getBackupName(),
       ],
     ];

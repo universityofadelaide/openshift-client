@@ -10,6 +10,8 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\Database;
  */
 class BackupNormalizer extends BaseNormalizer {
 
+  use BackupRestoreNormalizerTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -47,29 +49,17 @@ class BackupNormalizer extends BaseNormalizer {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
-    $volumes = [];
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup $object */
-    foreach ($object->getVolumes() as $volumeId => $claimName) {
-      $volumes[$volumeId] = ['claimName' => $claimName];
-    }
     $data = [
-      'apiVersion' => 'extensions.shepherd.io/v1beta1',
+      'apiVersion' => 'extension.shepherd/v1',
       'kind' => 'Backup',
       'metadata' => [
         'labels' => $object->getLabels(),
         'name' => $object->getName(),
       ],
       'spec' => [
-        'volumes' => $volumes,
-        'mysql' => array_reduce($object->getDatabases(), function ($carry, Database $db) {
-          $carry[$db->getId()] = [
-            'secret' => [
-              'name' => $db->getSecretName(),
-              'keys' => $db->getSecretKeys(),
-            ],
-          ];
-          return $carry;
-        }, []),
+        'volumes' => $this->normalizeVolumes($object),
+        'mysql' => $this->normalizeMysqls($object),
       ],
     ];
     if ($object->hasAnnotations()) {

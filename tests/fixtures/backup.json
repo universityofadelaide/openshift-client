@@ -1,5 +1,5 @@
 {
-  "apiVersion": "extensions.shepherd.io/v1beta1",
+  "apiVersion": "extension.shepherd/v1",
   "kind": "Backup",
   "metadata": {
     "creationTimestamp": "2019-07-03T02:12:48Z",

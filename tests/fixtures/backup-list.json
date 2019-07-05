@@ -1,8 +1,8 @@
 {
-  "apiVersion": "extensions.shepherd.io/v1beta1",
+  "apiVersion": "extension.shepherd/v1",
   "items": [
     {
-      "apiVersion": "extensions.shepherd.io/v1beta1",
+      "apiVersion": "extension.shepherd/v1",
       "kind": "Backup",
       "metadata": {
         "annotations": {
@@ -28,7 +28,7 @@
       }
     },
     {
-      "apiVersion": "extensions.shepherd.io/v1beta1",
+      "apiVersion": "extension.shepherd/v1",
       "kind": "Backup",
       "metadata": {
         "annotations": {
@@ -58,6 +58,6 @@
   "metadata": {
     "continue": "",
     "resourceVersion": "216101",
-    "selfLink": "/apis/extensions.shepherd.io/v1beta1/namespaces/myproject/backups"
+    "selfLink": "/apis/extension.shepherd/v1/namespaces/myproject/backups"
   }
 }
