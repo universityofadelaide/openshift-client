@@ -963,7 +963,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change = FALSE, array $volumes = [], array $data = [], array $probes = [], array $volumes_to_backup = []) {
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change = FALSE, array $volumes = [], array $data = [], array $probes = []) {
     $volume_config = $this->setVolumes($volumes);
 
     $securityContext = [];
@@ -999,7 +999,6 @@ class Client implements ClientInterface {
           'metadata' => [
             'annotations' => [
               'openshift.io/container.' . $image_name . '.image.entrypoint' => '["/usr/local/s2i/run"]',
-              Backup::VolumesToBackupAnnotation => $volumes_to_backup ? implode(',', $volumes_to_backup) : '',
             ],
             'labels' => array_key_exists('labels', $data) ? array_merge($data['labels'], ['name' => $name]) : [],
           ],

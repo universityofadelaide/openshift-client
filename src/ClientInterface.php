@@ -608,13 +608,11 @@ interface ClientInterface {
    *   Configuration data for deployment config.
    * @param array $probes
    *   Probe configuration.
-   * @param array $volumes_to_backup
-   *   An array of volume names to backup.
    *
    * @return array
    *   Returns the body response if successful.
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change, array $volumes, array $data, array $probes, array $volumes_to_backup = []);
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change, array $volumes, array $data, array $probes);
 
   /**
    * Updates and existing deployment config.
