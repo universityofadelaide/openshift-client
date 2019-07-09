@@ -428,7 +428,9 @@ class Client implements ClientInterface {
     $requestOptions = [];
 
     // Openshift API borks on empty array parameters, remove them.
-    $body = $this->filterEmptyArrays($body);
+    if (is_array($body)) {
+      $body = $this->filterEmptyArrays($body);
+    }
 
     if ($method !== 'DELETE') {
       $requestOptions = [
