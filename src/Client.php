@@ -399,10 +399,36 @@ class Client implements ClientInterface {
   }
 
   /**
+   * Recurse into the array and remove any keys with empty values.
+   *
+   * @param array $array
+   *   The array to process.
+   *
+   * @return array
+   *   The processed array with empty data removed.
+   */
+  private function filterEmptyArrays(array $array) {
+    foreach ($array as $key => $value) {
+      if (is_array($value)) {
+        if (empty($value)) {
+          unset($array[$key]);
+        }
+        else {
+          $array[$key] = $this->filterEmptyArrays($value);
+        }
+      }
+    }
+    return $array;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function request(string $method, string $uri, $body = NULL, array $query = [], $decode_response = TRUE) {
     $requestOptions = [];
+
+    // Openshift API borks on empty array parameters, remove them.
+    $body = $this->filterEmptyArrays($body);
 
     if ($method !== 'DELETE') {
       $requestOptions = [
@@ -422,8 +448,8 @@ class Client implements ClientInterface {
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
     }
     catch (RequestException $e) {
-      // If the exception is a 'not found' response to a GET, just return false.
-      if ($method === 'GET' && $e->getCode() === 404) {
+      // If the exception is a 'not found' response to a GET or DELETE, just return false.
+      if (($method === 'GET' || $method === 'DELETE') && $e->getCode() === 404) {
         return FALSE;
       }
       // Do some special decoding for OpenShift.
@@ -727,6 +753,16 @@ class Client implements ClientInterface {
         'name' => $name,
       ],
       'spec' => [
+        'resources' => [
+          'limits' => [
+            'cpu' => $data['cpu_limit'] ?? '0m',
+            'memory' => $data['memory_limit'] ?? '1Gi',
+          ],
+          'requests' => [
+            'cpu' => $data['cpu_request'] ?? '0m',
+            'memory' => $data['memory_request'] ?? '0Mi',
+          ],
+        ],
         'output' => [
           'to' => [
             'kind' => 'ImageStreamTag',
@@ -966,14 +1002,6 @@ class Client implements ClientInterface {
   public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change = FALSE, array $volumes = [], array $data = [], array $probes = []) {
     $volume_config = $this->setVolumes($volumes);
 
-    $securityContext = [];
-    if (array_key_exists('uid', $data)) {
-      $securityContext = [
-        'runAsUser' => $data['uid'],
-        'supplementalGroups' => array_key_exists('gid', $data) ? [$data['gid']] : [],
-      ];
-    }
-
     $deploymentConfig = [
       'apiVersion' => 'v1',
       'kind' => 'DeploymentConfig',
@@ -985,7 +1013,6 @@ class Client implements ClientInterface {
         'replicas' => 1,
         'selector' => array_key_exists('labels', $data) ? array_merge($data['labels'], ['name' => $name]) : [],
         'strategy' => [
-          'resources' => [],
           'rollingParams' => [
             'intervalSeconds' => 1,
             'maxSurge' => '25%',
@@ -1034,7 +1061,6 @@ class Client implements ClientInterface {
                 ],
               'dnsPolicy' => 'ClusterFirst',
               'restartPolicy' => 'Always',
-              'securityContext' => $securityContext,
               'terminationGracePeriodSeconds' => 30,
               'volumes' => $volume_config['config'],
             ],
@@ -1066,6 +1092,12 @@ class Client implements ClientInterface {
       $this->applyAnnotations($deploymentConfig, $data['annotations']);
     }
 
+    // v3.11 complains if the securityContext is blank, only create if needed.
+    if (array_key_exists('uid', $data)) {
+      $deploymentConfig['spec']['template']['spec'] +=
+        $this->generateSecurityContext($data);
+    }
+
     if (!empty($probes)) {
       $deploymentConfig['spec']['template']['spec']['containers'][0] +=
         $this->generateProbeConfigs($probes);
@@ -1075,7 +1107,33 @@ class Client implements ClientInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Return a formatted securityContext for openshift.
+   *
+   * TODO: Move uid/gid into a sub array and only pass that?
+   *
+   * @param $data
+   *   The complete data array
+   *
+   * @return array
+   *   Security array ready for API.
+   */
+  protected function generateSecurityContext($data) {
+    return [
+      'securityContext' => [
+        'runAsUser' => $data['uid'],
+        'supplementalGroups' => array_key_exists('gid', $data) ? [$data['gid']] : [],
+      ]
+    ];
+  }
+
+  /**
+   * Return an array of probes.
+   *
+   * @param $probes
+   *  Array of probe configuration constructed from a project entity.
+   *
+   * @return array
+   *   Probes array ready for API.
    */
   protected function generateProbeConfigs($probes) {
     $probeConfigs = [];
@@ -1217,8 +1275,8 @@ class Client implements ClientInterface {
         'concurrencyPolicy' => 'Forbid',
         'schedule' => $schedule,
         'suspend' => $cron_suspended,
-        'failedJobsHistoryLimit' => 5,
-        'successfulJobsHistoryLimit' => 5,
+        'failedJobsHistoryLimit' => 1,
+        'successfulJobsHistoryLimit' => 1,
         'jobTemplate' => $job_template,
       ],
     ];
@@ -1298,8 +1356,8 @@ class Client implements ClientInterface {
       'spec' => [
         'concurrencyPolicy' => 'Forbid',
         'suspend' => FALSE,
-        'failedJobsHistoryLimit' => 5,
-        'successfulJobsHistoryLimit' => 5,
+        'failedJobsHistoryLimit' => 1,
+        'successfulJobsHistoryLimit' => 1,
         'template' => $job_template['spec']['template'],
       ],
     ];
@@ -1658,13 +1716,18 @@ class Client implements ClientInterface {
                 ],
               'dnsPolicy' => 'ClusterFirst',
               'restartPolicy' => 'Never',
-              'securityContext' => [],
               'terminationGracePeriodSeconds' => 30,
               'volumes' => $volume_config['config'],
             ],
         ],
       ],
     ];
+
+    // v3.11 complains if the securityContext is blank, only create if needed.
+    if (array_key_exists('uid', $data)) {
+      $job_template['spec']['template']['spec'] +=
+        $this->generateSecurityContext($data);
+    }
 
     return $job_template;
   }
