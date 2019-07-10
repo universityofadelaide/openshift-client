@@ -1,0 +1,68 @@
+{
+  "apiVersion": "extension.shepherd/v1",
+  "items": [
+    {
+      "apiVersion": "extension.shepherd/v1",
+      "kind": "Restore",
+      "metadata": {
+        "creationTimestamp": "2018-11-25T21:52:22Z",
+        "labels": {
+          "environment_id": "9",
+          "site_id": "8"
+        },
+        "name": "restore-1",
+        "namespace": "myproject"
+      },
+      "spec": {
+        "backupName": "node-9-backup-20181126082338"
+      },
+      "status": {
+        "phase": "Completed"
+      }
+    },
+    {
+      "apiVersion": "extension.shepherd/v1",
+      "kind": "Restore",
+      "metadata": {
+        "creationTimestamp": "2018-11-25T21:55:24Z",
+        "labels": {
+          "environment_id": "9",
+          "site_id": "8"
+        },
+        "name": "restore-3",
+        "namespace": "myproject"
+      },
+      "spec": {
+        "backupName": "node-9-backup-20181126082338"
+      },
+      "status": {
+        "phase": "Completed"
+      }
+    },
+    {
+      "apiVersion": "extension.shepherd/v1",
+      "kind": "Restore",
+      "metadata": {
+        "creationTimestamp": "2018-11-26T01:42:57Z",
+        "labels": {
+          "environment_id": "9",
+          "site_id": "8"
+        },
+        "name": "restore-2",
+        "namespace": "myproject"
+      },
+      "spec": {
+        "backupName": "node-9-backup-20181126123820"
+      },
+      "status": {
+        "phase": "Completed"
+      }
+    }
+  ],
+  "kind": "RestoreList",
+  "metadata": {
+    "continue": "",
+    "resourceVersion": "323173",
+    "selfLink": "/apis/extension.shepherd/v1/namespaces/myproject/restores"
+  }
+}

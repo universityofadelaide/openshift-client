@@ -1,0 +1,63 @@
+{
+  "apiVersion": "extension.shepherd/v1",
+  "items": [
+    {
+      "apiVersion": "extension.shepherd/v1",
+      "kind": "Backup",
+      "metadata": {
+        "annotations": {
+          "backups.shepherd/friendly-name": "Wed, 03/07/2019 - 11:42 - Development"
+        },
+        "clusterName": "",
+        "creationTimestamp": "2019-07-03T02:12:48Z",
+        "generation": 1,
+        "labels": {
+          "environment_id": "3",
+          "site_id": "2"
+        },
+        "name": "node-3-backup",
+        "namespace": "myproject"
+      },
+      "spec": {
+        "mysql": [],
+        "volumes": []
+      },
+      "status": {
+        "phase": "Completed",
+        "startTime": "2018-11-24T00:16:23Z"
+      }
+    },
+    {
+      "apiVersion": "extension.shepherd/v1",
+      "kind": "Backup",
+      "metadata": {
+        "annotations": {
+          "backups.shepherd/friendly-name": "Wed, 04/07/2019 - 11:42 - Development"
+        },
+        "clusterName": "",
+        "creationTimestamp": "2019-07-04T02:12:48Z",
+        "generation": 1,
+        "labels": {
+          "environment_id": "4",
+          "site_id": "5"
+        },
+        "name": "node-4-backup",
+        "namespace": "myproject"
+      },
+      "spec": {
+        "mysql": [],
+        "volumes": []
+      },
+      "status": {
+        "phase": "InProgress",
+        "startTime": "2018-11-21T00:16:23Z"
+      }
+    }
+  ],
+  "kind": "BackupList",
+  "metadata": {
+    "continue": "",
+    "resourceVersion": "216101",
+    "selfLink": "/apis/extension.shepherd/v1/namespaces/myproject/backups"
+  }
+}

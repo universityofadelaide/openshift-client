@@ -2,6 +2,12 @@
 
 namespace UniversityOfAdelaide\OpenShift;
 
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
+use UniversityOfAdelaide\OpenShift\Objects\Label;
+
 /**
  * Interface OpenShiftClientInterface.
  *
@@ -30,10 +36,12 @@ interface ClientInterface {
    *   HTTP VERB.
    * @param string $uri
    *   Path the endpoint.
-   * @param array $body
-   *   Request body to be converted to JSON.
+   * @param mixed $body
+   *   Request body to be converted to JSON. Can be passed in as JSON.
    * @param array $query
    *   Query params.
+   * @param bool $decode_response
+   *   Whether to decode the response or not.
    *
    * @return array|bool
    *   Returns json_decoded body contents or FALSE.
@@ -41,7 +49,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue performing request.
    */
-  public function request(string $method, string $uri, array $body = [], array $query = []);
+  public function request(string $method, string $uri, $body = NULL, array $query = [], $decode_response = TRUE);
 
   /**
    * Retrieves a secret that matches the name/tag.
@@ -892,5 +900,145 @@ interface ClientInterface {
    *   Throws exception if there is an issue deleting replication controllers.
    */
   public function deleteReplicationControllers($name, $label);
+
+  /**
+   * Retrieves a backup that matches the name.
+   *
+   * @param string $name
+   *   Name of the backup to retrieved.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup|bool
+   *   Returns a Backup if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving backup.
+   */
+  public function getBackup(string $name);
+
+  /**
+   * Retrieves a list of backups optionally filtered by selectors.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Label $label_selector
+   *   An optional label selector to apply to the query.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList|bool
+   *   Returns a BackupList if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the list of backups.
+   */
+  public function listBackup(Label $label_selector = NULL);
+
+  /**
+   * Creates a new backup.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup
+   *   The backup to create.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup|bool
+   *   Returns a Backup if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the backup.
+   */
+  public function createBackup(Backup $backup);
+
+  /**
+   * Deletes a named backup.
+   *
+   * @param string $name
+   *   The name backup to delete.
+   *
+   * @return array
+   *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue deleting backup.
+   */
+  public function deleteBackup(string $name);
+
+  /**
+   * Creates a new restore.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore $restore
+   *   The restore to create.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore|bool
+   *   Returns a Restore if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the restore.
+   */
+  public function createRestore(Restore $restore);
+
+  /**
+   * Retrieves a list of restores optionally filtered by selectors.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Label $label_selector
+   *   An optional label selector to apply to the query.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList|bool
+   *   Returns a RestoreList if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the list of backups.
+   */
+  public function listRestore(Label $label_selector = NULL);
+
+  /**
+   * Retrieves a schedule that matches the name.
+   *
+   * @param string $name
+   *   Name of the schedule to retrieved.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup|bool
+   *   Returns a ScheduledBackup if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving schedule.
+   */
+  public function getSchedule(string $name);
+
+  /**
+   * Creates a new schedule.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup $schedule
+   *   The schedule to create.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup|bool
+   *   Returns a ScheduledBackup if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the ScheduledBackup.
+   */
+  public function createSchedule(ScheduledBackup $schedule);
+
+  /**
+   * Updates an existing schedule.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup $schedule
+   *   The schedule to update.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup|bool
+   *   Returns a ScheduledBackup if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the ScheduledBackup.
+   */
+  public function updateSchedule(ScheduledBackup $schedule);
+
+  /**
+   * Deletes a named schedule.
+   *
+   * @param string $name
+   *   The name schedule to delete.
+   *
+   * @return array
+   *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue deleting schedule.
+   */
+  public function deleteSchedule(string $name);
 
 }

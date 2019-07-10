@@ -1,0 +1,38 @@
+{
+  "apiVersion": "extension.shepherd/v1",
+  "kind": "Restore",
+  "metadata": {
+    "creationTimestamp": "2018-11-26T01:42:57Z",
+    "labels": {
+      "site_id": "123"
+    },
+    "name": "test-restore"
+  },
+  "spec": {
+    "backupName": "test-backup",
+    "volumes": {
+      "shared": {
+        "claimName": "node-123-shared"
+      }
+    },
+    "mysql": {
+      "default": {
+        "secret": {
+          "name": "node-123",
+          "keys": {
+            "username": "DATABASE_USER",
+            "password": "DATABASE_PASSWORD",
+            "database": "DATABASE_NAME",
+            "hostname": "DATABASE_HOST",
+            "port": "DATABASE_PORT"
+          }
+        }
+      }
+    }
+  },
+  "status": {
+    "phase": "Completed",
+    "startTime": "2018-11-21T00:16:23Z",
+    "completionTime": "2018-11-21T00:16:43Z"
+  }
+}

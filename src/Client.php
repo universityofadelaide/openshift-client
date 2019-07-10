@@ -4,6 +4,13 @@ namespace UniversityOfAdelaide\OpenShift;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
+use UniversityOfAdelaide\OpenShift\Objects\Label;
+use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
 /**
  * Class Client.
@@ -44,11 +51,36 @@ class Client implements ClientInterface {
   protected $guzzleClient;
 
   /**
+   * The serializer.
+   *
+   * @var \Symfony\Component\Serializer\Serializer
+   */
+  protected $serializer;
+
+  /**
    * Resource map.
    *
    * @var array
    */
   protected $resourceMap = [
+    'backup' => [
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backups',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backups/{name}',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backups/{name}',
+      ],
+      'list' => [
+        'action' => 'GET',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backups',
+      ],
+    ],
     'buildconfig' => [
       'create' => [
         'action' => 'POST',
@@ -209,6 +241,24 @@ class Client implements ClientInterface {
         'uri'    => '/api/v1/namespaces/{namespace}/replicationcontrollers/{name}',
       ],
     ],
+    'restore' => [
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/restores',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/restores/{name}',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/restores/{name}',
+      ],
+      'list' => [
+        'action' => 'GET',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/restores',
+      ],
+    ],
     'route' => [
       'create' => [
         'action' => 'POST',
@@ -225,6 +275,25 @@ class Client implements ClientInterface {
       'update' => [
         'action' => 'PUT',
         'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+      ],
+    ],
+    'schedule' => [
+      'get' => [
+        'action' => 'GET',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/schedules/{name}',
+      ],
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/schedules',
+      ],
+      'update' => [
+        // We use PATCH here since we're using nicely serialized data.
+        'action' => 'PATCH',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/schedules/{name}',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/schedules/{name}',
       ],
     ],
     'secret' => [
@@ -296,6 +365,7 @@ class Client implements ClientInterface {
         'Accept' => 'application/json',
       ],
     ]);
+    $this->serializer = OpenShiftSerializerFactory::create();
   }
 
   /**
@@ -354,16 +424,18 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function request(string $method, string $uri, array $body = [], array $query = []) {
+  public function request(string $method, string $uri, $body = NULL, array $query = [], $decode_response = TRUE) {
     $requestOptions = [];
 
     // Openshift API borks on empty array parameters, remove them.
-    $body = $this->filterEmptyArrays($body);
+    if (is_array($body)) {
+      $body = $this->filterEmptyArrays($body);
+    }
 
     if ($method !== 'DELETE') {
       $requestOptions = [
         'query' => $query,
-        'body' => json_encode($body),
+        'body' => is_array($body) ? json_encode($body) : $body,
       ];
     }
 
@@ -393,7 +465,8 @@ class Client implements ClientInterface {
         $e->hasResponse() ? $e->getResponse()->getBody() : ''
       );
     }
-    return json_decode($response->getBody()->getContents(), TRUE);
+    $contents = $response->getBody()->getContents();
+    return $decode_response ? json_decode($contents, TRUE) : $contents;
   }
 
   /**
@@ -456,10 +529,12 @@ class Client implements ClientInterface {
 
     // @todo - this should use model.
     $secret = [
-      'api_version' => 'v1',
       'kind' => 'Secret',
       'metadata' => [
         'name' => $name,
+        'labels' => [
+          'app' => $name,
+        ],
       ],
       'type' => 'Opaque',
       'data' => $data,
@@ -490,10 +565,12 @@ class Client implements ClientInterface {
     }
 
     $secret = [
-      'api_version' => 'v1',
       'kind' => 'Secret',
       'metadata' => [
         'name' => $name,
+        'labels' => [
+          'app' => $name,
+        ],
       ],
       'type' => 'Opaque',
       'data' => $data,
@@ -1404,6 +1481,128 @@ class Client implements ClientInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getBackup(string $name) {
+    $result = $this->apiCall(__METHOD__, $name, NULL, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, Backup::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function listBackup(Label $label_selector = NULL) {
+    $label = NULL;
+    if ($label_selector) {
+      $label = (string) $label_selector;
+    }
+
+    $result = $this->apiCall(__METHOD__, '', $label, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, BackupList::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createBackup(Backup $backup) {
+    return $this->createSerializableObject(__METHOD__, $backup);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteBackup(string $name) {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createRestore(Restore $restore) {
+    return $this->createSerializableObject(__METHOD__, $restore);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function listRestore(Label $label_selector = NULL) {
+    $label = NULL;
+    if ($label_selector) {
+      $label = (string) $label_selector;
+    }
+
+    $result = $this->apiCall(__METHOD__, '', $label, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, RestoreList::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSchedule(string $name) {
+    $result = $this->apiCall(__METHOD__, $name, NULL, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, ScheduledBackup::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createSchedule(ScheduledBackup $schedule) {
+    return $this->createSerializableObject(__METHOD__, $schedule);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateSchedule(ScheduledBackup $schedule) {
+    return $this->createSerializableObject(__METHOD__, $schedule, ['name' => $schedule->getName()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteSchedule(string $name) {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * Create an object in openshift that supports serialization.
+   *
+   * @param string $method
+   *   The method this has been called from.
+   * @param object $object
+   *   The object to create.
+   * @param array $params
+   *   Optional params to pass to createRequestUri.
+   *
+   * @throws \UniversityOfAdelaide\OpenShift\ClientException
+   *   A client exception if the creation failed.
+   *
+   * @return mixed|bool
+   *   Either the object that was created, or false if it failed.
+   */
+  private function createSerializableObject($method, $object, array $params = []) {
+    $resourceMethod = $this->getResourceMethod($method);
+    $uri = $this->createRequestUri($resourceMethod['uri'], $params);
+    $serialized = $this->serializer->serialize($object, 'json');
+    if (!$result = $this->request($resourceMethod['action'], $uri, $serialized, [], FALSE)) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, get_class($object), 'json');
+  }
+
+  /**
    * Merge annotations into the config, if there are any.
    *
    * Applying a blank annotation causes failures, is why this function exists.
@@ -1544,13 +1743,15 @@ class Client implements ClientInterface {
    *   Name of the item to retrieve.
    * @param string $label
    *   Label of items to retrieve.
+   * @param bool $decode_response
+   *   Whether to decode the response or not.
    *
    * @return array|bool
    *   Return the item, or false if the retrieve failed.
    *
    * @throws \UniversityOfAdelaide\OpenShift\ClientException
    */
-  private function apiCall(string $method, $name = '', $label = NULL) {
+  private function apiCall(string $method, $name = '', $label = NULL, $decode_response = TRUE) {
     $resourceMethod = $this->getResourceMethod($method);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
       'name' => (string) $name,
@@ -1561,6 +1762,7 @@ class Client implements ClientInterface {
       $query = ['labelSelector' => $label];
     }
 
-    return $this->request($resourceMethod['action'], $uri, [], $query);
+    return $this->request($resourceMethod['action'], $uri, [], $query, $decode_response);
   }
+
 }
