@@ -1,24 +1,36 @@
 {
-  "apiVersion": "ark.heptio.com/v1",
-  "kind": "Schedule",
+  "apiVersion": "extension.shepherd/v1",
+  "kind": "BackupScheduled",
   "metadata": {
+    "creationTimestamp": "2018-11-26T01:42:57Z",
     "name": "test-schedule",
-    "labels": {},
-    "namespace": "heptio-ark"
+    "labels": {
+      "test-label": "test label value"
+    }
   },
   "spec": {
-    "schedule": "*/5 * * * *",
-    "template": {
-      "labelSelector": {
-        "matchLabels": {
-          "app": "node-9"
+    "schedule": "0 2 * * * *",
+    "volumes": {
+      "shared": {
+        "claimName": "node-123-shared"
+      }
+    },
+    "mysql": {
+      "default": {
+        "secret": {
+          "name": "node-123",
+          "keys": {
+            "username": "DATABASE_USER",
+            "password": "DATABASE_PASSWORD",
+            "database": "DATABASE_NAME",
+            "hostname": "DATABASE_HOST",
+            "port": "DATABASE_PORT"
+          }
         }
-      },
-      "ttl": "360h0m0s"
+      }
     }
   },
   "status": {
-    "lastBackup": "2018-11-29T05:00:47Z",
-    "phase": "Enabled"
+    "lastExecutedTime": "2018-11-21T00:16:43Z"
   }
 }

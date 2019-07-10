@@ -3,7 +3,6 @@
 namespace UniversityOfAdelaide\OpenShift\Serializer;
 
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
-use UniversityOfAdelaide\OpenShift\Objects\Backups\Database;
 
 /**
  * Serializer for Backup objects.
@@ -25,23 +24,13 @@ class BackupNormalizer extends BaseNormalizer {
     $backup = Backup::create();
     $backup->setName($data['metadata']['name'])
       ->setLabels($data['metadata']['labels'])
-      ->setCreationTimestamp($data['metadata']['creationTimestamp']);
-    if (isset($data['metadata']['annotations'])) {
-      $backup->setAnnotations($data['metadata']['annotations']);
-    }
+      ->setCreationTimestamp($data['metadata']['creationTimestamp'])
+      ->setAnnotations($data['metadata']['annotations'] ?? [])
+      ->setPhase($data['status']['phase'] ?? '')
+      ->setStartTimeStamp($data['status']['startTime'] ?? '')
+      ->setCompletionTimeStamp($data['status']['completionTime'] ?? '')
+      ->setResticId($data['status']['resticId'] ?? '');
 
-    if (isset($data['status']['phase'])) {
-      $backup->setPhase($data['status']['phase']);
-    }
-    if (isset($data['status']['startTime'])) {
-      $backup->setstartTimeStamp($data['status']['startTime']);
-    }
-    if (isset($data['status']['completionTime'])) {
-      $backup->setcompletionTimeStamp($data['status']['completionTime']);
-    }
-    if (isset($data['status']['resticId'])) {
-      $backup->setResticId($data['status']['resticId']);
-    }
     return $backup;
   }
 

@@ -3,8 +3,10 @@
 namespace UniversityOfAdelaide\OpenShift\Tests\Unit\Serializer;
 
 use PHPUnit\Framework\TestCase;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Database;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Phase;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
+use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
 /**
@@ -34,29 +36,40 @@ class ScheduledBackupSerializerTest extends TestCase {
     $jsonData = file_get_contents(__DIR__ . '/../../../fixtures/schedule.json');
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup $schedule */
     $schedule = $this->serializer->deserialize($jsonData, ScheduledBackup::class, 'json');
+    $this->assertEquals(['test-label' => 'test label value'], $schedule->getLabels());
     $this->assertEquals('test-schedule', $schedule->getName());
-    $this->assertEquals('360h0m0s', $schedule->getTtl());
-    $this->assertEquals(['app' => 'node-9'], $schedule->getMatchLabels());
-    $this->assertEquals(Phase::ENABLED, $schedule->getPhase());
-    $this->assertEquals('2018-11-29T05:00:47Z', $schedule->getLastBackup());
-    $this->assertEquals('*/5 * * * *', $schedule->getSchedule());
+    $this->assertEquals('2018-11-21T00:16:43Z', $schedule->getLastExecuted());
+    $this->assertEquals('0 2 * * * *', $schedule->getSchedule());
   }
 
   /**
    * @covers ::normalize
    */
   public function testNormalizer() {
-    $backup = ScheduledBackup::create();
-    $backup->setName('test-schedule')
-      ->setTtl('360h0m0s')
-      ->setMatchLabels(['app' => 'node-9'])
-      ->setLastBackup('2018-11-29T05:00:47Z')
-      ->setSchedule('*/5 * * * *')
-      ->setPhase(Phase::ENABLED);
+    $db = (new Database())->setId('default')
+      ->setSecretName('node-123')
+      ->setSecretKeys([
+        'username' => 'DATABASE_USER',
+        'password' => 'DATABASE_PASSWORD',
+        'database' => 'DATABASE_NAME',
+        'hostname' => 'DATABASE_HOST',
+        'port' => 'DATABASE_PORT',
+      ]);
+    /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup $scheduled */
+    $scheduled = ScheduledBackup::create();
+    $scheduled->setName('test-schedule')
+      ->setVolumes([
+        'shared' => 'node-123-shared',
+      ])
+      ->addDatabase($db)
+      ->setLastExecuted('2018-11-29T05:00:47Z')
+      ->setSchedule('0 2 * * * *')
+      ->setLabel(Label::create('test-label', 'test label value'));
 
     $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/schedule.json'), TRUE);
     unset($expected['status']);
-    $this->assertEquals($expected, $this->serializer->normalize($backup));
+    unset($expected['metadata']['creationTimestamp']);
+    $this->assertEquals($expected, $this->serializer->normalize($scheduled));
   }
 
 }

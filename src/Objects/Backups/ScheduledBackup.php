@@ -19,7 +19,7 @@ class ScheduledBackup extends BackupObjectBase {
    *
    * @var string
    */
-  protected $lastBackup;
+  protected $lastExecuted;
 
   /**
    * Gets the value of schedule.
@@ -46,26 +46,26 @@ class ScheduledBackup extends BackupObjectBase {
   }
 
   /**
-   * Gets the value of lastBackup.
+   * Gets the value of lastExecuted.
    *
    * @return string
-   *   Value of lastBackup.
+   *   Value of lastExecuted.
    */
-  public function getLastBackup(): string {
-    return $this->lastBackup;
+  public function getLastExecuted(): string {
+    return $this->lastExecuted;
   }
 
   /**
-   * Sets the value of LastBackup.
+   * Sets the value of lastExecuted.
    *
-   * @param string $lastBackup
-   *   The value for lastBackup.
+   * @param string $lastExecuted
+   *   The value for lastExecuted.
    *
    * @return $this
    *   The calling class.
    */
-  public function setLastBackup(string $lastBackup): ScheduledBackup {
-    $this->lastBackup = $lastBackup;
+  public function setLastExecuted(string $lastExecuted): ScheduledBackup {
+    $this->lastExecuted = $lastExecuted;
     return $this;
   }
 
