@@ -29,6 +29,27 @@ class Database {
   protected $secretKeys;
 
   /**
+   * Create a db object from values.
+   *
+   * @param string $id
+   *   The id.
+   * @param string $secretName
+   *   The secret name.
+   * @param array $secretKeys
+   *   The secret keys.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Database
+   *   The object.
+   */
+  public static function createFromValues($id, $secretName, array $secretKeys) {
+    $instance = new static();
+    $instance->setId($id)
+      ->setSecretName($secretName)
+      ->setSecretKeys($secretKeys);
+    return $instance;
+  }
+
+  /**
    * Gets the value of Id.
    *
    * @return string

@@ -40,6 +40,18 @@ class ScheduledBackupSerializerTest extends TestCase {
     $this->assertEquals('test-schedule', $schedule->getName());
     $this->assertEquals('2018-11-21T00:16:43Z', $schedule->getLastExecuted());
     $this->assertEquals('0 2 * * * *', $schedule->getSchedule());
+    $this->assertEquals(['shared' => 'node-123-shared'], $schedule->getVolumes());
+    /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Database $db */
+    $db = $schedule->getDatabases()[0];
+    $this->assertEquals('default', $db->getId());
+    $this->assertEquals('node-123', $db->getSecretName());
+    $this->assertEquals([
+      'username' => 'DATABASE_USER',
+      'password' => 'DATABASE_PASSWORD',
+      'database' => 'DATABASE_NAME',
+      'hostname' => 'DATABASE_HOST',
+      'port' => 'DATABASE_PORT',
+    ], $db->getSecretKeys());
   }
 
   /**
