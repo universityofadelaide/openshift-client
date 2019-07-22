@@ -151,6 +151,22 @@ abstract class BackupObjectBase extends ObjectBase {
   }
 
   /**
+   * Add a new volume.
+   *
+   * @param string $id
+   *   The volume name.
+   * @param string $claimName
+   *   The claim name.
+   *
+   * @return BackupObjectBase
+   *   The calling class.
+   */
+  public function addVolume($id, $claimName): BackupObjectBase {
+    $this->volumes[$id] = $claimName;
+    return $this;
+  }
+
+  /**
    * Gets the value of Databases.
    *
    * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Database[]

@@ -2,12 +2,15 @@
 
 namespace UniversityOfAdelaide\OpenShift\Serializer;
 
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Database;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 
 /**
  * Serializer for ScheduledBackup objects.
  */
 class ScheduledBackupNormalizer extends BaseNormalizer {
+
+  use BackupRestoreNormalizerTrait;
 
   /**
    * {@inheritdoc}
@@ -18,20 +21,22 @@ class ScheduledBackupNormalizer extends BaseNormalizer {
    * {@inheritdoc}
    */
   public function denormalize($data, $class, $format = NULL, array $context = []) {
+    /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup $schedule */
     $schedule = ScheduledBackup::create();
     $schedule->setName($data['metadata']['name'])
-      ->setTtl($data['spec']['template']['ttl'])
-      ->setMatchLabels($data['spec']['template']['labelSelector']['matchLabels'])
-      ->setSchedule($data['spec']['schedule']);
-    if (isset($data['metadata']['labels'])) {
-      $schedule->setLabels($data['metadata']['labels']);
+      ->setLabels($data['metadata']['labels'])
+      ->setSchedule($data['spec']['schedule'])
+      ->setCreationTimestamp($data['metadata']['creationTimestamp'])
+      ->setLastExecuted($data['status']['lastExecutedTime'] ?? '');
+
+    foreach ($data['spec']['mysql'] as $id => $dbSpec) {
+      $schedule->addDatabase(Database::createFromValues($id, $dbSpec['secret']['name'], $dbSpec['secret']['keys']));
     }
-    if (isset($data['status']['phase'])) {
-      $schedule->setPhase($data['status']['phase']);
+
+    foreach ($data['spec']['volumes'] as $id => $volumeSpec) {
+      $schedule->addVolume($id, $volumeSpec['claimName']);
     }
-    if (isset($data['status']['lastBackup'])) {
-      $schedule->setLastBackup($data['status']['lastBackup']);
-    }
+
     return $schedule;
   }
 
@@ -41,21 +46,16 @@ class ScheduledBackupNormalizer extends BaseNormalizer {
   public function normalize($object, $format = NULL, array $context = []) {
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup $object */
     $data = [
-      'apiVersion' => 'ark.heptio.com/v1',
-      'kind' => 'Schedule',
+      'apiVersion' => 'extension.shepherd/v1',
+      'kind' => 'BackupScheduled',
       'metadata' => [
         'labels' => $object->getLabels(),
         'name' => $object->getName(),
-        'namespace' => 'heptio-ark',
       ],
       'spec' => [
         'schedule' => $object->getSchedule(),
-        'template' => [
-          'labelSelector' => [
-            'matchLabels' => $object->getMatchLabels(),
-          ],
-          'ttl' => $object->getTtl(),
-        ],
+        'volumes' => $this->normalizeVolumes($object),
+        'mysql' => $this->normalizeMysqls($object),
       ],
     ];
 

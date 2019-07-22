@@ -280,20 +280,20 @@ class Client implements ClientInterface {
     'schedule' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/schedules/{name}',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backupscheduleds/{name}',
       ],
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/schedules',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backupscheduleds',
       ],
       'update' => [
         // We use PATCH here since we're using nicely serialized data.
         'action' => 'PATCH',
-        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/schedules/{name}',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backupscheduleds/{name}',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/schedules/{name}',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backupscheduleds/{name}',
       ],
     ],
     'secret' => [

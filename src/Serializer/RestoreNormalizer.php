@@ -25,16 +25,10 @@ class RestoreNormalizer extends BaseNormalizer {
     $restore->setName($data['metadata']['name'])
       ->setCreationTimestamp($data['metadata']['creationTimestamp'])
       ->setBackupName($data['spec']['backupName'])
-      ->setLabels($data['metadata']['labels']);
-    if (isset($data['status']['phase'])) {
-      $restore->setPhase($data['status']['phase']);
-    }
-    if (isset($data['status']['startTime'])) {
-      $restore->setStartTimestamp($data['status']['startTime']);
-    }
-    if (isset($data['status']['completionTime'])) {
-      $restore->setCompletionTimestamp($data['status']['completionTime']);
-    }
+      ->setLabels($data['metadata']['labels'])
+      ->setPhase($data['status']['phase'] ?? '')
+      ->setStartTimeStamp($data['status']['startTime'] ?? '')
+      ->setCompletionTimeStamp($data['status']['completionTime'] ?? '');
     return $restore;
   }
 
@@ -42,11 +36,6 @@ class RestoreNormalizer extends BaseNormalizer {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
-    $volumes = [];
-    /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore $object */
-    foreach ($object->getVolumes() as $volumeId => $claimName) {
-      $volumes[$volumeId] = ['claimName' => $claimName];
-    }
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore $object */
     $data = [
       'apiVersion' => 'extension.shepherd/v1',
