@@ -415,9 +415,14 @@ class Client implements ClientInterface {
         }
         else {
           $array[$key] = $this->filterEmptyArrays($value);
+          // If the key itself is empty after filtering its values, remove it.
+          if (empty($array[$key])) {
+            unset($array[$key]);
+          }
         }
       }
     }
+
     return $array;
   }
 
