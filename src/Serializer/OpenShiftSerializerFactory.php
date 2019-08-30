@@ -23,6 +23,7 @@ class OpenShiftSerializerFactory {
     $normalizers = [
       new BackupNormalizer(),
       new BackupListNormalizer(),
+      new ConfigMapNormalizer(),
       new RestoreNormalizer(),
       new RestoreListNormalizer(),
       new ScheduledBackupNormalizer(),

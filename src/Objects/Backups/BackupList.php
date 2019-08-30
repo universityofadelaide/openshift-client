@@ -2,6 +2,8 @@
 
 namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
 
+use UniversityOfAdelaide\OpenShift\Objects\ObjectListBase;
+
 /**
  * Defines a value object representing a BackupList.
  */

@@ -1,0 +1,15 @@
+{
+  "apiVersion": "v1",
+  "data": {
+    "foo": "bar",
+    "boo": "far"
+  },
+  "kind": "ConfigMap",
+  "metadata": {
+    "creationTimestamp": "2019-06-14T01:46:57Z",
+    "name": "test-config",
+    "labels": {
+      "test-label": "test label value"
+    }
+  }
+}

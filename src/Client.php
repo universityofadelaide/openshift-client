@@ -9,6 +9,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
+use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
@@ -103,6 +104,16 @@ class Client implements ClientInterface {
       'get' => [
         'action' => 'GET',
         'uri'    => '/oapi/v1/namespaces/{namespace}/builds/{name}',
+      ],
+    ],
+    'configmap' => [
+      'get' => [
+        'action' => 'GET',
+        'uri'    => '/apis/v1/namespaces/{namespace}/configmaps/{name}',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri'    => '/apis/v1/namespaces/{namespace}/configmaps/{name}',
       ],
     ],
     'cronjob' => [
@@ -1579,6 +1590,24 @@ class Client implements ClientInterface {
    */
   public function deleteSchedule(string $name) {
     return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateConfigmap(ConfigMap $configMap) {
+    return $this->createSerializableObject(__METHOD__, $configMap, ['name' => $configMap->getName()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigmap(string $name) {
+    $result = $this->apiCall(__METHOD__, $name, NULL, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, ConfigMap::class, 'json');
   }
 
   /**

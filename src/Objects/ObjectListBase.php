@@ -1,6 +1,6 @@
 <?php
 
-namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
+namespace UniversityOfAdelaide\OpenShift\Objects;
 
 /**
  * Base class for list objects.

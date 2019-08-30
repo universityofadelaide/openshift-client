@@ -6,6 +6,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
+use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 
 /**
@@ -1040,5 +1041,33 @@ interface ClientInterface {
    *   Throws exception if there is an issue deleting schedule.
    */
   public function deleteSchedule(string $name);
+
+  /**
+   * Updates an existing configmap.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\ConfigMap $configMap
+   *   The configmap to update.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\ConfigMap|bool
+   *   Returns a ConfigMap if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the ConfigMap.
+   */
+  public function updateConfigmap(ConfigMap $configMap);
+
+  /**
+   * Retrieves a configmap that matches the name.
+   *
+   * @param string $name
+   *   Name of the configmap to retrieved.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\ConfigMap|bool
+   *   Returns a ConfigMap if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the ConfigMap.
+   */
+  public function getConfigmap(string $name);
 
 }
