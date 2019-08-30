@@ -11,6 +11,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
+use UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
 /**
@@ -109,11 +110,11 @@ class Client implements ClientInterface {
     'configmap' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/apis/v1/namespaces/{namespace}/configmaps/{name}',
+        'uri'    => '/api/v1/namespaces/{namespace}/configmaps/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/apis/v1/namespaces/{namespace}/configmaps/{name}',
+        'uri'    => '/api/v1/namespaces/{namespace}/configmaps/{name}',
       ],
     ],
     'cronjob' => [
@@ -202,6 +203,16 @@ class Client implements ClientInterface {
       'update' => [
         'action' => 'PUT',
         'uri'    => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
+      ],
+    ],
+    'networkpolicy' => [
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicy',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicy',
       ],
     ],
     'persistentvolumeclaim' => [
@@ -1608,6 +1619,20 @@ class Client implements ClientInterface {
       return FALSE;
     }
     return $this->serializer->deserialize($result, ConfigMap::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createNetworkpolicy(NetworkPolicy $np) {
+    return $this->createSerializableObject(__METHOD__, $np);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteNetworkpolicy(string $name) {
+    return $this->apiCall(__METHOD__, $name);
   }
 
   /**

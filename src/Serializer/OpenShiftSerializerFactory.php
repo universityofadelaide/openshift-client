@@ -24,6 +24,7 @@ class OpenShiftSerializerFactory {
       new BackupNormalizer(),
       new BackupListNormalizer(),
       new ConfigMapNormalizer(),
+      new NetworkPolicyNormalizer(),
       new RestoreNormalizer(),
       new RestoreListNormalizer(),
       new ScheduledBackupNormalizer(),

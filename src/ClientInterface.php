@@ -8,6 +8,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
 use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
+use UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy;
 
 /**
  * Interface OpenShiftClientInterface.
@@ -1069,5 +1070,33 @@ interface ClientInterface {
    *   Throws exception if there is an issue retrieving the ConfigMap.
    */
   public function getConfigmap(string $name);
+
+  /**
+   * Creates a new NetworkPolicy.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy $np
+   *   The NetworkPolicy to create.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy|bool
+   *   Returns a NetworkPolicy if successful, false if it fails.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the NetworkPolicy.
+   */
+  public function createNetworkpolicy(NetworkPolicy $np);
+
+  /**
+   * Deletes a named NetworkPolicy.
+   *
+   * @param string $name
+   *   The name NetworkPolicy to delete.
+   *
+   * @return array
+   *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue deleting NetworkPolicy.
+   */
+  public function deleteNetworkpolicy(string $name);
 
 }

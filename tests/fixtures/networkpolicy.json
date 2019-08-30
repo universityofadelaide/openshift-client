@@ -1,0 +1,36 @@
+{
+  "apiVersion": "extensions/v1beta1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "test-np"
+  },
+  "spec": {
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "node-19"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 11312,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ],
+    "podSelector": {
+      "matchLabels": {
+        "application": "datagrid-app"
+      }
+    },
+    "policyTypes": [
+      "Ingress"
+    ]
+  }
+}

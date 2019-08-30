@@ -5,7 +5,7 @@ namespace UniversityOfAdelaide\OpenShift\Serializer;
 use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
 
 /**
- * Serializer for Backup objects.
+ * Serializer for ConfigMap objects.
  */
 class ConfigMapNormalizer extends BaseNormalizer {
 
@@ -21,7 +21,7 @@ class ConfigMapNormalizer extends BaseNormalizer {
     /** @var \UniversityOfAdelaide\OpenShift\Objects\ConfigMap $configMap */
     $configMap = ConfigMap::create();
     $configMap->setName($data['metadata']['name'])
-      ->setLabels($data['metadata']['labels'])
+      ->setLabels($data['metadata']['labels'] ?? [])
       ->setCreationTimestamp($data['metadata']['creationTimestamp'])
       ->setData($data['data'] ?? []);
 
