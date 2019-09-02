@@ -37,11 +37,13 @@ class ConfigMapNormalizer extends BaseNormalizer {
       'apiVersion' => 'v1',
       'kind' => 'ConfigMap',
       'metadata' => [
-        'labels' => $object->getLabels(),
         'name' => $object->getName(),
       ],
       'data' => $object->getData(),
     ];
+    if (!empty($object->getLabels())) {
+      $data['metadata']['labels'] = $object->getLabels();
+    }
     return $data;
   }
 

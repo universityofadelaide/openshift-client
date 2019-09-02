@@ -208,11 +208,11 @@ class Client implements ClientInterface {
     'networkpolicy' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicy',
+        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicy',
+        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies',
       ],
     ],
     'persistentvolumeclaim' => [

@@ -17,6 +17,16 @@ class NetworkPolicyNormalizer extends BaseNormalizer {
   /**
    * {@inheritdoc}
    */
+  public function denormalize($data, $class, $format = NULL, array $context = []) {
+    /** @var \UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy $np */
+    $np = NetworkPolicy::create();
+    $np->setName($data['metadata']['name']);
+    return $np;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function normalize($object, $format = NULL, array $context = []) {
     /** @var \UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy $object */
     $data = [
