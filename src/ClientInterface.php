@@ -1072,6 +1072,20 @@ interface ClientInterface {
   public function getConfigmap(string $name);
 
   /**
+   * Retrieves a NetworkPolicy that matches the name.
+   *
+   * @param string $name
+   *   Name of the NetworkPolicy to retrieved.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy|bool
+   *   Returns a NetworkPolicy if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the NetworkPolicy.
+   */
+  public function getNetworkpolicy(string $name);
+
+  /**
    * Creates a new NetworkPolicy.
    *
    * @param \UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy $np

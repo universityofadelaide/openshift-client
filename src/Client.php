@@ -206,13 +206,17 @@ class Client implements ClientInterface {
       ],
     ],
     'networkpolicy' => [
+      'get' => [
+        'action' => 'GET',
+        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies/{name}',
+      ],
       'create' => [
         'action' => 'POST',
         'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies',
+        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies/{name}',
       ],
     ],
     'persistentvolumeclaim' => [
@@ -1619,6 +1623,17 @@ class Client implements ClientInterface {
       return FALSE;
     }
     return $this->serializer->deserialize($result, ConfigMap::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNetworkpolicy(string $name) {
+    $result = $this->apiCall(__METHOD__, $name, NULL, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, NetworkPolicy::class, 'json');
   }
 
   /**

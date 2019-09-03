@@ -30,11 +30,27 @@ class ConfigMap extends ObjectBase {
    * @param array $data
    *   The value for Data.
    *
-   * @return ConfigMap
+   * @return \UniversityOfAdelaide\OpenShift\Objects\ConfigMap
    *   The calling class.
    */
   public function setData(array $data): ConfigMap {
     $this->data = $data;
+    return $this;
+  }
+
+  /**
+   * Sets a key in data.
+   *
+   * @param string $key
+   *   The key.
+   * @param mixed $data
+   *   The data.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\ConfigMap
+   *   The calling class.
+   */
+  public function setDataKey($key, $data): ConfigMap {
+    $this->data[$key] = $data;
     return $this;
   }
 
