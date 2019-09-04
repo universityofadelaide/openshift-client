@@ -9,6 +9,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
 use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy;
+use UniversityOfAdelaide\OpenShift\Objects\StatefulSet;
 
 /**
  * Interface OpenShiftClientInterface.
@@ -1112,5 +1113,34 @@ interface ClientInterface {
    *   Throws exception if there is an issue deleting NetworkPolicy.
    */
   public function deleteNetworkpolicy(string $name);
+
+
+  /**
+   * Updates an existing StatefulSet.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\StatefulSet $statefulSet
+   *   The StatefulSet to update.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\ConfigMap|bool
+   *   Returns a StatefulSet if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the StatefulSet.
+   */
+  public function updateStatefulset(StatefulSet $statefulSet);
+
+  /**
+   * Retrieves a StatefulSet that matches the name.
+   *
+   * @param string $name
+   *   Name of the StatefulSet to retrieved.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\StatefulSet|bool
+   *   Returns a StatefulSet if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the StatefulSet.
+   */
+  public function getStatefulset(string $name);
 
 }
