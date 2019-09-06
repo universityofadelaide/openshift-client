@@ -32,6 +32,12 @@ class StatefulSetNormalizer extends BaseNormalizer {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
+    // securityContext must be provided an empty object, rather than an array.
+    $spec = $object->getSpec();
+    if (empty($spec['template']['spec']['securityContext'])) {
+      $spec['template']['spec']['securityContext'] = new \stdClass();
+    }
+
     /** @var \UniversityOfAdelaide\OpenShift\Objects\StatefulSet $object */
     $data = [
       'apiVersion' => 'apps/v1',
@@ -40,7 +46,7 @@ class StatefulSetNormalizer extends BaseNormalizer {
         'name' => $object->getName(),
         'labels' => $object->getLabels(),
       ],
-      'spec' => $object->getSpec(),
+      'spec' => $spec,
     ];
     return $data;
   }
