@@ -1,0 +1,18 @@
+{
+    "apiVersion": "apps/v1",
+    "kind": "StatefulSet",
+    "metadata": {
+        "creationTimestamp": "2019-09-04T04:14:57Z",
+        "labels": {
+            "application": "test"
+        },
+        "name": "test-ss"
+    },
+    "spec": {
+        "template": {
+            "spec": {
+                "securityContext": {}
+            }
+        }
+    }
+}

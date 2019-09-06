@@ -32,7 +32,10 @@ class StatefulSetNormalizer extends BaseNormalizer {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
-    // securityContext must be provided an empty object, rather than an array.
+    // If securityContext is empty, it must be an array.
+    // Replace with preserve_empty_objects in the client when
+    // symfony/serializer is updated.
+    // @see https://github.com/symfony/symfony/pull/28363/files#diff-cf0df583a97c223ac656cd9228cc4966R206
     $spec = $object->getSpec();
     if (empty($spec['template']['spec']['securityContext'])) {
       $spec['template']['spec']['securityContext'] = new \stdClass();
