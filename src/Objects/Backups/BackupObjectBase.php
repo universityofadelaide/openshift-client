@@ -2,6 +2,8 @@
 
 namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
 
+use UniversityOfAdelaide\OpenShift\Objects\ObjectBase;
+
 /**
  * A base class for backup and restore objects.
  */

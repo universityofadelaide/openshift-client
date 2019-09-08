@@ -1,8 +1,6 @@
 <?php
 
-namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
-
-use UniversityOfAdelaide\OpenShift\Objects\Label;
+namespace UniversityOfAdelaide\OpenShift\Objects;
 
 /**
  * A base class for objects.

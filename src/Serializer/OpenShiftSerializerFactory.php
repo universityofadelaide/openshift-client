@@ -23,9 +23,12 @@ class OpenShiftSerializerFactory {
     $normalizers = [
       new BackupNormalizer(),
       new BackupListNormalizer(),
+      new ConfigMapNormalizer(),
+      new NetworkPolicyNormalizer(),
       new RestoreNormalizer(),
       new RestoreListNormalizer(),
       new ScheduledBackupNormalizer(),
+      new StatefulSetNormalizer(),
     ];
     return new Serializer($normalizers, $encoders);
   }

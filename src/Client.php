@@ -9,7 +9,10 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
+use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
+use UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy;
+use UniversityOfAdelaide\OpenShift\Objects\StatefulSet;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
 /**
@@ -105,6 +108,16 @@ class Client implements ClientInterface {
         'uri'    => '/oapi/v1/namespaces/{namespace}/builds/{name}',
       ],
     ],
+    'configmap' => [
+      'get' => [
+        'action' => 'GET',
+        'uri'    => '/api/v1/namespaces/{namespace}/configmaps/{name}',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri'    => '/api/v1/namespaces/{namespace}/configmaps/{name}',
+      ],
+    ],
     'cronjob' => [
       'create' => [
         'action' => 'POST',
@@ -191,6 +204,20 @@ class Client implements ClientInterface {
       'update' => [
         'action' => 'PUT',
         'uri'    => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
+      ],
+    ],
+    'networkpolicy' => [
+      'get' => [
+        'action' => 'GET',
+        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies/{name}',
+      ],
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies/{name}',
       ],
     ],
     'persistentvolumeclaim' => [
@@ -334,6 +361,16 @@ class Client implements ClientInterface {
       'update' => [
         'action' => 'PUT',
         'uri'    => '/api/v1/namespaces/{namespace}/services/{name}',
+      ],
+    ],
+    'statefulset' => [
+      'get'         => [
+        'action' => 'GET',
+        'uri'    => '/apis/apps/v1/namespaces/{namespace}/statefulsets/{name}',
+      ],
+      'update'      => [
+        'action' => 'PUT',
+        'uri'    => '/apis/apps/v1/namespaces/{namespace}/statefulsets/{name}',
       ],
     ],
   ];
@@ -601,9 +638,15 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createService(string $name, string $deployment_name, int $port, int $target_port, string $app_name) {
+  public function createService(string $name, string $deployment_name, int $port, int $target_port, string $app_name, array $selector = []) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri']);
+    // Default selector to deploymentconfig => deploymentname.
+    if (empty($selector)) {
+      $selector = [
+        'deploymentconfig' => $deployment_name,
+      ];
+    }
 
     // @todo - use a model.
     $service = [
@@ -622,9 +665,7 @@ class Client implements ClientInterface {
             'targetPort' => $target_port,
           ],
         ],
-        'selector' => [
-          'deploymentconfig' => $deployment_name,
-        ],
+        'selector' => $selector,
       ],
     ];
 
@@ -1579,6 +1620,67 @@ class Client implements ClientInterface {
    */
   public function deleteSchedule(string $name) {
     return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateConfigmap(ConfigMap $configMap) {
+    return $this->createSerializableObject(__METHOD__, $configMap, ['name' => $configMap->getName()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfigmap(string $name) {
+    $result = $this->apiCall(__METHOD__, $name, NULL, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, ConfigMap::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getNetworkpolicy(string $name) {
+    $result = $this->apiCall(__METHOD__, $name, NULL, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, NetworkPolicy::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createNetworkpolicy(NetworkPolicy $np) {
+    return $this->createSerializableObject(__METHOD__, $np);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteNetworkpolicy(string $name) {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateStatefulset(StatefulSet $statefulSet) {
+    return $this->createSerializableObject(__METHOD__, $statefulSet, ['name' => $statefulSet->getName()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatefulset(string $name) {
+    $result = $this->apiCall(__METHOD__, $name, NULL, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, StatefulSet::class, 'json');
   }
 
   /**

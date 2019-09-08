@@ -6,7 +6,10 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
+use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
+use UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy;
+use UniversityOfAdelaide\OpenShift\Objects\StatefulSet;
 
 /**
  * Interface OpenShiftClientInterface.
@@ -1040,5 +1043,104 @@ interface ClientInterface {
    *   Throws exception if there is an issue deleting schedule.
    */
   public function deleteSchedule(string $name);
+
+  /**
+   * Updates an existing configmap.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\ConfigMap $configMap
+   *   The configmap to update.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\ConfigMap|bool
+   *   Returns a ConfigMap if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the ConfigMap.
+   */
+  public function updateConfigmap(ConfigMap $configMap);
+
+  /**
+   * Retrieves a configmap that matches the name.
+   *
+   * @param string $name
+   *   Name of the configmap to retrieved.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\ConfigMap|bool
+   *   Returns a ConfigMap if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the ConfigMap.
+   */
+  public function getConfigmap(string $name);
+
+  /**
+   * Retrieves a NetworkPolicy that matches the name.
+   *
+   * @param string $name
+   *   Name of the NetworkPolicy to retrieved.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy|bool
+   *   Returns a NetworkPolicy if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the NetworkPolicy.
+   */
+  public function getNetworkpolicy(string $name);
+
+  /**
+   * Creates a new NetworkPolicy.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy $np
+   *   The NetworkPolicy to create.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy|bool
+   *   Returns a NetworkPolicy if successful, false if it fails.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the NetworkPolicy.
+   */
+  public function createNetworkpolicy(NetworkPolicy $np);
+
+  /**
+   * Deletes a named NetworkPolicy.
+   *
+   * @param string $name
+   *   The name NetworkPolicy to delete.
+   *
+   * @return array
+   *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue deleting NetworkPolicy.
+   */
+  public function deleteNetworkpolicy(string $name);
+
+
+  /**
+   * Updates an existing StatefulSet.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\StatefulSet $statefulSet
+   *   The StatefulSet to update.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\ConfigMap|bool
+   *   Returns a StatefulSet if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the StatefulSet.
+   */
+  public function updateStatefulset(StatefulSet $statefulSet);
+
+  /**
+   * Retrieves a StatefulSet that matches the name.
+   *
+   * @param string $name
+   *   Name of the StatefulSet to retrieved.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\StatefulSet|bool
+   *   Returns a StatefulSet if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the StatefulSet.
+   */
+  public function getStatefulset(string $name);
 
 }
