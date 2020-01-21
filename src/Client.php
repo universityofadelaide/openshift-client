@@ -474,12 +474,10 @@ class Client implements ClientInterface {
       $body = $this->filterEmptyArrays($body);
     }
 
-    if ($method !== 'DELETE') {
-      $requestOptions = [
-        'query' => $query,
-        'body' => is_array($body) ? json_encode($body) : $body,
-      ];
-    }
+    $requestOptions = [
+      'query' => $query,
+      'body' => is_array($body) ? json_encode($body) : $body,
+    ];
 
     if ($method === 'PATCH') {
       $requestOptions['headers']['Content-Type'] = 'application/merge-patch+json';
