@@ -1035,6 +1035,8 @@ interface ClientInterface {
    *
    * @param string $name
    *   The name schedule to delete.
+   * @param bool $cascade
+   *   By default, don't delete all backups associated with a backup schedule.
    *
    * @return array
    *   Returns the body response if successful.
@@ -1042,7 +1044,7 @@ interface ClientInterface {
    * @throws ClientException
    *   Throws exception if there is an issue deleting schedule.
    */
-  public function deleteSchedule(string $name);
+  public function deleteSchedule(string $name, bool $cascade = FALSE);
 
   /**
    * Updates an existing configmap.
