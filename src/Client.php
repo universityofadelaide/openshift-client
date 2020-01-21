@@ -1618,8 +1618,14 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function deleteSchedule(string $name) {
-    return $this->apiCall(__METHOD__, $name);
+  public function deleteSchedule(string $name, bool $cascade = FALSE) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name,
+    ]);
+    // @link https://kubernetes.io/docs/concepts/workloads/controllers/garbage-collection/
+    $body = $cascade ? NULL : '{"kind":"DeleteOptions","apiVersion":"v1","propagationPolicy":"Orphan"}';
+    return $this->request($resourceMethod['action'], $uri, $body);
   }
 
   /**
