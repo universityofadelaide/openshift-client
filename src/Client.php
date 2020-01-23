@@ -1873,7 +1873,7 @@ class Client implements ClientInterface {
       $query = ['labelSelector' => $label];
     }
 
-    return $this->request($resourceMethod['action'], $uri, [], $query, $decode_response);
+    return $this->request($resourceMethod['action'], $uri, NULL, $query, $decode_response);
   }
 
 }
