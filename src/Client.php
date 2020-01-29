@@ -474,12 +474,10 @@ class Client implements ClientInterface {
       $body = $this->filterEmptyArrays($body);
     }
 
-    if ($method !== 'DELETE') {
-      $requestOptions = [
-        'query' => $query,
-        'body' => is_array($body) ? json_encode($body) : $body,
-      ];
-    }
+    $requestOptions = [
+      'query' => $query,
+      'body' => is_array($body) ? json_encode($body) : $body,
+    ];
 
     if ($method === 'PATCH') {
       $requestOptions['headers']['Content-Type'] = 'application/merge-patch+json';
@@ -1618,8 +1616,14 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function deleteSchedule(string $name) {
-    return $this->apiCall(__METHOD__, $name);
+  public function deleteSchedule(string $name, bool $cascade = FALSE) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri'], [
+      'name' => $name,
+    ]);
+    // @link https://kubernetes.io/docs/concepts/workloads/controllers/garbage-collection/
+    $body = $cascade ? NULL : '{"kind":"DeleteOptions","apiVersion":"v1","propagationPolicy":"Orphan"}';
+    return $this->request($resourceMethod['action'], $uri, $body);
   }
 
   /**
@@ -1869,7 +1873,7 @@ class Client implements ClientInterface {
       $query = ['labelSelector' => $label];
     }
 
-    return $this->request($resourceMethod['action'], $uri, [], $query, $decode_response);
+    return $this->request($resourceMethod['action'], $uri, NULL, $query, $decode_response);
   }
 
 }
