@@ -11,6 +11,21 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\Database;
 trait BackupRestoreNormalizerTrait {
 
   /**
+   * Normalize the backup object's schedule.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupObjectBase $object
+   *   The backup object.
+   *
+   * @return array
+   *   Normalized schedule.
+   */
+  protected function normalizeSchedule(BackupObjectBase $object) {
+    return [
+      'crontab' => $object->getSchedule()
+    ];
+  }
+
+  /**
    * Normalize the backup object's volumes.
    *
    * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupObjectBase $object
