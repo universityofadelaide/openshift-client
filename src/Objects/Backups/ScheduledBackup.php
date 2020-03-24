@@ -15,6 +15,13 @@ class ScheduledBackup extends BackupObjectBase {
   protected $schedule;
 
   /**
+   * Retention as a number of scheduled backups to retain.
+   *
+   * @var int
+   */
+  protected $retention;
+
+  /**
    * Timestamp for when the last backup ran.
    *
    * @var string
@@ -42,6 +49,30 @@ class ScheduledBackup extends BackupObjectBase {
    */
   public function setSchedule(string $schedule): ScheduledBackup {
     $this->schedule = $schedule;
+    return $this;
+  }
+
+  /**
+   * Gets the value of schedule.
+   *
+   * @return string
+   *   Value of schedule.
+   */
+  public function getRetention(): string {
+    return $this->retention;
+  }
+
+  /**
+   * Sets the value of schedule.
+   *
+   * @param string $schedule
+   *   The value for schedule.
+   *
+   * @return $this
+   *   The calling class.
+   */
+  public function setRetention(string $retention): ScheduledBackup {
+    $this->retention = $retention;
     return $this;
   }
 

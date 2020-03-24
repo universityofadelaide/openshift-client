@@ -26,6 +26,7 @@ class ScheduledBackupNormalizer extends BaseNormalizer {
     $schedule->setName($data['metadata']['name'])
       ->setLabels($data['metadata']['labels'])
       ->setSchedule($data['spec']['schedule']['crontab'])
+      ->setRetention($data['spec']['retention']['maxNumber'])
       ->setCreationTimestamp($data['metadata']['creationTimestamp'])
       ->setLastExecuted($data['status']['lastExecutedTime'] ?? '');
 
@@ -53,6 +54,7 @@ class ScheduledBackupNormalizer extends BaseNormalizer {
         'name' => $object->getName(),
       ],
       'spec' => [
+        'retention' => $this->normalizeRetention($object),
         'schedule' => $this->normalizeSchedule($object),
         'volumes' => $this->normalizeVolumes($object),
         'mysql' => $this->normalizeMysqls($object),
