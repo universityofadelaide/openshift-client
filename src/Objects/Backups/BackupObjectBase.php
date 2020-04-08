@@ -10,6 +10,11 @@ use UniversityOfAdelaide\OpenShift\Objects\ObjectBase;
 abstract class BackupObjectBase extends ObjectBase {
 
   /**
+   * Defines the annotation to store a backups friendly name on.
+   */
+  const FRIENDLY_NAME_ANNOTATION = 'backups.shepherd/friendly-name';
+
+  /**
    * The phase the object is in.
    *
    * @var string
@@ -204,6 +209,16 @@ abstract class BackupObjectBase extends ObjectBase {
   public function addDatabase(Database $db): BackupObjectBase {
     $this->databases[] = $db;
     return $this;
+  }
+
+  /**
+   * Returns the friendly name of the backup.
+   *
+   * @return string
+   *   The friendly name if set, otherwise the backup name.
+   */
+  public function getFriendlyName(): string {
+    return $this->getAnnotation(self::FRIENDLY_NAME_ANNOTATION) ?: $this->getName();
   }
 
 }

@@ -7,6 +7,9 @@ namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
  */
 class Backup extends BackupObjectBase {
 
+  /**
+   * The name of the label to determine whether the backup is manual.
+   */
   const MANUAL_LABEL = 'is-manual';
 
   /**
