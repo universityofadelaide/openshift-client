@@ -11,6 +11,36 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\Database;
 trait BackupRestoreNormalizerTrait {
 
   /**
+   * Normalize the backup object's retention.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupObjectBase $object
+   *   The backup object.
+   *
+   * @return array
+   *   Normalized retention.
+   */
+  protected function normalizeRetention(BackupObjectBase $object) {
+    return [
+      'maxNumber' => (int)$object->getRetention()
+    ];
+  }
+
+  /**
+   * Normalize the backup object's schedule.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupObjectBase $object
+   *   The backup object.
+   *
+   * @return array
+   *   Normalized schedule.
+   */
+  protected function normalizeSchedule(BackupObjectBase $object) {
+    return [
+      'crontab' => $object->getSchedule()
+    ];
+  }
+
+  /**
    * Normalize the backup object's volumes.
    *
    * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupObjectBase $object
