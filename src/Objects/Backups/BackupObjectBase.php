@@ -36,6 +36,13 @@ abstract class BackupObjectBase extends ObjectBase {
   protected $completionTimestamp = '';
 
   /**
+   * The time the backup was deleted.
+   *
+   * @var string
+   */
+  protected $deletionTimestamp = '';
+
+  /**
    * The array of volumes to backup/restore.
    *
    * Keyed by an identifier, with the value being the PVC name.
@@ -130,6 +137,30 @@ abstract class BackupObjectBase extends ObjectBase {
    */
   public function setCompletionTimestamp(string $completionTimestamp): BackupObjectBase {
     $this->completionTimestamp = $completionTimestamp;
+    return $this;
+  }
+
+  /**
+   * Gets the value of DeletionTimestamp.
+   *
+   * @return string
+   *   Value of DeletionTimestamp.
+   */
+  public function getDeletionTimestamp(): string {
+    return $this->deletionTimestamp;
+  }
+
+  /**
+   * Sets the value of DeletionTimestamp.
+   *
+   * @param string $deletionTimestamp
+   *   The value for DeletionTimestamp.
+   *
+   * @return BackupObjectBase
+   *   The calling class.
+   */
+  public function setDeletionTimestamp(string $deletionTimestamp): BackupObjectBase {
+    $this->deletionTimestamp = $deletionTimestamp;
     return $this;
   }
 

@@ -25,6 +25,7 @@ class BackupNormalizer extends BaseNormalizer {
     $backup->setName($data['metadata']['name'])
       ->setLabels($data['metadata']['labels'])
       ->setCreationTimestamp($data['metadata']['creationTimestamp'])
+      ->setDeletionTimestamp($data['metadata']['deletionTimestamp'] ?? '')
       ->setAnnotations($data['metadata']['annotations'] ?? [])
       ->setPhase($data['status']['phase'] ?? '')
       ->setStartTimeStamp($data['status']['startTime'] ?? '')
