@@ -8,6 +8,11 @@ namespace UniversityOfAdelaide\OpenShift\Objects\Backups;
 class Backup extends BackupObjectBase {
 
   /**
+   * The name of the label to determine whether the backup is manual.
+   */
+  const MANUAL_LABEL = 'is-manual';
+
+  /**
    * An array of annotations to apply to this backup.
    *
    * @var array
@@ -106,6 +111,16 @@ class Backup extends BackupObjectBase {
   public function setResticId(string $resticId): BackupObjectBase {
     $this->resticId = $resticId;
     return $this;
+  }
+
+  /**
+   * Return whether the backup was manually triggered.
+   *
+   * @return bool
+   *   TRUE if the backup was manually triggered.
+   */
+  public function isManual(): bool {
+    return (int) $this->getLabel(self::MANUAL_LABEL) === 1;
   }
 
 }
