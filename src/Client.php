@@ -79,6 +79,11 @@ class Client implements ClientInterface {
         'action' => 'GET',
         'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backups/{name}',
       ],
+      'update' => [
+        // We use PATCH here since we're using nicely serialized data.
+        'action' => 'PATCH',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backups/{name}',
+      ],
       'list' => [
         'action' => 'GET',
         'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/backups',
@@ -1556,6 +1561,13 @@ class Client implements ClientInterface {
    */
   public function createBackup(Backup $backup) {
     return $this->createSerializableObject(__METHOD__, $backup);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateBackup(Backup $backup) {
+    return $this->createSerializableObject(__METHOD__, $backup, ['name' => $backup->getName()]);
   }
 
   /**

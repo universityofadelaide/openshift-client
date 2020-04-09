@@ -935,7 +935,7 @@ interface ClientInterface {
   /**
    * Creates a new backup.
    *
-   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup $backup
    *   The backup to create.
    *
    * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup|bool
@@ -945,6 +945,20 @@ interface ClientInterface {
    *   Throws exception if there is an issue creating the backup.
    */
   public function createBackup(Backup $backup);
+
+  /**
+   * Updates an existing backup.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup $backup
+   *   The backup to update.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup|bool
+   *   Returns a Backup if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue updating the Backup.
+   */
+  public function updateBackup(Backup $backup);
 
   /**
    * Deletes a named backup.

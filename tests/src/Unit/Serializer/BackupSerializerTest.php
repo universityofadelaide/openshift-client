@@ -43,6 +43,18 @@ class BackupSerializerTest extends TestCase {
     $this->assertEquals('2018-11-21T00:16:43Z', $backup->getCompletionTimestamp());
     $this->assertEquals('test 123', $backup->getAnnotation('some.annotation'));
     $this->assertEquals('2019-07-03T02:12:48Z', $backup->getCreationTimestamp());
+    $this->assertEquals(['shared' => 'node-123-shared'], $backup->getVolumes());
+    /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Database $db */
+    $db = $backup->getDatabases()[0];
+    $this->assertEquals('default', $db->getId());
+    $this->assertEquals('node-123', $db->getSecretName());
+    $this->assertEquals([
+      'username' => 'DATABASE_USER',
+      'password' => 'DATABASE_PASSWORD',
+      'database' => 'DATABASE_NAME',
+      'hostname' => 'DATABASE_HOST',
+      'port' => 'DATABASE_PORT',
+    ], $db->getSecretKeys());
   }
 
   /**
