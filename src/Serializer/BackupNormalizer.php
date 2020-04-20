@@ -3,6 +3,7 @@
 namespace UniversityOfAdelaide\OpenShift\Serializer;
 
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Database;
 
 /**
  * Serializer for Backup objects.
@@ -31,6 +32,14 @@ class BackupNormalizer extends BaseNormalizer {
       ->setStartTimeStamp($data['status']['startTime'] ?? '')
       ->setCompletionTimeStamp($data['status']['completionTime'] ?? '')
       ->setResticId($data['status']['resticId'] ?? '');
+
+    foreach ($data['spec']['mysql'] as $id => $dbSpec) {
+      $backup->addDatabase(Database::createFromValues($id, $dbSpec['secret']['name'], $dbSpec['secret']['keys']));
+    }
+
+    foreach ($data['spec']['volumes'] as $id => $volumeSpec) {
+      $backup->addVolume($id, $volumeSpec['claimName']);
+    }
 
     return $backup;
   }
