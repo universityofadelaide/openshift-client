@@ -1756,30 +1756,44 @@ class Client implements ClientInterface {
     $volume_mounts = [];
 
     foreach ($volumes as $volume) {
-      if ($volume['type'] === 'pvc') {
-        $volumes_config[] = [
-          'name' => $volume['name'],
-          'persistentVolumeClaim' => [
-            'claimName' => $volume['name'],
-          ],
-        ];
-        $volume_mounts[] = [
-          'mountPath' => $volume['path'],
-          'name' => $volume['name'],
-        ];
-      }
-      elseif ($volume['type'] === 'secret') {
-        $volumes_config[] = [
-          'name' => $volume['name'],
-          'secret' => [
-            'secretName' => $volume['secret'],
-          ],
-        ];
-        $volume_mounts[] = [
-          'mountPath' => $volume['path'],
-          'name' => $volume['name'],
-          'readOnly' => TRUE,
-        ];
+      switch ($volume['type']) {
+        case 'pvc':
+          $volumes_config[] = [
+            'name' => $volume['name'],
+            'persistentVolumeClaim' => [
+              'claimName' => $volume['name'],
+            ],
+          ];
+          $volume_mounts[] = [
+            'mountPath' => $volume['path'],
+            'name' => $volume['name'],
+          ];
+          break;
+
+        case 'secret':
+          $volumes_config[] = [
+            'name' => $volume['name'],
+            'secret' => [
+              'secretName' => $volume['secret'],
+            ],
+          ];
+          $volume_mounts[] = [
+            'mountPath' => $volume['path'],
+            'name' => $volume['name'],
+            'readOnly' => TRUE,
+          ];
+          break;
+
+        case 'empty':
+          // Empty volumes map to the emptyDir type, which is the default.
+          $volumes_config[] = [
+            'name' => $volume['name'],
+          ];
+          $volume_mounts[] = [
+            'mountPath' => $volume['path'],
+            'name' => $volume['name'],
+          ];
+          break;
       }
     }
     return [
