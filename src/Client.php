@@ -10,6 +10,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
+use UniversityOfAdelaide\OpenShift\Objects\Hpa;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy;
 use UniversityOfAdelaide\OpenShift\Objects\StatefulSet;
@@ -167,6 +168,16 @@ class Client implements ClientInterface {
       'get' => [
         'action' => 'GET',
         'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
+      ],
+    ],
+    'hpa' => [
+      'create'      => [
+        'action' => 'POST',
+        'uri'    => '/apis/autoscaling/v1/namespaces/{namespace}/horizontalpodautoscalers',
+      ],
+      'delete'      => [
+        'action' => 'DELETE',
+        'uri'    => '/apis/autoscaling/v1/namespaces/{namespace}/horizontalpodautoscalers/{name}',
       ],
     ],
     'imagestream' => [
@@ -1702,6 +1713,20 @@ class Client implements ClientInterface {
       return FALSE;
     }
     return $this->serializer->deserialize($result, StatefulSet::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createHpa(Hpa $hpa) {
+    return $this->createSerializableObject(__METHOD__, $hpa);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteHpa(string $name) {
+    return $this->apiCall(__METHOD__, $name);
   }
 
   /**

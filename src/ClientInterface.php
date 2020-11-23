@@ -7,6 +7,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
 use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
+use UniversityOfAdelaide\OpenShift\Objects\Hpa;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy;
 use UniversityOfAdelaide\OpenShift\Objects\StatefulSet;
@@ -1130,7 +1131,6 @@ interface ClientInterface {
    */
   public function deleteNetworkpolicy(string $name);
 
-
   /**
    * Updates an existing StatefulSet.
    *
@@ -1158,5 +1158,33 @@ interface ClientInterface {
    *   Throws exception if there is an issue retrieving the StatefulSet.
    */
   public function getStatefulset(string $name);
+
+  /**
+   * Creates a new HPA.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Hpa $hpa
+   *   The HPA to create.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Hpa|bool
+   *   Returns a HPA if successful, false if it fails.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the HPA.
+   */
+  public function createHpa(Hpa $hpa);
+
+  /**
+   * Deletes a named HPA.
+   *
+   * @param string $name
+   *   The name HPA to delete.
+   *
+   * @return array
+   *   Returns the body response if successful.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue deleting HPA.
+   */
+  public function deleteHpa(string $name);
 
 }

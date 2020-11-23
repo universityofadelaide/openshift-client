@@ -1,0 +1,17 @@
+{
+  "apiVersion": "autoscaling/v1",
+  "kind": "HorizontalPodAutoscaler",
+  "metadata": {
+    "name": "test-hpa"
+  },
+  "spec": {
+    "maxReplicas": 2,
+    "minReplicas": 1,
+    "scaleTargetRef": {
+      "apiVersion": "apps.openshift.io/v1",
+      "kind": "DeploymentConfig",
+      "name": "test-hpa"
+    },
+    "targetCPUUtilizationPercentage": 80
+  }
+}

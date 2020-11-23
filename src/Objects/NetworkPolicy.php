@@ -3,7 +3,7 @@
 namespace UniversityOfAdelaide\OpenShift\Objects;
 
 /**
- * Value object for config maps.
+ * Value object for Network Policies.
  */
 class NetworkPolicy extends ObjectBase {
 
