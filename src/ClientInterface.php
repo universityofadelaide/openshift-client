@@ -1187,4 +1187,32 @@ interface ClientInterface {
    */
   public function deleteHpa(string $name);
 
+  /**
+   * Retrieves a HPA that matches the name.
+   *
+   * @param string $name
+   *   Name of the HPA to retrieved.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Hpa|bool
+   *   Returns a HPA if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the HPA.
+   */
+  public function getHpa(string $name);
+
+  /**
+   * Updates an HPA.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Hpa $hpa
+   *   The HPA to update.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Hpa|bool
+   *   Returns a HPA if successful, false if it fails.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue updating the HPA.
+   */
+  public function updateHpa(Hpa $hpa);
+
 }

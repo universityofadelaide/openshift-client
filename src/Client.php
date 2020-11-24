@@ -171,12 +171,20 @@ class Client implements ClientInterface {
       ],
     ],
     'hpa' => [
-      'create'      => [
+      'create' => [
         'action' => 'POST',
         'uri'    => '/apis/autoscaling/v1/namespaces/{namespace}/horizontalpodautoscalers',
       ],
-      'delete'      => [
+      'delete' => [
         'action' => 'DELETE',
+        'uri'    => '/apis/autoscaling/v1/namespaces/{namespace}/horizontalpodautoscalers/{name}',
+      ],
+      'get' => [
+        'action' => 'GET',
+        'uri'    => '/apis/autoscaling/v1/namespaces/{namespace}/horizontalpodautoscalers/{name}',
+      ],
+      'update' => [
+        'action' => 'PUT',
         'uri'    => '/apis/autoscaling/v1/namespaces/{namespace}/horizontalpodautoscalers/{name}',
       ],
     ],
@@ -1727,6 +1735,24 @@ class Client implements ClientInterface {
    */
   public function deleteHpa(string $name) {
     return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getHpa(string $name) {
+    $result = $this->apiCall(__METHOD__, $name, NULL, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, Hpa::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateHpa(Hpa $hpa) {
+    return $this->createSerializableObject(__METHOD__, $hpa, ['name' => $hpa->getName()]);
   }
 
   /**
