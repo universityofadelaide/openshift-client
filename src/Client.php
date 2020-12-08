@@ -1299,8 +1299,10 @@ class Client implements ClientInterface {
     $deployment_config = array_replace_recursive($deployment_config, $config);
 
     // Just replace the entire env array as the replace screws it up.
-    $deployment_config['spec']['template']['spec']['containers'][0]['env'] =
-      $config['spec']['template']['spec']['containers'][0]['env'];
+    if (isset($config['spec']['template']['spec']['containers'][0]['env'])) {
+      $deployment_config['spec']['template']['spec']['containers'][0]['env'] =
+        $config['spec']['template']['spec']['containers'][0]['env'];
+    }
 
     $resourceMethod = $this->getResourceMethod(__METHOD__);
     $uri = $this->createRequestUri($resourceMethod['uri'], [
