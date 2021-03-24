@@ -38,7 +38,11 @@ class NetworkPolicySerializerTest extends TestCase {
       ->setName('test-np');
 
     $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/networkpolicy.json'), TRUE);
+//    $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/meh.json'), TRUE);
     unset($expected['metadata']['creationTimestamp']);
+//    var_dump($expected);
+//    echo __DIR__;
+//    var_dump(file_get_contents(__DIR__ . '/../../../fixtures/networkpolicy.json'));
     $this->assertEquals($expected, json_decode($this->serializer->serialize($np, 'json'), TRUE));
   }
 
