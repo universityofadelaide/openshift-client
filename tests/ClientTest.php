@@ -3,6 +3,7 @@
 use PHPUnit\Framework\TestCase;
 use UniversityOfAdelaide\OpenShift\Client;
 use GuzzleHttp\Client as GuzzleClient;
+use UniversityOfAdelaide\OpenShift\Objects\Route;
 
 class ClientTest extends TestCase {
 
@@ -363,7 +364,18 @@ class ClientTest extends TestCase {
     $service = $this->json->clientTest->artifacts . '-service';
     $application_domain = $this->json->clientTest->domain;
 
-    $response = $this->client->createRoute($name, $service, $application_domain);
+    /** @var \UniversityOfAdelaide\OpenShift\Objects\Route $route */
+    $route = Route::create()
+      ->setName($name)
+      ->setHost($application_domain)
+      ->setInsecureEdgeTerminationPolicy('Allow')
+      ->setTermination('edge')
+      ->setToKind('Service')
+      ->setToName($service)
+      ->setToWeight(50)
+      ->setWildcardPolicy('None');
+
+    $response = $this->client->createRoute($route);
 
     $this->assertNotFalse(
       $response,

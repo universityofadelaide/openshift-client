@@ -755,31 +755,8 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createRoute(string $name, string $service_name, string $domain, string $path = NULL, array $annotations = []) {
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
-
-    $route = [
-      'kind' => 'Route',
-      'metadata' => [
-        'name' => $name,
-        'labels' => ['app' => $name],
-      ],
-      'spec' => [
-        'host' => $domain,
-        'path' => $path,
-        'to' => [
-          'kind' => 'Service',
-          'name' => $service_name,
-        ],
-      ],
-    ];
-
-    if (count($annotations)) {
-      $route['metadata']['annotations'] = $annotations;
-    }
-
-    return $this->request($resourceMethod['action'], $uri, $route);
+  public function createRoute(Route $route) {
+    return $this->createSerializableObject(__METHOD__, $route);
   }
 
   /**
