@@ -10,6 +10,9 @@ class Route extends ObjectBase {
   /**
    * Annotations
    *
+   * E.g.
+   * ['some-name' => 'some-value']
+   *
    * @var array
    */
   protected $annotations = [];
@@ -31,12 +34,16 @@ class Route extends ObjectBase {
   /**
    * Insecure edge termination policy.
    *
+   * "None", "Allow" or "Redirect".
+   *
    * @var string
    */
   protected $insecureEdgeTerminationPolicy;
 
   /**
    * Termination.
+   *
+   * "edge" or "passthrough".
    *
    * @var string
    */
