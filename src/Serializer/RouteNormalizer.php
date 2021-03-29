@@ -30,7 +30,7 @@ class RouteNormalizer extends BaseNormalizer {
   public function normalize($object, $format = NULL, array $context = []) {
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Route $object */
     $data = [
-      'apiVersion' => 'route.openshift.io/v1',
+      'apiVersion' => 'v1',
       'kind' => 'Route',
       'metadata' => [
         'name' => $object->getName(),
