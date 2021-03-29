@@ -262,9 +262,9 @@ class Route extends ObjectBase {
   /**
    * Gets the value of wildcard policy.
    *
-   * @return string
+   * @return string|NULL
    */
-  public function getWildcardPolicy(): string {
+  public function getWildcardPolicy(): ?string {
     return $this->wildcardPolicy;
   }
 
