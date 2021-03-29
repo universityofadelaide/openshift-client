@@ -8,6 +8,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
 use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
 use UniversityOfAdelaide\OpenShift\Objects\Hpa;
+use UniversityOfAdelaide\OpenShift\Objects\Route;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy;
 use UniversityOfAdelaide\OpenShift\Objects\StatefulSet;
