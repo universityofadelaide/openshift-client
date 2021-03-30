@@ -11,6 +11,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
 use UniversityOfAdelaide\OpenShift\Objects\Hpa;
+use UniversityOfAdelaide\OpenShift\Objects\Route;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy;
 use UniversityOfAdelaide\OpenShift\Objects\StatefulSet;
@@ -755,31 +756,8 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function createRoute(string $name, string $service_name, string $domain, string $path = NULL, array $annotations = []) {
-    $resourceMethod = $this->getResourceMethod(__METHOD__);
-    $uri = $this->createRequestUri($resourceMethod['uri']);
-
-    $route = [
-      'kind' => 'Route',
-      'metadata' => [
-        'name' => $name,
-        'labels' => ['app' => $name],
-      ],
-      'spec' => [
-        'host' => $domain,
-        'path' => $path,
-        'to' => [
-          'kind' => 'Service',
-          'name' => $service_name,
-        ],
-      ],
-    ];
-
-    if (count($annotations)) {
-      $route['metadata']['annotations'] = $annotations;
-    }
-
-    return $this->request($resourceMethod['action'], $uri, $route);
+  public function createRoute(Route $route) {
+    return $this->createSerializableObject(__METHOD__, $route);
   }
 
   /**

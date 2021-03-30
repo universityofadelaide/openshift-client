@@ -8,6 +8,7 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
 use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
 use UniversityOfAdelaide\OpenShift\Objects\Hpa;
+use UniversityOfAdelaide\OpenShift\Objects\Route;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy;
 use UniversityOfAdelaide\OpenShift\Objects\StatefulSet;
@@ -206,26 +207,18 @@ interface ClientInterface {
   public function getRoute(string $name);
 
   /**
-   * Creates a route.
+   * Creates a new NetworkPolicy.
    *
-   * @param string $name
-   *   Name for the route.
-   * @param string $service_name
-   *   The service name to associate with the route.
-   * @param string $domain
-   *   The domain to associate with the route.
-   * @param string $path
-   *   The path to associate with the route. Optional.
-   * @param array $annotations
-   *   An optional array of metadata annotations to add to the route.
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Route $route
+   *   The Route to create.
    *
-   * @return array
-   *   Returns the body response if successful.
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Route|bool
+   *   Returns a Route if successful, false if it fails.
    *
    * @throws ClientException
-   *   Throws exception if there is an issue creating route.
+   *   Throws exception if there is an issue creating the Route.
    */
-  public function createRoute(string $name, string $service_name, string $domain, string $path = NULL, array $annotations = []);
+  public function createRoute(Route $route);
 
   /**
    * Updates an existing named route.
