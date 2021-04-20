@@ -39,7 +39,7 @@ class ScheduledBackupSerializerTest extends TestCase {
     $this->assertEquals(['test-label' => 'test label value'], $schedule->getLabels());
     $this->assertEquals('test-schedule', $schedule->getName());
     $this->assertEquals('2018-11-21T00:16:43Z', $schedule->getLastExecuted());
-    $this->assertEquals('0 2 * * * *', $schedule->getSchedule());
+    $this->assertEquals('0 2 * * *', $schedule->getSchedule());
     $this->assertEquals(['shared' => 'node-123-shared'], $schedule->getVolumes());
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Database $db */
     $db = $schedule->getDatabases()[0];
@@ -75,7 +75,8 @@ class ScheduledBackupSerializerTest extends TestCase {
       ])
       ->addDatabase($db)
       ->setLastExecuted('2018-11-29T05:00:47Z')
-      ->setSchedule('0 2 * * * *')
+      ->setSchedule('0 2 * * *')
+      ->setRetention(7)
       ->setLabel(Label::create('test-label', 'test label value'));
 
     $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/schedule.json'), TRUE);
