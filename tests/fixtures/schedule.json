@@ -9,7 +9,9 @@
     }
   },
   "spec": {
-    "schedule": "0 2 * * * *",
+    "schedule": {
+      "crontab": "0 2 * * *"
+    },
     "volumes": {
       "shared": {
         "claimName": "node-123-shared"
@@ -28,6 +30,9 @@
           }
         }
       }
+    },
+    "retention": {
+      "maxNumber": 7
     }
   },
   "status": {
