@@ -36,7 +36,8 @@ trait BackupRestoreNormalizerTrait {
    */
   protected function normalizeSchedule(BackupObjectBase $object) {
     return [
-      'crontab' => $object->getSchedule()
+      'crontab' => $object->getSchedule(),
+      'startingDeadlineSeconds' => $object->getStartingDeadlineSeconds(),
     ];
   }
 
