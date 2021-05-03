@@ -1,9 +1,9 @@
-# GitHub Action for Shepherd Operator
-name: Testing Shepherd Operator
+# GitHub Action for OpenShift client
+name: Testing OpenShift client
 on: [push, pull_request]
 jobs:
   symfony:
-    name: Shepherd Operator (PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }})
+    name: OpenShift client (PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }})
     runs-on: ${{ matrix.operating-system }}
     strategy:
       fail-fast: false
