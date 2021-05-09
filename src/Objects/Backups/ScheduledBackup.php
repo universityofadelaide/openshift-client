@@ -29,6 +29,30 @@ class ScheduledBackup extends BackupObjectBase {
   protected $lastExecuted;
 
   /**
+   * Schedule requires a starting deadline in seconds.
+   *
+   * @var int
+   */
+  protected $startingDeadlineSeconds = 3600;
+
+  /**
+   * @return string
+   */
+  public function getPhase(): string {
+    return $this->phase;
+  }
+
+  /**
+   * @param string $phase
+   *
+   * @return ScheduledBackup
+   */
+  public function setPhase(string $phase): ScheduledBackup {
+    $this->phase = $phase;
+    return $this;
+  }
+
+  /**
    * Gets the value of schedule.
    *
    * @return string
@@ -97,6 +121,28 @@ class ScheduledBackup extends BackupObjectBase {
    */
   public function setLastExecuted(string $lastExecuted): ScheduledBackup {
     $this->lastExecuted = $lastExecuted;
+    return $this;
+  }
+
+  /**
+   * Gets the value of startingDeadlineSeconds.
+   *
+   * @return int
+   */
+  public function getStartingDeadlineSeconds(): int {
+    return $this->startingDeadlineSeconds;
+  }
+
+  /**
+   * Sets the value of startingDeadlineSeconds.
+   *
+   * @param int $startingDeadlineSeconds
+   *
+   * @return ScheduledBackup
+   */
+  public function setStartingDeadlineSeconds(int $startingDeadlineSeconds
+  ): ScheduledBackup {
+    $this->startingDeadlineSeconds = $startingDeadlineSeconds;
     return $this;
   }
 

@@ -10,7 +10,8 @@
   },
   "spec": {
     "schedule": {
-      "crontab": "0 2 * * *"
+      "crontab": "0 2 * * *",
+      "startingDeadlineSeconds": 3600
     },
     "volumes": {
       "shared": {
