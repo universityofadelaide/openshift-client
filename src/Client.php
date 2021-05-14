@@ -1059,6 +1059,7 @@ class Client implements ClientInterface {
       ],
       'spec' => [
         'replicas' => 1,
+        'revisionHistoryLimit' => 5,
         'selector' => array_key_exists('labels', $data) ? array_merge($data['labels'], ['name' => $name]) : [],
         'strategy' => [
           'rollingParams' => [
