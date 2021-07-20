@@ -21,7 +21,7 @@ trait BackupRestoreNormalizerTrait {
    */
   protected function normalizeRetention(BackupObjectBase $object) {
     return [
-      'maxNumber' => (int)$object->getRetention()
+      'maxNumber' => (int) $object->getRetention(),
     ];
   }
 
@@ -44,33 +44,32 @@ trait BackupRestoreNormalizerTrait {
   /**
    * Normalize the backup object's volumes.
    *
-   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupObjectBase $object
-   *   The backup object.
+   * @param array $volumes
+   *   The backup object's volumes.
    *
    * @return array
    *   Normalized volumes.
    */
-  protected function normalizeVolumes(BackupObjectBase $object) {
-    $volumes = [];
+  protected function normalizeVolumes(array $volumes) {
+    $ret = [];
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupObjectBase $object */
-    foreach ($object->getVolumes() as $volumeId => $claimName) {
-      $volumes[$volumeId] = ['claimName' => $claimName];
+    foreach ($volumes as $volumeId => $claimName) {
+      $ret[$volumeId] = ['claimName' => $claimName];
     }
-
-    return $volumes;
+    return $ret;
   }
 
   /**
    * Normalize the backup object's mysqls.
    *
-   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupObjectBase $object
-   *   The backup object.
+   * @param array $mysqls
+   *   The backup object's mysqls.
    *
    * @return array
    *   Normalized mysqls.
    */
-  protected function normalizeMysqls(BackupObjectBase $object) {
-    return array_reduce($object->getDatabases(), function ($carry, Database $db) {
+  protected function normalizeMysqls(array $mysqls) {
+    return array_reduce($mysqls, function ($carry, Database $db) {
       $carry[$db->getId()] = [
         'secret' => [
           'name' => $db->getSecretName(),

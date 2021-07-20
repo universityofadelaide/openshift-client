@@ -1,0 +1,66 @@
+{
+  "apiVersion": "extension.shepherd/v1",
+  "kind": "Sync",
+  "metadata": {
+    "creationTimestamp": "2021-07-20T04:46:08Z",
+    "labels": {
+      "test-label": "test label value"
+    },
+    "name": "test-123-sync"
+  },
+  "spec": {
+    "backupEnv": "6",
+    "backupSpec": {
+      "mysql": {
+        "default": {
+          "secret": {
+            "keys": {
+              "database": "DATABASE_NAME",
+              "hostname": "DATABASE_HOST",
+              "password": "DATABASE_PASSWORD",
+              "port": "DATABASE_PORT",
+              "username": "DATABASE_USER"
+            },
+            "name": "node-6"
+          }
+        }
+      },
+      "volumes": {
+        "shared": {
+          "claimName": "node-6-shared"
+        }
+      }
+    },
+    "restoreEnv": "5",
+    "restoreSpec": {
+      "mysql": {
+        "default": {
+          "secret": {
+            "keys": {
+              "database": "DATABASE_NAME",
+              "hostname": "DATABASE_HOST",
+              "password": "DATABASE_PASSWORD",
+              "port": "DATABASE_PORT",
+              "username": "DATABASE_USER"
+            },
+            "name": "node-5"
+          }
+        }
+      },
+      "volumes": {
+        "shared": {
+          "claimName": "node-5-shared"
+        }
+      }
+    },
+    "site": "2"
+  },
+  "status": {
+    "backupName": "sync-adam-test-1-backup",
+    "backupPhase": "Completed",
+    "completionTime": "2021-07-20T04:46:19Z",
+    "restoreName": "sync-adam-test-1-restore",
+    "restorePhase": "InProgress",
+    "startTime": "2021-07-20T04:46:08Z"
+  }
+}
