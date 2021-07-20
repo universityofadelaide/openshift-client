@@ -32,6 +32,7 @@ class OpenShiftSerializerFactory {
       new StatefulSetNormalizer(),
       new HpaNormalizer(),
       new SyncNormalizer(),
+      new SyncListNormalizer(),
     ];
     return new Serializer($normalizers, $encoders);
   }

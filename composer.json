@@ -26,5 +26,10 @@
         "psr-4": {
             "UniversityOfAdelaide\\OpenShift\\": "src/"
         }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "UniversityOfAdelaide\\OpenShift\\Tests\\": "tests/src"
+      }
     }
 }
