@@ -9,6 +9,8 @@ use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\ScheduledBackup;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\Sync;
+use UniversityOfAdelaide\OpenShift\Objects\Backups\SyncList;
 use UniversityOfAdelaide\OpenShift\Objects\ConfigMap;
 use UniversityOfAdelaide\OpenShift\Objects\Hpa;
 use UniversityOfAdelaide\OpenShift\Objects\Route;
@@ -396,6 +398,20 @@ class Client implements ClientInterface {
       'update'      => [
         'action' => 'PUT',
         'uri'    => '/apis/apps/v1/namespaces/{namespace}/statefulsets/{name}',
+      ],
+    ],
+    'sync' => [
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/syncs',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/syncs/{name}',
+      ],
+      'list' => [
+        'action' => 'GET',
+        'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/syncs',
       ],
     ],
   ];
@@ -1734,6 +1750,40 @@ class Client implements ClientInterface {
    */
   public function updateHpa(Hpa $hpa) {
     return $this->createSerializableObject(__METHOD__, $hpa, ['name' => $hpa->getName()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSync(string $name) {
+    $result = $this->apiCall(__METHOD__, $name, NULL, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, Sync::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function listSync(Label $label_selector = NULL) {
+    $label = NULL;
+    if ($label_selector) {
+      $label = (string) $label_selector;
+    }
+
+    $result = $this->apiCall(__METHOD__, '', $label, FALSE);
+    if (!$result) {
+      return FALSE;
+    }
+    return $this->serializer->deserialize($result, SyncList::class, 'json');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createSync(Sync $sync) {
+    return $this->createSerializableObject(__METHOD__, $sync);
   }
 
   /**
