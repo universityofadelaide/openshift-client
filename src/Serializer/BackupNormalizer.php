@@ -57,8 +57,8 @@ class BackupNormalizer extends BaseNormalizer {
         'name' => $object->getName(),
       ],
       'spec' => [
-        'volumes' => $this->normalizeVolumes($object),
-        'mysql' => $this->normalizeMysqls($object),
+        'volumes' => $this->normalizeVolumes($object->getVolumes()),
+        'mysql' => $this->normalizeMysqls($object->getDatabases()),
       ],
     ];
     if ($object->hasAnnotations()) {

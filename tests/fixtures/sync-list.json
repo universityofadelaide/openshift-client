@@ -1,0 +1,121 @@
+{
+  "apiVersion": "extension.shepherd/v1",
+  "items": [
+    {
+      "apiVersion": "extension.shepherd/v1",
+      "kind": "Sync",
+      "metadata": {
+        "creationTimestamp": "2021-07-20T04:46:08Z",
+        "labels": {
+          "test-label": "test label value"
+        },
+        "name": "test-123-sync"
+      },
+      "spec": {
+        "backupEnv": "6",
+        "backupSpec": {
+          "mysql": {
+            "default": {
+              "secret": {
+                "keys": {
+                  "database": "DATABASE_NAME",
+                  "hostname": "DATABASE_HOST",
+                  "password": "DATABASE_PASSWORD",
+                  "port": "DATABASE_PORT",
+                  "username": "DATABASE_USER"
+                },
+                "name": "node-6"
+              }
+            }
+          },
+          "volumes": {
+            "shared": {
+              "claimName": "node-6-shared"
+            }
+          }
+        },
+        "restoreEnv": "5",
+        "restoreSpec": {
+          "mysql": {
+            "default": {
+              "secret": {
+                "keys": {
+                  "database": "DATABASE_NAME",
+                  "hostname": "DATABASE_HOST",
+                  "password": "DATABASE_PASSWORD",
+                  "port": "DATABASE_PORT",
+                  "username": "DATABASE_USER"
+                },
+                "name": "node-5"
+              }
+            }
+          },
+          "volumes": {
+            "shared": {
+              "claimName": "node-5-shared"
+            }
+          }
+        },
+        "site": "2"
+      }
+    },
+    {
+      "apiVersion": "extension.shepherd/v1",
+      "kind": "Sync",
+      "metadata": {
+        "creationTimestamp": "2021-07-21T04:46:08Z",
+        "labels": {
+          "test-label": "test label value"
+        },
+        "name": "test-456-sync"
+      },
+      "spec": {
+        "backupEnv": "7",
+        "backupSpec": {
+          "mysql": {
+            "default": {
+              "secret": {
+                "keys": {
+                  "database": "DATABASE_NAME",
+                  "hostname": "DATABASE_HOST",
+                  "password": "DATABASE_PASSWORD",
+                  "port": "DATABASE_PORT",
+                  "username": "DATABASE_USER"
+                },
+                "name": "node-7"
+              }
+            }
+          },
+          "volumes": {
+            "shared": {
+              "claimName": "node-7-shared"
+            }
+          }
+        },
+        "restoreEnv": "8",
+        "restoreSpec": {
+          "mysql": {
+            "default": {
+              "secret": {
+                "keys": {
+                  "database": "DATABASE_NAME",
+                  "hostname": "DATABASE_HOST",
+                  "password": "DATABASE_PASSWORD",
+                  "port": "DATABASE_PORT",
+                  "username": "DATABASE_USER"
+                },
+                "name": "node-8"
+              }
+            }
+          },
+          "volumes": {
+            "shared": {
+              "claimName": "node-8-shared"
+            }
+          }
+        },
+        "site": "3"
+      }
+    }
+  ]
+}

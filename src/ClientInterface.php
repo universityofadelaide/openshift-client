@@ -1208,4 +1208,46 @@ interface ClientInterface {
    */
   public function updateHpa(Hpa $hpa);
 
+  /**
+   * Retrieves a sync that matches the name.
+   *
+   * @param string $name
+   *   Name of the sync to retrieved.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Sync|bool
+   *   Returns a Sync if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving sync.
+   */
+  public function getSync(string $name);
+
+  /**
+   * Retrieves a list of syncs optionally filtered by selectors.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Label|null $label_selector
+   *   An optional label selector to apply to the query.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\SyncList|bool
+   *   Returns a SyncList if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue retrieving the list of syncs.
+   */
+  public function listSync(Label $label_selector = NULL);
+
+  /**
+   * Creates a new sync.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Backups\Sync $sync
+   *   The sync to create.
+   *
+   * @return \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup|bool
+   *   Returns a Sync if successful, false if it does not exist.
+   *
+   * @throws ClientException
+   *   Throws exception if there is an issue creating the sync.
+   */
+  public function createSync(Sync $sync);
+
 }
