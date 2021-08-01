@@ -13,6 +13,11 @@ class Backup extends BackupObjectBase {
   const MANUAL_LABEL = 'is-manual';
 
   /**
+   * The name of the label to determine whether the backup is sync.
+   */
+  const SYNC_LABEL = 'is-sync';
+
+  /**
    * An array of annotations to apply to this backup.
    *
    * @var array
@@ -123,4 +128,13 @@ class Backup extends BackupObjectBase {
     return (int) $this->getLabel(self::MANUAL_LABEL) === 1;
   }
 
+  /**
+   * Return whether the backup was manually triggered.
+   *
+   * @return bool
+   *   TRUE if the backup was manually triggered.
+   */
+  public function isSync(): bool {
+    return (int) $this->getLabel(self::SYNC_LABEL) === 1;
+  }
 }
