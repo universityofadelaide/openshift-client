@@ -1922,7 +1922,7 @@ class Client implements ClientInterface {
                     'args' => $args,
                     'env' => $data['env_vars'] ?? [],
                     'image' => $image_name,
-                    'imagePullPolicy' => 'Always',
+                    'imagePullPolicy' => 'IfNotPresent',
                     'name' => $name,
                     'resources' =>
                       [
