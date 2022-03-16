@@ -24,7 +24,7 @@ class ClientTest extends TestCase {
   /**
    * Setup things required for the tests.
    */
-  public function setUp() {
+  public function setUp(): void {
     global $argv, $argc;
 
     $this->assertEquals(6, $argc, 'Missing arguments');
@@ -41,7 +41,7 @@ class ClientTest extends TestCase {
       die("Unable to open specified file $argv[5]");
     }
 
-    $this->client = new Client($this->host, $this->token, $this->namespace, TRUE);
+    $this->client = new Client($this->host, $this->token, $this->namespace, FALSE);
 
     $this->volumes = [
       [
@@ -116,7 +116,8 @@ class ClientTest extends TestCase {
    * Test creating an image stream.
    */
   public function testCreateImageStream() {
-    $response = $this->client->createImageStream($this->json->clientTest->artifacts . '-stream');
+    $response = $this->client->createImageStream(
+      $this->client->generateImageStreamConfig($this->json->clientTest->artifacts . '-stream'));
 
     $this->assertNotFalse(
       $response,
@@ -135,8 +136,7 @@ class ClientTest extends TestCase {
       'Unable to retrieve image stream.'
     );
 
-    $this->assertInternalType(
-      'array',
+    $this->assertIsArray(
       $response,
       'Returned type for image stream incorrect.'
     );
@@ -151,7 +151,8 @@ class ClientTest extends TestCase {
     $response = $this->client->createPersistentVolumeClaim(
       $this->json->clientTest->artifacts . '-private',
       'ReadWriteMany',
-      '10Gi'
+      '10Gi',
+      'mydeployment'
     );
 
     $this->assertNotFalse(
@@ -167,7 +168,8 @@ class ClientTest extends TestCase {
     $response = $this->client->createPersistentVolumeClaim(
       $this->json->clientTest->artifacts . '-public',
       'ReadWriteMany',
-      '10Gi'
+      '10Gi',
+      'mydeployment'
     );
 
     $this->assertNotFalse(
@@ -192,10 +194,12 @@ class ClientTest extends TestCase {
     ];
 
     $response = $this->client->createBuildConfig(
-      $this->json->clientTest->artifacts . '-build',
-      $this->json->clientTest->buildSecret,
-      $this->json->clientTest->artifacts . '-stream:master',
-      $data
+      $this->client->generateBuildConfig(
+        $this->json->clientTest->artifacts . '-build',
+        $this->json->clientTest->buildSecret,
+        $this->json->clientTest->artifacts . '-stream:master',
+        $data
+      )
     );
 
     $this->assertNotFalse(
@@ -215,10 +219,7 @@ class ClientTest extends TestCase {
       'Unable to retrieve build config.'
     );
 
-    $this->assertInternalType(
-      'array',
-      $response
-    );
+    $this->assertIsArray($response);
   }
 
   /**
@@ -252,6 +253,9 @@ class ClientTest extends TestCase {
       'annotations' => [
         'test' => 'tester',
       ],
+      'labels' => [
+        'app' => $this->json->clientTest->artifacts
+      ]
     ];
 
     $name = $this->json->clientTest->artifacts . '-deploy';
@@ -259,11 +263,15 @@ class ClientTest extends TestCase {
     $image_name = $this->json->clientTest->artifacts . '-image';
 
     $response = $this->client->createDeploymentConfig(
-      $name,
-      $image_stream_tag,
-      $image_name,
-      $this->volumes,
-      $data
+      $this->client->generateDeploymentConfig(
+        $name,
+        $image_stream_tag,
+        $image_name,
+        FALSE,
+        $this->volumes,
+        $data,
+        []
+      )
     );
 
     $this->assertNotFalse(
@@ -305,6 +313,7 @@ class ClientTest extends TestCase {
       $name,
       $image_name,
       '*/30 * * * *',
+      FALSE,
       $args,
       $this->volumes,
       $data
@@ -327,10 +336,7 @@ class ClientTest extends TestCase {
       'Unable to retrieve deploy config.'
     );
 
-    $this->assertInternalType(
-      'array',
-      $response
-    );
+    $this->assertIsArray($response);
   }
 
   /**
@@ -348,7 +354,13 @@ class ClientTest extends TestCase {
 
     $name = $this->json->clientTest->artifacts . '-service';
 
-    $response = $this->client->createService($name, $data);
+    $response = $this->client->createService(
+      $name,
+      $this->json->clientTest->artifacts . '-deploy',
+      8080,
+      8080,
+      $this->json->clientTest->artifacts . '-deploy'
+    );
 
     $this->assertNotFalse(
       $response,
@@ -368,6 +380,7 @@ class ClientTest extends TestCase {
     $route = Route::create()
       ->setName($name)
       ->setHost($application_domain)
+      ->setPath('')
       ->setInsecureEdgeTerminationPolicy('Allow')
       ->setTermination('edge')
       ->setToKind('Service')

@@ -21,7 +21,7 @@ abstract class ListTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->serializer = OpenShiftSerializerFactory::create();
   }

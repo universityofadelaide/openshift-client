@@ -24,7 +24,7 @@ class BackupSerializerTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->serializer = OpenShiftSerializerFactory::create();
   }
@@ -33,7 +33,7 @@ class BackupSerializerTest extends TestCase {
    * @covers ::denormalize
    */
   public function testDenormalize() {
-    $jsonData = file_get_contents(__DIR__ . '/../../../fixtures/backup.json');
+    $jsonData = file_get_contents(__DIR__ . '/../../fixtures/backup.json');
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup $backup */
     $backup = $this->serializer->deserialize($jsonData, Backup::class, 'json');
     $this->assertEquals('test-123-backup', $backup->getName());
@@ -80,7 +80,7 @@ class BackupSerializerTest extends TestCase {
       ->addDatabase($db)
       ->setLabel(Label::create('test-label', 'test label value'));
 
-    $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/backup.json'), TRUE);
+    $expected = json_decode(file_get_contents(__DIR__ . '/../../fixtures/backup.json'), TRUE);
     unset($expected['status']);
     unset($expected['metadata']['creationTimestamp']);
     $this->assertEquals($expected, json_decode($this->serializer->serialize($backup, 'json'), TRUE));
