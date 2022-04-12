@@ -194,25 +194,25 @@ class Client implements ClientInterface {
     'imagestream' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams',
+        'uri'    => '/apis/image.openshift.io/v1/namespaces/{namespace}/imagestreams',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
+        'uri'    => '/apis/image.openshift.io/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
       'get'    => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
+        'uri'    => '/apis/image.openshift.io/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
+        'uri'    => '/apis/image.openshift.io/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
     ],
     'imagestreamtag' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreamtags/{name}',
+        'uri'    => '/apis/image.openshift.io/v1/namespaces/{namespace}/imagestreamtags/{name}',
       ],
     ],
     'job' => [
@@ -920,7 +920,7 @@ class Client implements ClientInterface {
    */
   public function generateImageStreamConfig(string $name) {
     $imageStream = [
-      'apiVersion' => 'v1',
+      'apiVersion' => 'image.openshift.io/v1',
       'kind' => 'ImageStream',
       'metadata' => [
         'name' => $name,
