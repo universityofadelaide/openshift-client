@@ -96,25 +96,25 @@ class Client implements ClientInterface {
     'buildconfig' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs',
+        'uri'    => '/apis/build.openshift.io/v1/namespaces/{namespace}/buildconfigs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
+        'uri'    => '/apis/build.openshift.io/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
       'get'    => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
+        'uri'    => '/apis/build.openshift.io/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
+        'uri'    => '/apis/build.openshift.io/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
     ],
     'builds' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/builds/{name}',
+        'uri'    => '/apis/build.openshift.io/v1/namespaces/{namespace}/builds',
       ],
     ],
     'configmap' => [
@@ -148,29 +148,29 @@ class Client implements ClientInterface {
     'deploymentconfig' => [
       'create'      => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
+        'uri'    => '/apis/apps.openshift.io/v1/namespaces/{namespace}/deploymentconfigs',
       ],
       'delete'      => [
         'action' => 'DELETE',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+        'uri'    => '/apis/apps.openshift.io/v1/namespaces/{namespace}/deploymentconfigs/{name}',
       ],
       'get'         => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+        'uri'    => '/apis/apps.openshift.io/v1/namespaces/{namespace}/deploymentconfigs/{name}',
       ],
       'update'      => [
         'action' => 'PUT',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+        'uri'    => '/apis/apps.openshift.io/v1/namespaces/{namespace}/deploymentconfigs/{name}',
       ],
       'instantiate' => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}/instantiate',
+        'uri'    => '/apis/apps.openshift.io/v1/namespaces/{namespace}/deploymentconfigs/{name}/instantiate',
       ],
     ],
     'deploymentconfigs' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
+        'uri'    => '/apis/apps.openshift.io/v1/namespaces/{namespace}/deploymentconfigs',
       ],
     ],
     'hpa' => [
@@ -316,19 +316,19 @@ class Client implements ClientInterface {
     'route' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/routes',
+        'uri'    => '/apis/route.openshift.io/v1/namespaces/{namespace}/routes',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+        'uri'    => '/apis/route.openshift.io/v1/namespaces/{namespace}/routes/{name}',
       ],
       'get'    => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+        'uri'    => '/apis/route.openshift.io/v1/namespaces/{namespace}/routes/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+        'uri'    => '/apis/route.openshift.io/v1/namespaces/{namespace}/routes/{name}',
       ],
     ],
     'schedule' => [
