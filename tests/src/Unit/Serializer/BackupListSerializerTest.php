@@ -13,7 +13,7 @@ class BackupListSerializerTest extends ListTestBase {
    * @covers ::denormalize
    */
   public function testDenormalize() {
-    $jsonData = file_get_contents(__DIR__ . '/../../../fixtures/backup-list.json');
+    $jsonData = file_get_contents(__DIR__ . '/../../fixtures/backup-list.json');
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList $backupList */
     $backupList = $this->serializer->deserialize($jsonData, BackupList::class, 'json');
     $this->assertTrue($backupList->hasBackups());

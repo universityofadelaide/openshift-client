@@ -24,7 +24,7 @@ class RestoreSerializerTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->serializer = OpenShiftSerializerFactory::create();
   }
@@ -33,7 +33,7 @@ class RestoreSerializerTest extends TestCase {
    * @covers ::denormalize
    */
   public function testDenormalize() {
-    $jsonData = file_get_contents(__DIR__ . '/../../../fixtures/restore.json');
+    $jsonData = file_get_contents(__DIR__ . '/../../fixtures/restore.json');
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Restore $restore */
     $restore = $this->serializer->deserialize($jsonData, Restore::class, 'json');
     $this->assertEquals('test-restore', $restore->getName());
@@ -66,7 +66,7 @@ class RestoreSerializerTest extends TestCase {
       ->setDatabases([$db])
       ->setLabel(Label::create('site_id', '123'));
 
-    $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/restore.json'), TRUE);
+    $expected = json_decode(file_get_contents(__DIR__ . '/../../fixtures/restore.json'), TRUE);
     // We don't set status on normalization.
     unset($expected['status']);
     unset($expected['metadata']['creationTimestamp']);

@@ -13,7 +13,7 @@ class RestoreListSerializerTest extends ListTestBase {
    * @covers ::denormalize
    */
   public function testDenormalize() {
-    $jsonData = file_get_contents(__DIR__ . '/../../../fixtures/restore-list.json');
+    $jsonData = file_get_contents(__DIR__ . '/../../fixtures/restore-list.json');
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\RestoreList $restoreList */
     $restoreList = $this->serializer->deserialize($jsonData, RestoreList::class, 'json');
     $this->assertTrue($restoreList->hasRestores());

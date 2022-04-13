@@ -21,7 +21,7 @@ class NetworkPolicySerializerTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->serializer = OpenShiftSerializerFactory::create();
   }
@@ -37,7 +37,7 @@ class NetworkPolicySerializerTest extends TestCase {
       ->setPort(11312)
       ->setName('test-np');
 
-    $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/networkpolicy.json'), TRUE);
+    $expected = json_decode(file_get_contents(__DIR__ . '/../../fixtures/networkpolicy.json'), TRUE);
     unset($expected['metadata']['creationTimestamp']);
     $this->assertEquals($expected, json_decode($this->serializer->serialize($np, 'json'), TRUE));
   }

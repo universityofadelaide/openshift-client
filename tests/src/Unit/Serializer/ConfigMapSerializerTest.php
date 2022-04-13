@@ -22,7 +22,7 @@ class ConfigMapSerializerTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->serializer = OpenShiftSerializerFactory::create();
   }
@@ -31,7 +31,7 @@ class ConfigMapSerializerTest extends TestCase {
    * @covers ::denormalize
    */
   public function testDenormalize() {
-    $jsonData = file_get_contents(__DIR__ . '/../../../fixtures/configmap.json');
+    $jsonData = file_get_contents(__DIR__ . '/../../fixtures/configmap.json');
     /** @var \UniversityOfAdelaide\OpenShift\Objects\ConfigMap $configMap */
     $configMap = $this->serializer->deserialize($jsonData, ConfigMap::class, 'json');
     $this->assertEquals('test-config', $configMap->getName());
@@ -49,7 +49,7 @@ class ConfigMapSerializerTest extends TestCase {
       ->setLabel(Label::create('test-label', 'test label value'))
       ->setData(['foo' => 'bar', 'boo' => 'far']);
 
-    $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/configmap.json'), TRUE);
+    $expected = json_decode(file_get_contents(__DIR__ . '/../../fixtures/configmap.json'), TRUE);
     unset($expected['status']);
     unset($expected['metadata']['creationTimestamp']);
     $this->assertEquals($expected, json_decode($this->serializer->serialize($configMap, 'json'), TRUE));
