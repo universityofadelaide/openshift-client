@@ -30,25 +30,11 @@ use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 class Client implements ClientInterface {
 
   /**
-   * Api version.
-   *
-   * @var string
-   */
-  private $apiVersion = 'v1';
-
-  /**
    * Current working namespace.
    *
    * @var string
    */
   private $namespace;
-
-  /**
-   * Base url to OpenShift.
-   *
-   * @var string
-   */
-  private $host;
 
   /**
    * Guzzle HTTP Client.
@@ -433,7 +419,6 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function __construct($host, $token, $namespace, $verifyTls = TRUE) {
-    $this->host = $host;
     $this->namespace = $namespace;
     $this->guzzleClient = new GuzzleClient([
       'verify' => $verifyTls,
@@ -447,30 +432,10 @@ class Client implements ClientInterface {
   }
 
   /**
-   * Returns the api version.
-   *
-   * @return string
-   *   The currently supported api version.
-   */
-  public function getApiVersion() {
-    return $this->apiVersion;
-  }
-
-  /**
-   * Set the api version number.
-   *
-   * @param string $apiVersion
-   *   Api version number.
-   */
-  public function setApiVersion(string $apiVersion) {
-    $this->apiVersion = $apiVersion;
-  }
-
-  /**
-   * Returns the guzzle client.
+   * Return the Guzzle client.
    *
    * @return \GuzzleHttp\Client
-   *   Return the guzzle client.
+   *   Return the Guzzle client.
    */
   public function getGuzzleClient() {
     return $this->guzzleClient;
@@ -608,7 +573,6 @@ class Client implements ClientInterface {
       $data[$key] = base64_encode($value);
     }
 
-    // @todo - this should use model.
     $secret = [
       'kind' => 'Secret',
       'metadata' => [
@@ -687,7 +651,6 @@ class Client implements ClientInterface {
       ];
     }
 
-    // @todo - use a model.
     $service = [
       'kind' => 'Service',
       'metadata' => [
@@ -698,7 +661,6 @@ class Client implements ClientInterface {
         'ports' => [
           // Defaults to TCP.
           [
-            // @todo Does this have any impact when using non web ports?
             'name' => 'web',
             'port' => $port,
             'targetPort' => $target_port,
@@ -780,7 +742,7 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function updateRoute(string $name, string $service_name, string $application_domain) {
-    // TODO: Implement updateRoute() method.
+    // @todo Implement updateRoute() method.
   }
 
   /**
@@ -866,7 +828,6 @@ class Client implements ClientInterface {
           ],
           'type' => 'Source',
         ],
-        // @todo - figure out github and other types of triggers
         'triggers' => [
           [
             'type' => 'ImageChange',
@@ -974,14 +935,14 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function createImageSteamTag(string $name) {
-    // TODO: Implement createImageSteamTag() method.
+    // @todo Implement createImageSteamTag() method.
   }
 
   /**
    * {@inheritdoc}
    */
   public function updateImageSteamTag(string $name) {
-    // TODO: Implement updateImageSteamTag() method.
+    // @todo Implement updateImageSteamTag() method.
   }
 
   /**
@@ -1035,7 +996,7 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function updatePersistentVolumeClaim(string $name, string $access_mode, string $storage) {
-    // TODO: Implement updatePersistentVolumeClaim() method.
+    // @todo Implement updatePersistentVolumeClaim() method.
   }
 
   /**
@@ -1174,8 +1135,6 @@ class Client implements ClientInterface {
   /**
    * Return a formatted securityContext for openshift.
    *
-   * TODO: Move uid/gid into a sub array and only pass that?
-   *
    * @param $data
    *   The complete data array
    *
@@ -1187,15 +1146,15 @@ class Client implements ClientInterface {
       'securityContext' => [
         'runAsUser' => $data['uid'],
         'supplementalGroups' => array_key_exists('gid', $data) ? [$data['gid']] : [],
-      ]
+      ],
     ];
   }
 
   /**
    * Return an array of probes.
    *
-   * @param $probes
-   *  Array of probe configuration constructed from a project entity.
+   * @param array $probes
+   *   Array of probe configuration constructed from a project entity.
    *
    * @return array
    *   Probes array ready for API.
@@ -1293,7 +1252,7 @@ class Client implements ClientInterface {
   public function updateDeploymentConfig(string $name, array $deployment_config, array $config) {
     $deployment_config = array_replace_recursive($deployment_config, $config);
 
-    // Just replace the entire env array as the replace screws it up.
+    // Replace the entire env array.
     if (isset($config['spec']['template']['spec']['containers'][0]['env'])) {
       $deployment_config['spec']['template']['spec']['containers'][0]['env'] =
         $config['spec']['template']['spec']['containers'][0]['env'];
@@ -1497,7 +1456,7 @@ class Client implements ClientInterface {
 
     $repControllers = $this->getReplicationControllers($name, $label);
     if ($replica_count === NULL) {
-      // @todo - err what ?
+      // @todo err what ?
       return $repControllers;
     }
 
