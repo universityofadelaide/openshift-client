@@ -30,13 +30,6 @@ use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 class Client implements ClientInterface {
 
   /**
-   * Api version.
-   *
-   * @var string
-   */
-  private $apiVersion = 'v1';
-
-  /**
    * Current working namespace.
    *
    * @var string
@@ -444,26 +437,6 @@ class Client implements ClientInterface {
       ],
     ]);
     $this->serializer = OpenShiftSerializerFactory::create();
-  }
-
-  /**
-   * Returns the api version.
-   *
-   * @return string
-   *   The currently supported api version.
-   */
-  public function getApiVersion() {
-    return $this->apiVersion;
-  }
-
-  /**
-   * Set the api version number.
-   *
-   * @param string $apiVersion
-   *   Api version number.
-   */
-  public function setApiVersion(string $apiVersion) {
-    $this->apiVersion = $apiVersion;
   }
 
   /**
@@ -1067,7 +1040,7 @@ class Client implements ClientInterface {
     $volume_config = $this->setVolumes($volumes);
 
     $deploymentConfig = [
-      'apiVersion' => 'v1',
+      'apiVersion' => 'apps.openshift.io/v1',
       'kind' => 'DeploymentConfig',
       'metadata' => [
         'name' => $name,
@@ -1277,7 +1250,7 @@ class Client implements ClientInterface {
     ]);
 
     $instantiate = [
-      'apiVersion' => 'v1',
+      'apiVersion' => 'apps.openshift.io/v1',
       'kind' => 'DeploymentRequest',
       'name' => $name,
       'latest' => TRUE,
