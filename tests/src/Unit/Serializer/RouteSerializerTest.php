@@ -21,7 +21,7 @@ class RouteSerializerTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->serializer = OpenShiftSerializerFactory::create();
   }
@@ -42,7 +42,7 @@ class RouteSerializerTest extends TestCase {
       ->setToWeight(50)
       ->setWildcardPolicy('None');
 
-    $expected = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/route.json'), TRUE);
+    $expected = json_decode(file_get_contents(__DIR__ . '/../../fixtures/route.json'), TRUE);
     $this->assertEquals($expected, json_decode($this->serializer->serialize($route, 'json'), TRUE));
   }
 

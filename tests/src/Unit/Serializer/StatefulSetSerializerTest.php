@@ -23,7 +23,7 @@ class StatefulSetSerializerTest extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->serializer = OpenShiftSerializerFactory::create();
   }
@@ -32,7 +32,7 @@ class StatefulSetSerializerTest extends TestCase {
    * @covers ::denormalize
    */
   public function testDenormalize() {
-    $jsonData = file_get_contents(__DIR__ . '/../../../fixtures/statefulset.json');
+    $jsonData = file_get_contents(__DIR__ . '/../../fixtures/statefulset.json');
     /** @var \UniversityOfAdelaide\OpenShift\Objects\StatefulSet $ss */
     $ss = $this->serializer->deserialize($jsonData, StatefulSet::class, 'json');
     $this->assertEquals('test-ss', $ss->getName());
@@ -62,7 +62,7 @@ class StatefulSetSerializerTest extends TestCase {
         ],
       ]);
 
-    $expected = trim(file_get_contents(__DIR__ . '/../../../fixtures/statefulsetnormalized.json'));
+    $expected = trim(file_get_contents(__DIR__ . '/../../fixtures/statefulsetnormalized.json'));
     $actual = $this->serializer->serialize($ss, 'json');
     // Use assertEquals here as the json assertions will not pick up on the
     // difference between an empty array and empty object.

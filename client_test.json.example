@@ -21,7 +21,7 @@
       "from": {
         "kind": "DockerImage",
         "name": "uofa/s2i-shepherd-drupal:develop"
-      },
+      }
     },
     "envVars": [
       {

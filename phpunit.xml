@@ -1,35 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit bootstrap="tests/bootstrap.php" colors="true"
-         beStrictAboutTestsThatDoNotTestAnything="true"
-         beStrictAboutOutputDuringTests="true"
-         beStrictAboutChangesToGlobalState="true"
-         checkForUnintentionallyCoveredCode="false">
-    <php>
-        <!-- Set error reporting to E_ALL. -->
-        <ini name="error_reporting" value="32767"/>
-        <!-- Do not limit the amount of memory tests take to run. -->
-        <ini name="memory_limit" value="-1"/>
-        <const name="BOOTSTRAP_IS_PHPUNIT" value="true"/>
-    </php>
-    <testsuites>
-        <testsuite name="unit">
-            <directory>./tests/Unit</directory>
-        </testsuite>
-    </testsuites>
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="tests/bootstrap.php" colors="true" beStrictAboutTestsThatDoNotTestAnything="true" beStrictAboutOutputDuringTests="true" beStrictAboutChangesToGlobalState="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory>./src</directory>
+    </include>
+    <exclude>
+      <directory suffix="Test.php">./</directory>
+      <directory suffix="TestBase.php">./</directory>
+    </exclude>
+  </coverage>
+  <php>
+    <!-- Set error reporting to E_ALL. -->
+    <ini name="error_reporting" value="32767"/>
+    <!-- Do not limit the amount of memory tests take to run. -->
+    <ini name="memory_limit" value="-1"/>
+    <const name="BOOTSTRAP_IS_PHPUNIT" value="true"/>
+  </php>
+  <testsuites>
+    <testsuite name="unit">
+      <directory>./tests/src/Unit</directory>
+    </testsuite>
+  </testsuites>
+  <listeners>
+    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
         </listener>
-    </listeners>
-    <!-- Filter for coverage reports. -->
-    <filter>
-        <whitelist>
-            <directory>./src</directory>
-            <!-- By definition test classes have no tests. -->
-            <exclude>
-                <directory suffix="Test.php">./</directory>
-                <directory suffix="TestBase.php">./</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+  </listeners>
+  <!-- Filter for coverage reports. -->
 </phpunit>
