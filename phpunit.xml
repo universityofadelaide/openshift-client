@@ -23,7 +23,7 @@
   </testsuites>
   <listeners>
     <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
-        </listener>
+    </listener>
   </listeners>
   <!-- Filter for coverage reports. -->
 </phpunit>
