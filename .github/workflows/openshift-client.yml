@@ -33,8 +33,6 @@ jobs:
       - name: Install Composer dependencies
         run: |
           composer install --no-progress --prefer-dist
-      - name: Run Tests - Skip long time non functional client tests for now.
+      - name: Run Tests
         run: |
-          vendor/phpunit/phpunit/phpunit --coverage-text tests/src/Unit/BackupTest.php
-          vendor/phpunit/phpunit/phpunit --coverage-text tests/src/Unit/PhaseTest.php
-          vendor/phpunit/phpunit/phpunit --coverage-text tests/src/Unit/Serializer/
+          vendor/phpunit/phpunit/phpunit --coverage-text tests/src/Unit/
