@@ -1028,7 +1028,7 @@ class Client implements ClientInterface {
     $volume_config = $this->setVolumes($volumes);
 
     $deploymentConfig = [
-      'apiVersion' => 'v1',
+      'apiVersion' => 'apps.openshift.io/v1',
       'kind' => 'DeploymentConfig',
       'metadata' => [
         'name' => $name,
@@ -1236,7 +1236,7 @@ class Client implements ClientInterface {
     ]);
 
     $instantiate = [
-      'apiVersion' => 'v1',
+      'apiVersion' => 'apps.openshift.io/v1',
       'kind' => 'DeploymentRequest',
       'name' => $name,
       'latest' => TRUE,
