@@ -4,6 +4,10 @@ namespace UniversityOfAdelaide\OpenShift;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use Psr\Http\Message\RequestInterface;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
@@ -418,17 +422,31 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct($host, $token, $namespace, $verifyTls = TRUE) {
-    $this->namespace = $namespace;
+  public function __construct($host, $verifyTls = TRUE) {
+    // Create a handler stack with sane defaults.
+    $stack = new HandlerStack();
+    $stack->setHandler(new CurlHandler());
+
+    // Add our token variable checker so we can override the default token.
+    $stack->push($this->handleAuth());
+
     $this->guzzleClient = new GuzzleClient([
+      'handler' => $stack,
       'verify' => $verifyTls,
       'base_uri' => $host,
       'headers' => [
-        'Authorization' => 'Bearer ' . $token,
         'Accept' => 'application/json',
       ],
     ]);
     $this->serializer = OpenShiftSerializerFactory::create();
+  }
+
+  public function setNamespace($namespace) {
+    $this->namespace = $namespace;
+  }
+
+  public function setToken($token) {
+    $this->token = $token;
   }
 
   /**
@@ -439,6 +457,17 @@ class Client implements ClientInterface {
    */
   public function getGuzzleClient() {
     return $this->guzzleClient;
+  }
+
+  public function handleAuth() {
+    return function (callable $handler) {
+      return function (RequestInterface $r) use ($handler) {
+        if ($this->token) {
+          $r = $r->withHeader('Authorization', 'Bearer ' . $this->token);
+          return $r;
+        };
+      };
+    };
   }
 
   /**
