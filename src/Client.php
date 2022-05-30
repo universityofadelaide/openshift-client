@@ -271,7 +271,7 @@ class Client implements ClientInterface {
         'uri'    => '/api/v1/namespaces/{namespace}/pods',
       ],
     ],
-    'projects' => [
+    'project' => [
       'create'    => [
         'action' => 'POST',
         'uri'    => '/apis/project.openshift.io/v1/projects',
@@ -279,6 +279,12 @@ class Client implements ClientInterface {
       'get'    => [
         'action' => 'GET',
         'uri'    => '/apis/project.openshift.io/v1/projects',
+      ],
+    ],
+    'projectrequest' => [
+      'create'    => [
+        'action' => 'POST',
+        'uri'    => '/apis/project.openshift.io/v1/projectrequests',
       ],
     ],
     'replicationcontrollers' => [
@@ -622,13 +628,37 @@ class Client implements ClientInterface {
 
     $project = [
       'kind' => 'Project',
+      'apiVersion' => 'project.openshift.io/v1',
       'metadata' => [
         'name' => 'shp-' . $name,
+        'creationTimestamp' => NULL,
       ],
     ];
 
     return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $project);
   }
+
+  /**
+   * Create a new project request.
+   *
+   * @param string $name
+   *   The project name to be created.
+   */
+  public function createProjectRequest(string $name) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+
+    $project = [
+      'kind' => 'ProjectRequest',
+      'apiVersion' => 'project.openshift.io/v1',
+      'metadata' => [
+        'name' => 'shp-' . $name,
+        'creationTimestamp' => NULL,
+      ],
+    ];
+
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $project);
+  }
+
 
   /**
    * Retrieve a list of existing projects.
