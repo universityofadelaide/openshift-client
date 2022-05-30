@@ -271,6 +271,16 @@ class Client implements ClientInterface {
         'uri'    => '/api/v1/namespaces/{namespace}/pods',
       ],
     ],
+    'projects' => [
+      'create'    => [
+        'action' => 'POST',
+        'uri'    => '/apis/project.openshift.io/v1/projects',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/apis/project.openshift.io/v1/projects',
+      ],
+    ],
     'replicationcontrollers' => [
       'get'    => [
         'action' => 'GET',
@@ -461,10 +471,10 @@ class Client implements ClientInterface {
 
   public function handleAuth() {
     return function (callable $handler) {
-      return function (RequestInterface $r) use ($handler) {
+      return function (RequestInterface $request, array $options) use ($handler) {
         if ($this->token) {
-          $r = $r->withHeader('Authorization', 'Bearer ' . $this->token);
-          return $r;
+          $request = $request->withHeader('Authorization', 'Bearer ' . $this->token);
+          return $handler($request, $options);
         };
       };
     };
@@ -540,6 +550,16 @@ class Client implements ClientInterface {
         $e->hasResponse() ? $e->getResponse()->getBody() : ''
       );
     }
+
+    // If the response code is outside normal, throw some rage.
+    if (!in_array($response->getStatusCode(), [200, 201, 404])) {
+      $decoded_response = json_decode($response->getBody(), TRUE);
+      throw new ClientException(
+        $decoded_response['message'],
+        $decoded_response['code'],
+      );
+    }
+
     $contents = $response->getBody()->getContents();
     return $decode_response ? json_decode($contents, TRUE) : $contents;
   }
@@ -589,6 +609,32 @@ class Client implements ClientInterface {
     }
 
     return $uri;
+  }
+
+  /**
+   * Create a new project.
+   *
+   * @param string $name
+   *   The project name to be created.
+   */
+  public function createProject(string $name) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+
+    $project = [
+      'kind' => 'Project',
+      'metadata' => [
+        'name' => 'shp-' . $name,
+      ],
+    ];
+
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $project);
+  }
+
+  /**
+   * Retrieve a list of existing projects.
+   */
+  public function getProjects() {
+    return $this->apiCall(__METHOD__, $name);
   }
 
   /**
@@ -1794,6 +1840,7 @@ class Client implements ClientInterface {
     $resourceMethod = $this->getResourceMethod($method);
     $uri = $this->createRequestUri($resourceMethod['uri'], $params);
     $serialized = $this->serializer->serialize($object, 'json');
+
     if (!$result = $this->request($resourceMethod['action'], $uri, $serialized, [], FALSE)) {
       return FALSE;
     }
