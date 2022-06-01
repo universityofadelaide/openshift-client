@@ -319,6 +319,20 @@ class Client implements ClientInterface {
         'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/restores',
       ],
     ],
+    'rolebinding' => [
+      'get' => [
+        'action' => 'GET',
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings/{name}'
+      ],
+      'list' => [
+        'action' => 'GET',
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings'
+      ],
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings'
+      ],
+    ],
     'route' => [
       'create' => [
         'action' => 'POST',
@@ -630,7 +644,7 @@ class Client implements ClientInterface {
       'kind' => 'Project',
       'apiVersion' => 'project.openshift.io/v1',
       'metadata' => [
-        'name' => 'shp-' . $name,
+        'name' => $name,
         'creationTimestamp' => NULL,
       ],
     ];
@@ -651,7 +665,7 @@ class Client implements ClientInterface {
       'kind' => 'ProjectRequest',
       'apiVersion' => 'project.openshift.io/v1',
       'metadata' => [
-        'name' => 'shp-' . $name,
+        'name' => $name,
         'creationTimestamp' => NULL,
       ],
     ];
@@ -659,6 +673,42 @@ class Client implements ClientInterface {
     return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $project);
   }
 
+  /**
+   * Give access to other users
+   */
+  public function createRoleBinding(string $subjectUserName, string $roleBinding, string $roleBindingName, string $subjectProject = NULL) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+
+    $request = [
+      'kind' => 'RoleBinding',
+      'apiVersion' => 'rbac.authorization.k8s.io/v1',
+      'metadata' => [
+        'name' => $roleBindingName,
+        'namespace' => $this->namespace,
+      ],
+      'subjects' => [
+        [
+          'kind' => 'User',
+          'apiGroup' => 'rbac.authorization.k8s.io',
+          'name' => $subjectUserName,
+        ],
+      ],
+      'roleRef' => [
+        'apiGroup'=> 'rbac.authorization.k8s.io',
+        'kind'=> 'ClusterRole',
+        'name'=> $roleBinding,
+      ],
+    ];
+
+    // This is a bit icky..
+    if ($subjectProject) {
+      $subject[0]['kind'] = 'ServiceAccount';
+      $subject[0]['namespace'] = $subjectProject;
+      unset($subject[0]['apiGroup']);
+    }
+
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $request);
+  }
 
   /**
    * Retrieve a list of existing projects.
@@ -1205,6 +1255,7 @@ class Client implements ClientInterface {
               'from' => [
                 'kind' => 'ImageStreamTag',
                 'name' => $image_stream_tag,
+                'namespace' => 'shepherd',
               ],
             ],
             'type' => 'ImageChange',
