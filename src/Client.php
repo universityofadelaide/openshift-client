@@ -580,6 +580,11 @@ class Client implements ClientInterface {
       );
     }
 
+    // Reproduce what OpenShift 3.x did for 404 responses.
+    if ($response->getStatusCode() === 404) {
+      return FALSE;
+    }
+
     $contents = $response->getBody()->getContents();
     return $decode_response ? json_decode($contents, TRUE) : $contents;
   }
