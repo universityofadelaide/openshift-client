@@ -721,9 +721,9 @@ class Client implements ClientInterface {
 
     // This is a bit icky..
     if ($subjectProject) {
-      $subject[0]['kind'] = 'ServiceAccount';
-      $subject[0]['namespace'] = $subjectProject;
-      unset($subject[0]['apiGroup']);
+      $request['subjects'][0]['kind'] = 'ServiceAccount';
+      $request['subjects'][0]['namespace'] = $subjectProject;
+      unset($request['subjects'][0]['apiGroup']);
     }
 
     return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $request);
