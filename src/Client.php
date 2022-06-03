@@ -280,6 +280,10 @@ class Client implements ClientInterface {
         'action' => 'GET',
         'uri'    => '/apis/project.openshift.io/v1/projects',
       ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/apis/project.openshift.io/v1/projects/{name}',
+      ],
     ],
     'projectrequest' => [
       'create'    => [
@@ -655,6 +659,16 @@ class Client implements ClientInterface {
     ];
 
     return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $project);
+  }
+
+  /**
+   * Delete a project.
+   *
+   * @param string $name
+   *   The project name to be deleted.
+   */
+  public function deleteProject(string $name) {
+    return $this->apiCall(__METHOD__, $name);
   }
 
   /**
