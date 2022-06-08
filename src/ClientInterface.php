@@ -14,7 +14,7 @@ use UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy;
 use UniversityOfAdelaide\OpenShift\Objects\StatefulSet;
 
 /**
- * Interface OpenShiftClientInterface.
+ * The Interface for the OpenShiftClient.
  *
  * @package UnviersityofAdelaide\OpenShift.
  */
@@ -32,7 +32,7 @@ interface ClientInterface {
    * @param bool $verifyTls
    *   TLS certificates are verified by default.
    */
-  public function __construct($host, $token, $namespace, $verifyTls = TRUE);
+  public function __construct($host, $verifyTls = TRUE);
 
   /**
    * Sends a request via the guzzle http client.

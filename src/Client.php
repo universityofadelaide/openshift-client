@@ -4,6 +4,10 @@ namespace UniversityOfAdelaide\OpenShift;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use Psr\Http\Message\RequestInterface;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
@@ -267,6 +271,26 @@ class Client implements ClientInterface {
         'uri'    => '/api/v1/namespaces/{namespace}/pods',
       ],
     ],
+    'project' => [
+      'create'    => [
+        'action' => 'POST',
+        'uri'    => '/apis/project.openshift.io/v1/projects',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/apis/project.openshift.io/v1/projects',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/apis/project.openshift.io/v1/projects/{name}',
+      ],
+    ],
+    'projectrequest' => [
+      'create'    => [
+        'action' => 'POST',
+        'uri'    => '/apis/project.openshift.io/v1/projectrequests',
+      ],
+    ],
     'replicationcontrollers' => [
       'get'    => [
         'action' => 'GET',
@@ -297,6 +321,20 @@ class Client implements ClientInterface {
       'list' => [
         'action' => 'GET',
         'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/restores',
+      ],
+    ],
+    'rolebinding' => [
+      'get' => [
+        'action' => 'GET',
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings/{name}'
+      ],
+      'list' => [
+        'action' => 'GET',
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings'
+      ],
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings'
       ],
     ],
     'route' => [
@@ -418,17 +456,31 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct($host, $token, $namespace, $verifyTls = TRUE) {
-    $this->namespace = $namespace;
+  public function __construct($host, $verifyTls = TRUE) {
+    // Create a handler stack with sane defaults.
+    $stack = new HandlerStack();
+    $stack->setHandler(new CurlHandler());
+
+    // Add our token variable checker so we can override the default token.
+    $stack->push($this->handleAuth());
+
     $this->guzzleClient = new GuzzleClient([
+      'handler' => $stack,
       'verify' => $verifyTls,
       'base_uri' => $host,
       'headers' => [
-        'Authorization' => 'Bearer ' . $token,
         'Accept' => 'application/json',
       ],
     ]);
     $this->serializer = OpenShiftSerializerFactory::create();
+  }
+
+  public function setNamespace($namespace) {
+    $this->namespace = $namespace;
+  }
+
+  public function setToken($token) {
+    $this->token = $token;
   }
 
   /**
@@ -439,6 +491,17 @@ class Client implements ClientInterface {
    */
   public function getGuzzleClient() {
     return $this->guzzleClient;
+  }
+
+  public function handleAuth() {
+    return function (callable $handler) {
+      return function (RequestInterface $request, array $options) use ($handler) {
+        if ($this->token) {
+          $request = $request->withHeader('Authorization', 'Bearer ' . $this->token);
+          return $handler($request, $options);
+        };
+      };
+    };
   }
 
   /**
@@ -511,6 +574,21 @@ class Client implements ClientInterface {
         $e->hasResponse() ? $e->getResponse()->getBody() : ''
       );
     }
+
+    // If the response code is outside normal, throw some rage.
+    if (!in_array($response->getStatusCode(), [200, 201, 404])) {
+      $decoded_response = json_decode($response->getBody(), TRUE);
+      throw new ClientException(
+        $decoded_response['message'],
+        $decoded_response['code'],
+      );
+    }
+
+    // Reproduce what OpenShift 3.x did for 404 responses.
+    if ($response->getStatusCode() === 404) {
+      return FALSE;
+    }
+
     $contents = $response->getBody()->getContents();
     return $decode_response ? json_decode($contents, TRUE) : $contents;
   }
@@ -560,6 +638,102 @@ class Client implements ClientInterface {
     }
 
     return $uri;
+  }
+
+  /**
+   * Create a new project.
+   *
+   * @param string $name
+   *   The project name to be created.
+   */
+  public function createProject(string $name) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+
+    $project = [
+      'kind' => 'Project',
+      'apiVersion' => 'project.openshift.io/v1',
+      'metadata' => [
+        'name' => $name,
+        'creationTimestamp' => NULL,
+      ],
+    ];
+
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $project);
+  }
+
+  /**
+   * Delete a project.
+   *
+   * @param string $name
+   *   The project name to be deleted.
+   */
+  public function deleteProject(string $name) {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * Create a new project request.
+   *
+   * @param string $name
+   *   The project name to be created.
+   */
+  public function createProjectRequest(string $name) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+
+    $project = [
+      'kind' => 'ProjectRequest',
+      'apiVersion' => 'project.openshift.io/v1',
+      'metadata' => [
+        'name' => $name,
+        'creationTimestamp' => NULL,
+      ],
+    ];
+
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $project);
+  }
+
+  /**
+   * Give access to other users
+   */
+  public function createRoleBinding(string $subjectUserName, string $roleBinding, string $roleBindingName, string $subjectProject = NULL) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+
+    $request = [
+      'kind' => 'RoleBinding',
+      'apiVersion' => 'rbac.authorization.k8s.io/v1',
+      'metadata' => [
+        'name' => $roleBindingName,
+        'namespace' => $this->namespace,
+      ],
+      'subjects' => [
+        [
+          'kind' => 'User',
+          'apiGroup' => 'rbac.authorization.k8s.io',
+          'name' => $subjectUserName,
+        ],
+      ],
+      'roleRef' => [
+        'apiGroup'=> 'rbac.authorization.k8s.io',
+        'kind'=> 'ClusterRole',
+        'name'=> $roleBinding,
+      ],
+    ];
+
+    // This is a bit icky..
+    if ($subjectProject) {
+      $request['subjects'][0]['kind'] = 'ServiceAccount';
+      $request['subjects'][0]['namespace'] = $subjectProject;
+      unset($request['subjects'][0]['apiGroup']);
+    }
+
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $request);
+  }
+
+  /**
+   * Retrieve a list of existing projects.
+   */
+  public function getProjects() {
+    return $this->apiCall(__METHOD__, $name);
   }
 
   /**
@@ -1100,6 +1274,7 @@ class Client implements ClientInterface {
               'from' => [
                 'kind' => 'ImageStreamTag',
                 'name' => $image_stream_tag,
+                'namespace' => 'shepherd',
               ],
             ],
             'type' => 'ImageChange',
@@ -1765,6 +1940,7 @@ class Client implements ClientInterface {
     $resourceMethod = $this->getResourceMethod($method);
     $uri = $this->createRequestUri($resourceMethod['uri'], $params);
     $serialized = $this->serializer->serialize($object, 'json');
+
     if (!$result = $this->request($resourceMethod['action'], $uri, $serialized, [], FALSE)) {
       return FALSE;
     }
