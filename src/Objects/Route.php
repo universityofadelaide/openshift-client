@@ -8,7 +8,7 @@ namespace UniversityOfAdelaide\OpenShift\Objects;
 class Route extends ObjectBase {
 
   /**
-   * Annotations
+   * Annotations.
    *
    * E.g.
    * ['some-name' => 'some-value']
@@ -16,6 +16,16 @@ class Route extends ObjectBase {
    * @var array
    */
   protected $annotations = [];
+
+  /**
+   * Labels.
+   *
+   * E.g.
+   * ['some-name' => 'some-value']
+   *
+   * @var array
+   */
+  protected $labels = [];
 
   /**
    * Host.
@@ -110,6 +120,42 @@ class Route extends ObjectBase {
    */
   public function setAnnotation(Annotation $annotation): Route {
     $this->annotations[$annotation->getKey()] = $annotation->getValue();
+    return $this;
+  }
+
+  /**
+   * Gets the current labels.
+   *
+   * @return array
+   */
+  public function getLabels(): array {
+    return $this->labels;
+  }
+
+  /**
+   * Sets the value of Labels.
+   *
+   * @param array $labels
+   *
+   * @return Route
+   *   The calling class.
+   */
+  public function setLabels(array $labels): Route {
+    $this->labels = $labels;
+    return $this;
+  }
+
+  /**
+   * Sets a single Label.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Label $label
+   *   The Label object.
+   *
+   * @return Route
+   *   The calling class.
+   */
+  public function setLabel(Label $label): Route {
+    $this->labels[$label->getKey()] = $label->getValue();
     return $this;
   }
 
