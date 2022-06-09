@@ -6,7 +6,6 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use Psr\Http\Message\RequestInterface;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
@@ -326,15 +325,15 @@ class Client implements ClientInterface {
     'rolebinding' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings/{name}'
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings/{name}',
       ],
       'list' => [
         'action' => 'GET',
-        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings'
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings',
       ],
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings'
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings',
       ],
     ],
     'route' => [
@@ -1170,7 +1169,16 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function updatePersistentVolumeClaim(string $name, string $access_mode, string $storage) {
-    // @todo Implement updatePersistentVolumeClaim() method.
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri'], ['name' => $name]);
+
+    // Retrieve the existing settings.
+    $pvc = $this->getPersistentVolumeClaim($name);
+
+    // We only support changing the size.
+    $pvc['spec']['resources']['requests']['storage'] = $storage;
+
+    return $this->request($resourceMethod['action'], $uri, $pvc);
   }
 
   /**
