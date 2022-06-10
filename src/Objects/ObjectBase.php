@@ -22,6 +22,13 @@ abstract class ObjectBase {
   protected $labels = [];
 
   /**
+   * An arroy of annotations.
+   *
+   * @var array
+   */
+  protected $annotations = [];
+
+  /**
    * The time the object was created.
    *
    * @var string
@@ -111,6 +118,55 @@ abstract class ObjectBase {
    */
   public function getLabel(string $key): string {
     return isset($this->getLabels()[$key]) ? $this->getLabels()[$key] : FALSE;
+  }
+
+  /**
+   * Gets the value of Annotations.
+   *
+   * @return array
+   */
+  public function getAnnotations(): array {
+    return $this->annotations;
+  }
+
+  /**
+   * Sets the value of Annotations.
+   *
+   * @param array $annotations
+   *
+   * @return $this
+   *   The calling class.
+   */
+  public function setAnnotations(array $annotations) {
+    $this->annotations = $annotations;
+    return $this;
+  }
+
+  /**
+   * Sets a single Annotation.
+   *
+   * @param \UniversityOfAdelaide\OpenShift\Objects\Annotation $annotation
+   *   The Annotation object.
+   *
+   * @return $this
+   *   The calling class.
+   */
+  public function setAnnotation(Annotation $annotation) {
+    $this->annotations[$annotation->getKey()] = $annotation->getValue();
+    return $this;
+  }
+
+  /**
+   * Get a single annotation.
+   *
+   * @param string $key
+   *   The key for the annotation.
+   *
+   * @return string|bool
+   *   The annotation value or FALSE.
+   */
+  public function getAnnotation(string $key): string {
+    return isset($this->getAnnotations()[$key]) ? $this->getAnnotations()[$key] : FALSE;
   }
 
   /**

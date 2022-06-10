@@ -3,6 +3,7 @@
 namespace UniversityOfAdelaide\OpenShift\Tests\Unit\Serializer;
 
 use PHPUnit\Framework\TestCase;
+use UniversityOfAdelaide\OpenShift\Objects\Annotation;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Database;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Phase;
@@ -73,7 +74,7 @@ class BackupSerializerTest extends TestCase {
     /** @var \UniversityOfAdelaide\OpenShift\Objects\Backups\Backup $backup */
     $backup = Backup::create()
       ->setName('test-123-backup')
-      ->setAnnotation('some.annotation', 'test 123')
+      ->setAnnotation(Annotation::create('some.annotation', 'test 123'))
       ->setVolumes([
         'shared' => 'node-123-shared',
       ])
