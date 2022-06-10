@@ -43,7 +43,7 @@ class RouteSerializerTest extends TestCase {
       ->setToName('svc-test')
       ->setToWeight(50)
       ->setLabel(Label::create('testing-label', 'label-testing'))
-      ->setAnnotations(Annotation::create('testing-annotation', 'annotation-testing'))
+      ->setAnnotation(Annotation::create('testing-annotation', 'annotation-testing'))
       ->setWildcardPolicy('None');
 
     $expected = json_decode(file_get_contents(__DIR__ . '/../../fixtures/route.json'), TRUE);
