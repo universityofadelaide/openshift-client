@@ -8,7 +8,7 @@
     },
     "annotations": {
       "testing-annotation": "annotation-testing"
-    },
+    }
   },
   "spec": {
     "host": "route.host",
