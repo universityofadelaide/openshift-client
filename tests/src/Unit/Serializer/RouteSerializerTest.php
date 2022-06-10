@@ -3,6 +3,8 @@
 namespace UniversityOfAdelaide\OpenShift\Tests\Unit\Serializer;
 
 use PHPUnit\Framework\TestCase;
+use UniversityOfAdelaide\OpenShift\Objects\Annotation;
+use UniversityOfAdelaide\OpenShift\Objects\Label;
 use UniversityOfAdelaide\OpenShift\Objects\Route;
 use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 
@@ -40,6 +42,8 @@ class RouteSerializerTest extends TestCase {
       ->setToKind('Service')
       ->setToName('svc-test')
       ->setToWeight(50)
+      ->setLabel(Label::create('testing-label', 'label-testing'))
+      ->setAnnotations(Annotation::create('testing-annotation', 'annotation-testing'))
       ->setWildcardPolicy('None');
 
     $expected = json_decode(file_get_contents(__DIR__ . '/../../fixtures/route.json'), TRUE);

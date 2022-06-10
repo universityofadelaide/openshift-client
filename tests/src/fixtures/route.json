@@ -2,7 +2,13 @@
   "apiVersion": "route.openshift.io/v1",
   "kind": "Route",
   "metadata": {
-    "name": "route-test"
+    "name": "route-test",
+    "labels": {
+      "testing-label": "label-testing"
+    },
+    "annotations": {
+      "testing-annotation": "annotation-testing"
+    },
   },
   "spec": {
     "host": "route.host",
