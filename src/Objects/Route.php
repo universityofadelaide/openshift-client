@@ -8,16 +8,6 @@ namespace UniversityOfAdelaide\OpenShift\Objects;
 class Route extends ObjectBase {
 
   /**
-   * Annotations
-   *
-   * E.g.
-   * ['some-name' => 'some-value']
-   *
-   * @var array
-   */
-  protected $annotations = [];
-
-  /**
    * Host.
    *
    * @var string
@@ -76,42 +66,6 @@ class Route extends ObjectBase {
    * @var string
    */
   protected $wildcardPolicy;
-
-  /**
-   * Gets the value of Annotations.
-   *
-   * @return array
-   */
-  public function getAnnotations(): array {
-    return $this->annotations;
-  }
-
-  /**
-   * Sets the value of Annotations.
-   *
-   * @param array $annotations
-   *
-   * @return Route
-   *   The calling class.
-   */
-  public function setAnnotations(array $annotations): Route {
-    $this->annotations = $annotations;
-    return $this;
-  }
-
-  /**
-   * Sets a single Annotation.
-   *
-   * @param \UniversityOfAdelaide\OpenShift\Objects\Annotation $annotation
-   *   The Annotation object.
-   *
-   * @return Route
-   *   The calling class.
-   */
-  public function setAnnotation(Annotation $annotation): Route {
-    $this->annotations[$annotation->getKey()] = $annotation->getValue();
-    return $this;
-  }
 
   /**
    * Gets the value of Host.
