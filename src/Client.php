@@ -6,7 +6,6 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use Psr\Http\Message\RequestInterface;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
@@ -38,7 +37,14 @@ class Client implements ClientInterface {
    *
    * @var string
    */
-  private $namespace;
+  private string $namespace;
+
+  /**
+   * Current working token.
+   *
+   * @var string
+   */
+  private string $token;
 
   /**
    * Guzzle HTTP Client.
@@ -326,15 +332,15 @@ class Client implements ClientInterface {
     'rolebinding' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings/{name}'
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings/{name}',
       ],
       'list' => [
         'action' => 'GET',
-        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings'
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings',
       ],
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings'
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings',
       ],
     ],
     'route' => [
@@ -475,11 +481,23 @@ class Client implements ClientInterface {
     $this->serializer = OpenShiftSerializerFactory::create();
   }
 
-  public function setNamespace($namespace) {
+  /**
+   * Set the namespace for future calls.
+   *
+   * @param string $namespace
+   *   The namespace string.
+   */
+  public function setNamespace(string $namespace) {
     $this->namespace = $namespace;
   }
 
-  public function setToken($token) {
+  /**
+   * Set the Token for future calls.
+   *
+   * @param string $token
+   *   The token string.
+   */
+  public function setToken(string $token) {
     $this->token = $token;
   }
 
@@ -493,6 +511,12 @@ class Client implements ClientInterface {
     return $this->guzzleClient;
   }
 
+  /**
+   * Helper function called to handle token switching.
+   *
+   * @return \Closure
+   *   Returns the closure that does the work.
+   */
   public function handleAuth() {
     return function (callable $handler) {
       return function (RequestInterface $request, array $options) use ($handler) {
@@ -559,7 +583,7 @@ class Client implements ClientInterface {
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
     }
     catch (RequestException $e) {
-      // If the exception is a 'not found' response to a GET or DELETE, just return false.
+      // Early return for simple failures.
       if (($method === 'GET' || $method === 'DELETE') && $e->getCode() === 404) {
         return FALSE;
       }
@@ -1170,7 +1194,16 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function updatePersistentVolumeClaim(string $name, string $access_mode, string $storage) {
-    // @todo Implement updatePersistentVolumeClaim() method.
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri'], ['name' => $name]);
+
+    // Retrieve the existing settings.
+    $pvc = $this->getPersistentVolumeClaim($name);
+
+    // We only support changing the size.
+    $pvc['spec']['resources']['requests']['storage'] = $storage;
+
+    return $this->request($resourceMethod['action'], $uri, $pvc);
   }
 
   /**
