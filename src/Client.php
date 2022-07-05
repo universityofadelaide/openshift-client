@@ -737,17 +737,18 @@ class Client implements ClientInterface {
         ],
       ],
       'roleRef' => [
-        'apiGroup'=> 'rbac.authorization.k8s.io',
-        'kind'=> 'ClusterRole',
-        'name'=> $roleBinding,
+        'apiGroup' => 'rbac.authorization.k8s.io',
+        'kind' => 'ClusterRole',
+        'name' => $roleBinding,
       ],
     ];
 
-    // This is a bit icky..
+    // This is a bit icky.
     if ($subjectProject) {
       $request['subjects'][0]['kind'] = 'ServiceAccount';
       $request['subjects'][0]['namespace'] = $subjectProject;
       unset($request['subjects'][0]['apiGroup']);
+      unset($request['metadata']['namespace']);
     }
 
     return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $request);
