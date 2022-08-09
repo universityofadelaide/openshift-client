@@ -597,6 +597,8 @@ interface ClientInterface {
    *   Image stream to manage the deployment.
    * @param string $image_name
    *   Image name for deployment.
+   * @param string $image_stream_namespace
+   *   The namespace to pull the image stream from.
    * @param bool $update_on_image_change
    *   Automatically re-deploy pods on image change or not.
    * @param array $volumes
@@ -609,7 +611,7 @@ interface ClientInterface {
    * @return array
    *   Returns the body response if successful.
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change, array $volumes, array $data, array $probes);
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, string $image_stream_namespace, bool $update_on_image_change, array $volumes, array $data, array $probes);
 
   /**
    * Updates and existing deployment config.

@@ -1232,7 +1232,7 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change = FALSE, array $volumes = [], array $data = [], array $probes = []) {
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, string $image_stream_namespace, bool $update_on_image_change = FALSE, array $volumes = [], array $data = [], array $probes = []) {
     $volume_config = $this->setVolumes($volumes);
 
     $deploymentConfig = [
@@ -1308,7 +1308,7 @@ class Client implements ClientInterface {
               'from' => [
                 'kind' => 'ImageStreamTag',
                 'name' => $image_stream_tag,
-                'namespace' => 'shepherd',
+                'namespace' => $image_stream_namespace,
               ],
             ],
             'type' => 'ImageChange',
