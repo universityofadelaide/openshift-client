@@ -1002,7 +1002,7 @@ class Client implements ClientInterface {
           ],
           'secrets' => [
             [
-              'destinationDir' => '.',
+              'destinationDir' => '/code',
               'secret' => [
                 'name' => $secret,
               ],
@@ -1016,7 +1016,7 @@ class Client implements ClientInterface {
           'sourceStrategy' => [
             'env' => $data['env_vars'] ?? [],
             'forcePull' => TRUE,
-            'incremental' => TRUE,
+            'incremental' => FALSE,
             'from' => [
               'kind' => (string) $data['source']['type'],
               'name' => (string) $data['source']['name'],
