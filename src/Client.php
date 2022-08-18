@@ -603,7 +603,8 @@ class Client implements ClientInterface {
     if (!in_array($response->getStatusCode(), [200, 201, 404])) {
       $decoded_response = json_decode($response->getBody(), TRUE);
       throw new ClientException(
-        $decoded_response['message'],
+        $decoded_response['message'] . "\n" .
+        json_encode($requestOptions),
         $decoded_response['code'],
       );
     }
@@ -717,7 +718,7 @@ class Client implements ClientInterface {
   }
 
   /**
-   * Give access to other users
+   * Give access to other users.
    */
   public function createRoleBinding(string $subjectUserName, string $roleBinding, string $roleBindingName, string $subjectProject = NULL) {
     $resourceMethod = $this->getResourceMethod(__METHOD__);
