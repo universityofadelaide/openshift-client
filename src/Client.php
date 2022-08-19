@@ -981,12 +981,12 @@ class Client implements ClientInterface {
       'spec' => [
         'resources' => [
           'limits' => [
-            'cpu' => $data['cpu_limit'] ?? '0m',
-            'memory' => $data['memory_limit'] ?? '1Gi',
+            'cpu' => $data['cpu_limit'] ?? '256m',
+            'memory' => $data['memory_limit'] ?? '256Mi',
           ],
           'requests' => [
-            'cpu' => $data['cpu_request'] ?? '0m',
-            'memory' => $data['memory_request'] ?? '0Mi',
+            'cpu' => $data['cpu_request'] ?? '128m',
+            'memory' => $data['memory_request'] ?? '128Mi',
           ],
         ],
         'output' => [
@@ -1254,6 +1254,16 @@ class Client implements ClientInterface {
             'maxUnavailable' => '25%',
             'timeoutSeconds' => 600,
             'updatePeriodSeconds' => 1,
+          ],
+          'resources' => [
+            'limits' => [
+              'cpu' => $data['cpu_limit'] ?? '256m',
+              'memory' => $data['memory_limit'] ?? '256Mi',
+            ],
+            'requests' => [
+              'cpu' => $data['cpu_request'] ?? '128m',
+              'memory' => $data['memory_request'] ?? '128Mi',
+            ],
           ],
           'type' => 'Rolling',
         ],
