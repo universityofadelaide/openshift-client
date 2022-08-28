@@ -30,7 +30,7 @@ class NetworkPolicyNormalizer extends BaseNormalizer {
   public function normalize($object, $format = NULL, array $context = []) {
     /** @var \UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy $object */
     $data = [
-      'apiVersion' => 'extensions/v1beta1',
+      'apiVersion' => 'networking.k8s.io/v1',
       'kind' => 'NetworkPolicy',
       'metadata' => [
         'name' => $object->getName(),

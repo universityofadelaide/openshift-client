@@ -232,15 +232,15 @@ class Client implements ClientInterface {
     'networkpolicy' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies/{name}',
+        'uri'    => '/apis/networking.k8s.io/v1/namespaces/{namespace}/networkpolicies/{name}',
       ],
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies',
+        'uri'    => '/apis/networking.k8s.io/v1/namespaces/{namespace}/networkpolicies',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies/{name}',
+        'uri'    => '/apis/networking.k8s.io/v1/namespaces/{namespace}/networkpolicies/{name}',
       ],
     ],
     'persistentvolumeclaim' => [
