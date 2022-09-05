@@ -229,6 +229,16 @@ class Client implements ClientInterface {
         'uri'    => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
       ],
     ],
+    'namespace' => [
+      'get' => [
+        'action' => 'GET',
+        'uri' => '/api/v1/namespaces/{namespace}',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri' => '/api/v1/namespaces/{namespace}',
+      ],
+    ],
     'networkpolicy' => [
       'get' => [
         'action' => 'GET',
@@ -715,6 +725,36 @@ class Client implements ClientInterface {
     ];
 
     return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $project);
+  }
+
+  /**
+   * Retrieve a namespace by name.
+   *
+   * @param string $name
+   *   The project name to be retrieved.
+   */
+  public function getNamespace(string $name) {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * Update namespace with a label.
+   *
+   * @param string $name
+   *   The project name to be retrieved.
+   * @param array $labels
+   *   The array of labels to be applied.
+   */
+  public function updateNamespace(string $name, array $labels) {
+    if ($namespace = $this->getNamespace($name)) {
+      $namespace['metadata']['labels'] = array_merge(
+        $namespace['metadata']['labels'],
+        $labels
+      );
+
+      $resourceMethod = $this->getResourceMethod(__METHOD__);
+      return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $namespace);
+    }
   }
 
   /**
