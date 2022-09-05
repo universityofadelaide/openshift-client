@@ -41,7 +41,10 @@ class NetworkPolicyNormalizer extends BaseNormalizer {
             'from' => [
               [
                 'podSelector' => [
-                  'matchLabels' => $object->getIngressMatchLabels(),
+                  'matchLabels' => $object->getIngressPodMatchLabels(),
+                ],
+                'namespaceSelector' => [
+                  'matchLabels' => $object->getIngressNamespaceMatchLabels(),
                 ],
               ],
             ],

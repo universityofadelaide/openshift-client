@@ -32,7 +32,8 @@ class NetworkPolicySerializerTest extends TestCase {
   public function testNormalizer() {
     /** @var \UniversityOfAdelaide\OpenShift\Objects\NetworkPolicy $np */
     $np = NetworkPolicy::create()
-      ->setIngressMatchLabels(['app' => 'node-19'])
+      ->setIngressPodMatchLabels(['app' => 'node-19'])
+      ->setIngressNamespaceMatchLabels(['project' => 'project1'])
       ->setPodSelectorMatchLabels(['application' => 'datagrid-app'])
       ->setPort(11312)
       ->setName('test-np');

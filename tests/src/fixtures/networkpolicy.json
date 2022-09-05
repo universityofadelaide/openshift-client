@@ -13,6 +13,11 @@
               "matchLabels": {
                 "app": "node-19"
               }
+            },
+            "namespaceSelector": {
+              "matchLabels": {
+                "project": "project1"
+              }
             }
           }
         ],
