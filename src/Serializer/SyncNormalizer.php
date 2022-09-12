@@ -32,8 +32,8 @@ class SyncNormalizer extends BaseNormalizer implements NormalizationAwareInterfa
       ->setSite($data['spec']['site'])
       ->setBackupEnv($data['spec']['backupEnv'])
       ->setRestoreEnv($data['spec']['restoreEnv'])
-      ->setBackupPhase($data['status']['backup']['Phase'] ?? '')
-      ->setRestorePhase($data['status']['restore']['Phase'] ?? '')
+      ->setBackupPhase($data['status']['backup']['phase'] ?? '')
+      ->setRestorePhase($data['status']['restore']['phase'] ?? '')
       ->setStartTimeStamp($data['status']['backup']['startTime'] ?? '')
       ->setCompletionTimeStamp($data['status']['restore']['completionTime'] ?? '');
 
