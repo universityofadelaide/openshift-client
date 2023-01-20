@@ -126,19 +126,19 @@ class Client implements ClientInterface {
     'cronjob' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/batch/v1beta1/namespaces/{namespace}/cronjobs',
+        'uri'    => '/apis/batch/v1/namespaces/{namespace}/cronjobs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/batch/v1beta1/namespaces/{namespace}/cronjobs/{name}',
+        'uri'    => '/apis/batch/v1/namespaces/{namespace}/cronjobs/{name}',
       ],
       'get' => [
         'action' => 'GET',
-        'uri'    => '/apis/batch/v1beta1/namespaces/{namespace}/cronjobs/{name}',
+        'uri'    => '/apis/batch/v1/namespaces/{namespace}/cronjobs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/apis/batch/v1beta1/namespaces/{namespace}/cronjobs/{name}',
+        'uri'    => '/apis/batch/v1/namespaces/{namespace}/cronjobs/{name}',
       ],
     ],
     'deploymentconfig' => [
@@ -1556,7 +1556,7 @@ class Client implements ClientInterface {
     $job_template = $this->jobTemplate($name, $image_name, $args, $volume_config, $data);
 
     $cronConfig = [
-      'apiVersion' => 'batch/v1beta1',
+      'apiVersion' => 'batch/v1',
       'kind' => 'CronJob',
       'metadata' => [
         'name' => $name,
