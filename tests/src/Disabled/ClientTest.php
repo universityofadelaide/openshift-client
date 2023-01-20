@@ -183,6 +183,10 @@ class ClientTest extends TestCase {
    */
   public function testCreateBuildConfig() {
     $data = [
+      'cpu_limit' => '512m',
+      'cpu_request' => '256m',
+      'memory_limit' => '512Mi',
+      'memory_request' => '256Mi',
       'git' => [
         'uri' => $this->json->clientTest->source->git->uri,
         'ref' => $this->json->clientTest->source->git->ref,

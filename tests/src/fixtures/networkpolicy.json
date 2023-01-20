@@ -1,5 +1,5 @@
 {
-  "apiVersion": "extensions/v1beta1",
+  "apiVersion": "networking.k8s.io/v1",
   "kind": "NetworkPolicy",
   "metadata": {
     "name": "test-np"
@@ -12,6 +12,11 @@
             "podSelector": {
               "matchLabels": {
                 "app": "node-19"
+              }
+            },
+            "namespaceSelector": {
+              "matchLabels": {
+                "project": "project1"
               }
             }
           }

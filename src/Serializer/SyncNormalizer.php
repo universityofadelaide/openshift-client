@@ -32,10 +32,10 @@ class SyncNormalizer extends BaseNormalizer implements NormalizationAwareInterfa
       ->setSite($data['spec']['site'])
       ->setBackupEnv($data['spec']['backupEnv'])
       ->setRestoreEnv($data['spec']['restoreEnv'])
-      ->setBackupPhase($data['status']['backupPhase'] ?? '')
-      ->setRestorePhase($data['status']['restorePhase'] ?? '')
-      ->setStartTimeStamp($data['status']['startTime'] ?? '')
-      ->setCompletionTimeStamp($data['status']['completionTime'] ?? '');
+      ->setBackupPhase($data['status']['backup']['phase'] ?? '')
+      ->setRestorePhase($data['status']['restore']['phase'] ?? '')
+      ->setStartTimeStamp($data['status']['backup']['startTime'] ?? '')
+      ->setCompletionTimeStamp($data['status']['restore']['completionTime'] ?? '');
 
     $backupDbs = [];
     foreach ($data['spec']['backupSpec']['mysql'] as $id => $dbSpec) {

@@ -4,6 +4,9 @@ namespace UniversityOfAdelaide\OpenShift;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
+use Psr\Http\Message\RequestInterface;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\BackupList;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Restore;
@@ -30,25 +33,18 @@ use UniversityOfAdelaide\OpenShift\Serializer\OpenShiftSerializerFactory;
 class Client implements ClientInterface {
 
   /**
-   * Api version.
-   *
-   * @var string
-   */
-  private $apiVersion = 'v1';
-
-  /**
    * Current working namespace.
    *
    * @var string
    */
-  private $namespace;
+  private string $namespace;
 
   /**
-   * Base url to OpenShift.
+   * Current working token.
    *
    * @var string
    */
-  private $host;
+  private string $token;
 
   /**
    * Guzzle HTTP Client.
@@ -96,25 +92,25 @@ class Client implements ClientInterface {
     'buildconfig' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs',
+        'uri'    => '/apis/build.openshift.io/v1/namespaces/{namespace}/buildconfigs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
+        'uri'    => '/apis/build.openshift.io/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
       'get'    => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
+        'uri'    => '/apis/build.openshift.io/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/buildconfigs/{name}',
+        'uri'    => '/apis/build.openshift.io/v1/namespaces/{namespace}/buildconfigs/{name}',
       ],
     ],
     'builds' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/builds/{name}',
+        'uri'    => '/apis/build.openshift.io/v1/namespaces/{namespace}/builds',
       ],
     ],
     'configmap' => [
@@ -130,47 +126,47 @@ class Client implements ClientInterface {
     'cronjob' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/batch/v1beta1/namespaces/{namespace}/cronjobs',
+        'uri'    => '/apis/batch/v1/namespaces/{namespace}/cronjobs',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/batch/v1beta1/namespaces/{namespace}/cronjobs/{name}',
+        'uri'    => '/apis/batch/v1/namespaces/{namespace}/cronjobs/{name}',
       ],
       'get' => [
         'action' => 'GET',
-        'uri'    => '/apis/batch/v1beta1/namespaces/{namespace}/cronjobs/{name}',
+        'uri'    => '/apis/batch/v1/namespaces/{namespace}/cronjobs/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/apis/batch/v1beta1/namespaces/{namespace}/cronjobs/{name}',
+        'uri'    => '/apis/batch/v1/namespaces/{namespace}/cronjobs/{name}',
       ],
     ],
     'deploymentconfig' => [
       'create'      => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
+        'uri'    => '/apis/apps.openshift.io/v1/namespaces/{namespace}/deploymentconfigs',
       ],
       'delete'      => [
         'action' => 'DELETE',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+        'uri'    => '/apis/apps.openshift.io/v1/namespaces/{namespace}/deploymentconfigs/{name}',
       ],
       'get'         => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+        'uri'    => '/apis/apps.openshift.io/v1/namespaces/{namespace}/deploymentconfigs/{name}',
       ],
       'update'      => [
         'action' => 'PUT',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}',
+        'uri'    => '/apis/apps.openshift.io/v1/namespaces/{namespace}/deploymentconfigs/{name}',
       ],
       'instantiate' => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs/{name}/instantiate',
+        'uri'    => '/apis/apps.openshift.io/v1/namespaces/{namespace}/deploymentconfigs/{name}/instantiate',
       ],
     ],
     'deploymentconfigs' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/deploymentconfigs',
+        'uri'    => '/apis/apps.openshift.io/v1/namespaces/{namespace}/deploymentconfigs',
       ],
     ],
     'hpa' => [
@@ -194,25 +190,25 @@ class Client implements ClientInterface {
     'imagestream' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams',
+        'uri'    => '/apis/image.openshift.io/v1/namespaces/{namespace}/imagestreams',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
+        'uri'    => '/apis/image.openshift.io/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
       'get'    => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
+        'uri'    => '/apis/image.openshift.io/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreams/{name}',
+        'uri'    => '/apis/image.openshift.io/v1/namespaces/{namespace}/imagestreams/{name}',
       ],
     ],
     'imagestreamtag' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/imagestreamtags/{name}',
+        'uri'    => '/apis/image.openshift.io/v1/namespaces/{namespace}/imagestreamtags/{name}',
       ],
     ],
     'job' => [
@@ -233,18 +229,28 @@ class Client implements ClientInterface {
         'uri'    => '/apis/batch/v1/namespaces/{namespace}/jobs/{name}',
       ],
     ],
+    'namespace' => [
+      'get' => [
+        'action' => 'GET',
+        'uri' => '/api/v1/namespaces/{namespace}',
+      ],
+      'update' => [
+        'action' => 'PUT',
+        'uri' => '/api/v1/namespaces/{namespace}',
+      ],
+    ],
     'networkpolicy' => [
       'get' => [
         'action' => 'GET',
-        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies/{name}',
+        'uri'    => '/apis/networking.k8s.io/v1/namespaces/{namespace}/networkpolicies/{name}',
       ],
       'create' => [
         'action' => 'POST',
-        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies',
+        'uri'    => '/apis/networking.k8s.io/v1/namespaces/{namespace}/networkpolicies',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/apis/extensions/v1beta1/namespaces/{namespace}/networkpolicies/{name}',
+        'uri'    => '/apis/networking.k8s.io/v1/namespaces/{namespace}/networkpolicies/{name}',
       ],
     ],
     'persistentvolumeclaim' => [
@@ -281,6 +287,26 @@ class Client implements ClientInterface {
         'uri'    => '/api/v1/namespaces/{namespace}/pods',
       ],
     ],
+    'project' => [
+      'create'    => [
+        'action' => 'POST',
+        'uri'    => '/apis/project.openshift.io/v1/projects',
+      ],
+      'get'    => [
+        'action' => 'GET',
+        'uri'    => '/apis/project.openshift.io/v1/projects',
+      ],
+      'delete' => [
+        'action' => 'DELETE',
+        'uri'    => '/apis/project.openshift.io/v1/projects/{name}',
+      ],
+    ],
+    'projectrequest' => [
+      'create'    => [
+        'action' => 'POST',
+        'uri'    => '/apis/project.openshift.io/v1/projectrequests',
+      ],
+    ],
     'replicationcontrollers' => [
       'get'    => [
         'action' => 'GET',
@@ -313,22 +339,36 @@ class Client implements ClientInterface {
         'uri'    => '/apis/extension.shepherd/v1/namespaces/{namespace}/restores',
       ],
     ],
+    'rolebinding' => [
+      'get' => [
+        'action' => 'GET',
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings/{name}',
+      ],
+      'list' => [
+        'action' => 'GET',
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings',
+      ],
+      'create' => [
+        'action' => 'POST',
+        'uri'    => '/apis/rbac.authorization.k8s.io/v1/namespaces/{namespace}/rolebindings',
+      ],
+    ],
     'route' => [
       'create' => [
         'action' => 'POST',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/routes',
+        'uri'    => '/apis/route.openshift.io/v1/namespaces/{namespace}/routes',
       ],
       'delete' => [
         'action' => 'DELETE',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+        'uri'    => '/apis/route.openshift.io/v1/namespaces/{namespace}/routes/{name}',
       ],
       'get'    => [
         'action' => 'GET',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+        'uri'    => '/apis/route.openshift.io/v1/namespaces/{namespace}/routes/{name}',
       ],
       'update' => [
         'action' => 'PUT',
-        'uri'    => '/oapi/v1/namespaces/{namespace}/routes/{name}',
+        'uri'    => '/apis/route.openshift.io/v1/namespaces/{namespace}/routes/{name}',
       ],
     ],
     'schedule' => [
@@ -432,14 +472,19 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct($host, $token, $namespace, $verifyTls = TRUE) {
-    $this->host = $host;
-    $this->namespace = $namespace;
+  public function __construct($host, $verifyTls = TRUE) {
+    // Create a handler stack with sane defaults.
+    $stack = new HandlerStack();
+    $stack->setHandler(new CurlHandler());
+
+    // Add our token variable checker so we can override the default token.
+    $stack->push($this->handleAuth());
+
     $this->guzzleClient = new GuzzleClient([
+      'handler' => $stack,
       'verify' => $verifyTls,
       'base_uri' => $host,
       'headers' => [
-        'Authorization' => 'Bearer ' . $token,
         'Accept' => 'application/json',
       ],
     ]);
@@ -447,33 +492,50 @@ class Client implements ClientInterface {
   }
 
   /**
-   * Returns the api version.
+   * Set the namespace for future calls.
    *
-   * @return string
-   *   The currently supported api version.
+   * @param string $namespace
+   *   The namespace string.
    */
-  public function getApiVersion() {
-    return $this->apiVersion;
+  public function setNamespace(string $namespace) {
+    $this->namespace = $namespace;
   }
 
   /**
-   * Set the api version number.
+   * Set the Token for future calls.
    *
-   * @param string $apiVersion
-   *   Api version number.
+   * @param string $token
+   *   The token string.
    */
-  public function setApiVersion(string $apiVersion) {
-    $this->apiVersion = $apiVersion;
+  public function setToken(string $token) {
+    $this->token = $token;
   }
 
   /**
-   * Returns the guzzle client.
+   * Return the Guzzle client.
    *
    * @return \GuzzleHttp\Client
-   *   Return the guzzle client.
+   *   Return the Guzzle client.
    */
   public function getGuzzleClient() {
     return $this->guzzleClient;
+  }
+
+  /**
+   * Helper function called to handle token switching.
+   *
+   * @return \Closure
+   *   Returns the closure that does the work.
+   */
+  public function handleAuth() {
+    return function (callable $handler) {
+      return function (RequestInterface $request, array $options) use ($handler) {
+        if ($this->token) {
+          $request = $request->withHeader('Authorization', 'Bearer ' . $this->token);
+          return $handler($request, $options);
+        };
+      };
+    };
   }
 
   /**
@@ -531,7 +593,7 @@ class Client implements ClientInterface {
       $response = $this->guzzleClient->request($method, $uri, $requestOptions);
     }
     catch (RequestException $e) {
-      // If the exception is a 'not found' response to a GET or DELETE, just return false.
+      // Early return for simple failures.
       if (($method === 'GET' || $method === 'DELETE') && $e->getCode() === 404) {
         return FALSE;
       }
@@ -546,6 +608,22 @@ class Client implements ClientInterface {
         $e->hasResponse() ? $e->getResponse()->getBody() : ''
       );
     }
+
+    // If the response code is outside normal, throw some rage.
+    if (!in_array($response->getStatusCode(), [200, 201, 404])) {
+      $decoded_response = json_decode($response->getBody(), TRUE);
+      throw new ClientException(
+        $decoded_response['message'] . "\n" .
+        json_encode($requestOptions),
+        $decoded_response['code'],
+      );
+    }
+
+    // Reproduce what OpenShift 3.x did for 404 responses.
+    if ($response->getStatusCode() === 404) {
+      return FALSE;
+    }
+
     $contents = $response->getBody()->getContents();
     return $decode_response ? json_decode($contents, TRUE) : $contents;
   }
@@ -598,6 +676,133 @@ class Client implements ClientInterface {
   }
 
   /**
+   * Create a new project.
+   *
+   * @param string $name
+   *   The project name to be created.
+   */
+  public function createProject(string $name) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+
+    $project = [
+      'kind' => 'Project',
+      'apiVersion' => 'project.openshift.io/v1',
+      'metadata' => [
+        'name' => $name,
+        'creationTimestamp' => NULL,
+      ],
+    ];
+
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $project);
+  }
+
+  /**
+   * Delete a project.
+   *
+   * @param string $name
+   *   The project name to be deleted.
+   */
+  public function deleteProject(string $name) {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * Create a new project request.
+   *
+   * @param string $name
+   *   The project name to be created.
+   */
+  public function createProjectRequest(string $name) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+
+    $project = [
+      'kind' => 'ProjectRequest',
+      'apiVersion' => 'project.openshift.io/v1',
+      'metadata' => [
+        'name' => $name,
+        'creationTimestamp' => NULL,
+      ],
+    ];
+
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $project);
+  }
+
+  /**
+   * Retrieve a namespace by name.
+   *
+   * @param string $name
+   *   The project name to be retrieved.
+   */
+  public function getNamespace(string $name) {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
+   * Update namespace with a label.
+   *
+   * @param string $name
+   *   The project name to be retrieved.
+   * @param array $labels
+   *   The array of labels to be applied.
+   */
+  public function updateNamespace(string $name, array $labels) {
+    if ($namespace = $this->getNamespace($name)) {
+      $namespace['metadata']['labels'] = array_merge(
+        $namespace['metadata']['labels'],
+        $labels
+      );
+
+      $resourceMethod = $this->getResourceMethod(__METHOD__);
+      return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $namespace);
+    }
+  }
+
+  /**
+   * Give access to other users.
+   */
+  public function createRoleBinding(string $subjectUserName, string $roleBinding, string $roleBindingName, string $subjectProject = NULL) {
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+
+    $request = [
+      'kind' => 'RoleBinding',
+      'apiVersion' => 'rbac.authorization.k8s.io/v1',
+      'metadata' => [
+        'name' => $roleBindingName,
+        'namespace' => $this->namespace,
+      ],
+      'subjects' => [
+        [
+          'kind' => 'User',
+          'apiGroup' => 'rbac.authorization.k8s.io',
+          'name' => $subjectUserName,
+        ],
+      ],
+      'roleRef' => [
+        'apiGroup' => 'rbac.authorization.k8s.io',
+        'kind' => 'ClusterRole',
+        'name' => $roleBinding,
+      ],
+    ];
+
+    // This is a bit icky.
+    if ($subjectProject) {
+      $request['subjects'][0]['kind'] = 'ServiceAccount';
+      $request['subjects'][0]['namespace'] = $subjectProject;
+      unset($request['subjects'][0]['apiGroup']);
+      unset($request['metadata']['namespace']);
+    }
+
+    return $this->request($resourceMethod['action'], $this->createRequestUri($resourceMethod['uri']), $request);
+  }
+
+  /**
+   * Retrieve a list of existing projects.
+   */
+  public function getProjects() {
+    return $this->apiCall(__METHOD__, $name);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function createSecret(string $name, array $data) {
@@ -608,7 +813,6 @@ class Client implements ClientInterface {
       $data[$key] = base64_encode($value);
     }
 
-    // @todo - this should use model.
     $secret = [
       'kind' => 'Secret',
       'metadata' => [
@@ -687,7 +891,6 @@ class Client implements ClientInterface {
       ];
     }
 
-    // @todo - use a model.
     $service = [
       'kind' => 'Service',
       'metadata' => [
@@ -698,7 +901,6 @@ class Client implements ClientInterface {
         'ports' => [
           // Defaults to TCP.
           [
-            // @todo Does this have any impact when using non web ports?
             'name' => 'web',
             'port' => $port,
             'targetPort' => $target_port,
@@ -780,7 +982,7 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function updateRoute(string $name, string $service_name, string $application_domain) {
-    // TODO: Implement updateRoute() method.
+    // @todo Implement updateRoute() method.
   }
 
   /**
@@ -819,12 +1021,12 @@ class Client implements ClientInterface {
       'spec' => [
         'resources' => [
           'limits' => [
-            'cpu' => $data['cpu_limit'] ?? '0m',
-            'memory' => $data['memory_limit'] ?? '1Gi',
+            'cpu' => $data['cpu_limit'] ?? '256m',
+            'memory' => $data['memory_limit'] ?? '256Mi',
           ],
           'requests' => [
-            'cpu' => $data['cpu_request'] ?? '0m',
-            'memory' => $data['memory_request'] ?? '0Mi',
+            'cpu' => $data['cpu_request'] ?? '128m',
+            'memory' => $data['memory_request'] ?? '128Mi',
           ],
         ],
         'output' => [
@@ -841,7 +1043,7 @@ class Client implements ClientInterface {
           ],
           'secrets' => [
             [
-              'destinationDir' => '.',
+              'destinationDir' => '/code',
               'secret' => [
                 'name' => $secret,
               ],
@@ -855,7 +1057,7 @@ class Client implements ClientInterface {
           'sourceStrategy' => [
             'env' => $data['env_vars'] ?? [],
             'forcePull' => TRUE,
-            'incremental' => TRUE,
+            'incremental' => FALSE,
             'from' => [
               'kind' => (string) $data['source']['type'],
               'name' => (string) $data['source']['name'],
@@ -866,7 +1068,6 @@ class Client implements ClientInterface {
           ],
           'type' => 'Source',
         ],
-        // @todo - figure out github and other types of triggers
         'triggers' => [
           [
             'type' => 'ImageChange',
@@ -920,7 +1121,7 @@ class Client implements ClientInterface {
    */
   public function generateImageStreamConfig(string $name) {
     $imageStream = [
-      'apiVersion' => 'v1',
+      'apiVersion' => 'image.openshift.io/v1',
       'kind' => 'ImageStream',
       'metadata' => [
         'name' => $name,
@@ -974,14 +1175,14 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function createImageSteamTag(string $name) {
-    // TODO: Implement createImageSteamTag() method.
+    // @todo Implement createImageSteamTag() method.
   }
 
   /**
    * {@inheritdoc}
    */
   public function updateImageSteamTag(string $name) {
-    // TODO: Implement updateImageSteamTag() method.
+    // @todo Implement updateImageSteamTag() method.
   }
 
   /**
@@ -1035,7 +1236,16 @@ class Client implements ClientInterface {
    * {@inheritdoc}
    */
   public function updatePersistentVolumeClaim(string $name, string $access_mode, string $storage) {
-    // TODO: Implement updatePersistentVolumeClaim() method.
+    $resourceMethod = $this->getResourceMethod(__METHOD__);
+    $uri = $this->createRequestUri($resourceMethod['uri'], ['name' => $name]);
+
+    // Retrieve the existing settings.
+    $pvc = $this->getPersistentVolumeClaim($name);
+
+    // We only support changing the size.
+    $pvc['spec']['resources']['requests']['storage'] = $storage;
+
+    return $this->request($resourceMethod['action'], $uri, $pvc);
   }
 
   /**
@@ -1063,11 +1273,11 @@ class Client implements ClientInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, bool $update_on_image_change = FALSE, array $volumes = [], array $data = [], array $probes = []) {
+  public function generateDeploymentConfig(string $name, string $image_stream_tag, string $image_name, string $image_stream_namespace, bool $update_on_image_change = FALSE, array $volumes = [], array $data = [], array $probes = []) {
     $volume_config = $this->setVolumes($volumes);
 
     $deploymentConfig = [
-      'apiVersion' => 'v1',
+      'apiVersion' => 'apps.openshift.io/v1',
       'kind' => 'DeploymentConfig',
       'metadata' => [
         'name' => $name,
@@ -1084,6 +1294,16 @@ class Client implements ClientInterface {
             'maxUnavailable' => '25%',
             'timeoutSeconds' => 600,
             'updatePeriodSeconds' => 1,
+          ],
+          'resources' => [
+            'limits' => [
+              'cpu' => $data['cpu_limit'] ?? '256m',
+              'memory' => $data['memory_limit'] ?? '256Mi',
+            ],
+            'requests' => [
+              'cpu' => $data['cpu_request'] ?? '128m',
+              'memory' => $data['memory_request'] ?? '128Mi',
+            ],
           ],
           'type' => 'Rolling',
         ],
@@ -1139,6 +1359,7 @@ class Client implements ClientInterface {
               'from' => [
                 'kind' => 'ImageStreamTag',
                 'name' => $image_stream_tag,
+                'namespace' => $image_stream_namespace,
               ],
             ],
             'type' => 'ImageChange',
@@ -1174,8 +1395,6 @@ class Client implements ClientInterface {
   /**
    * Return a formatted securityContext for openshift.
    *
-   * TODO: Move uid/gid into a sub array and only pass that?
-   *
    * @param $data
    *   The complete data array
    *
@@ -1187,15 +1406,15 @@ class Client implements ClientInterface {
       'securityContext' => [
         'runAsUser' => $data['uid'],
         'supplementalGroups' => array_key_exists('gid', $data) ? [$data['gid']] : [],
-      ]
+      ],
     ];
   }
 
   /**
    * Return an array of probes.
    *
-   * @param $probes
-   *  Array of probe configuration constructed from a project entity.
+   * @param array $probes
+   *   Array of probe configuration constructed from a project entity.
    *
    * @return array
    *   Probes array ready for API.
@@ -1277,7 +1496,7 @@ class Client implements ClientInterface {
     ]);
 
     $instantiate = [
-      'apiVersion' => 'v1',
+      'apiVersion' => 'apps.openshift.io/v1',
       'kind' => 'DeploymentRequest',
       'name' => $name,
       'latest' => TRUE,
@@ -1293,7 +1512,7 @@ class Client implements ClientInterface {
   public function updateDeploymentConfig(string $name, array $deployment_config, array $config) {
     $deployment_config = array_replace_recursive($deployment_config, $config);
 
-    // Just replace the entire env array as the replace screws it up.
+    // Replace the entire env array.
     if (isset($config['spec']['template']['spec']['containers'][0]['env'])) {
       $deployment_config['spec']['template']['spec']['containers'][0]['env'] =
         $config['spec']['template']['spec']['containers'][0]['env'];
@@ -1337,7 +1556,7 @@ class Client implements ClientInterface {
     $job_template = $this->jobTemplate($name, $image_name, $args, $volume_config, $data);
 
     $cronConfig = [
-      'apiVersion' => 'batch/v1beta1',
+      'apiVersion' => 'batch/v1',
       'kind' => 'CronJob',
       'metadata' => [
         'name' => $name,
@@ -1497,7 +1716,7 @@ class Client implements ClientInterface {
 
     $repControllers = $this->getReplicationControllers($name, $label);
     if ($replica_count === NULL) {
-      // @todo - err what ?
+      // @todo err what ?
       return $repControllers;
     }
 
@@ -1806,6 +2025,7 @@ class Client implements ClientInterface {
     $resourceMethod = $this->getResourceMethod($method);
     $uri = $this->createRequestUri($resourceMethod['uri'], $params);
     $serialized = $this->serializer->serialize($object, 'json');
+
     if (!$result = $this->request($resourceMethod['action'], $uri, $serialized, [], FALSE)) {
       return FALSE;
     }

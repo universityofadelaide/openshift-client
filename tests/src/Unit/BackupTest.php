@@ -3,6 +3,7 @@
 namespace UniversityOfAdelaide\OpenShift\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use UniversityOfAdelaide\OpenShift\Objects\Annotation;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Backup;
 use UniversityOfAdelaide\OpenShift\Objects\Backups\Phase;
 use UniversityOfAdelaide\OpenShift\Objects\Label;
@@ -36,7 +37,7 @@ class BackupTest extends TestCase {
     $backup = new Backup();
     $backup->setName('foo');
     $this->assertEquals('foo', $backup->getFriendlyName());
-    $backup->setAnnotation(Backup::FRIENDLY_NAME_ANNOTATION, 'bar');
+    $backup->setAnnotation(Annotation::create(Backup::FRIENDLY_NAME_ANNOTATION, 'bar'));
     $this->assertEquals('bar', $backup->getFriendlyName());
   }
 

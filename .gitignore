@@ -3,3 +3,4 @@
 /.idea/
 /client_test.json
 /client_test.yml
+.phpunit.result.cache
