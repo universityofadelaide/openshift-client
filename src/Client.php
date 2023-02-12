@@ -1645,6 +1645,7 @@ class Client implements ClientInterface {
         'name' => $name,
       ],
       'spec' => [
+        'ttlSecondsAfterFinished' => 172800,
         'concurrencyPolicy' => 'Forbid',
         'suspend' => FALSE,
         'failedJobsHistoryLimit' => 1,
