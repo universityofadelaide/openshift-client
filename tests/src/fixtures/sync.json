@@ -56,11 +56,15 @@
     "site": "2"
   },
   "status": {
-    "backupName": "sync-adam-test-1-backup",
-    "backupPhase": "Completed",
-    "completionTime": "2021-07-20T04:46:19Z",
-    "restoreName": "sync-adam-test-1-restore",
-    "restorePhase": "InProgress",
-    "startTime": "2021-07-20T04:46:08Z"
+    "backup": {
+        "name": "sync-adam-test-1-backup",
+        "phase": "Completed",
+        "startTime": "2021-07-20T04:46:08Z"
+    },
+    "restore": {
+        "completionTime": "2021-07-20T04:46:19Z",
+        "name": "sync-adam-test-1-restore",
+        "phase": "InProgress"
+    }
   }
 }

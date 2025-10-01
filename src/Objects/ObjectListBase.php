@@ -20,7 +20,7 @@ abstract class ObjectListBase {
    */
   protected function sortObjectsByCreationTime(array $objects, string $operator) {
     usort($objects, function (ObjectBase $a, ObjectBase $b) use ($operator) {
-      return $operator === 'DESC' ? $a->getCreationTimestamp() < $b->getCreationTimestamp() : $a->getCreationTimestamp() > $b->getCreationTimestamp();
+      return $operator === 'DESC' ? $b->getCreationTimestamp() <=> $a->getCreationTimestamp() : $a->getCreationTimestamp() <=> $b->getCreationTimestamp();
     });
     return $objects;
   }

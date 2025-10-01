@@ -62,7 +62,7 @@ class BackupList extends ObjectListBase {
    */
   protected function sortBackupsByStartTime(array $backups, string $operator) {
     usort($backups, function (Backup $a, Backup $b) use ($operator) {
-      return $operator === 'DESC' ? $a->getStartTimestamp() < $b->getStartTimestamp() : $a->getStartTimestamp() > $b->getStartTimestamp();
+      return $operator === 'DESC' ? $b->getStartTimestamp() <=> $a->getStartTimestamp() : $a->getStartTimestamp() <=> $b->getStartTimestamp();
     });
     return $backups;
   }
