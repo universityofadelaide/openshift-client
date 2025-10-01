@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "guzzlehttp/guzzle" : "^6.5.5",
+        "guzzlehttp/guzzle" : "^6.5.5 || ^7.0",
         "symfony/serializer": "~4.4",
         "symfony/phpunit-bridge": "^5.3 || ^6.4"
     },
